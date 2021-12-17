@@ -11,7 +11,7 @@ local function alert(msg, err)
     require 'notify'(msg, err, {title = "http"})
 end
 
-local stringstream = require 'toolshed.stringstream'
+local stringstream = require 'toolshed.util.string.stream'
 
 local parserstate = {start = 0, headers = 1, body = 2, finished = 3, err = -1}
 

@@ -110,7 +110,7 @@ function a.spawn_lines_async(var, callback)
         builder = {}
     end
     local finished = false
-    local stream = require'toolshed.stringstream'.new()
+    local stream = require'toolshed.util.string.stream'.new()
     local processChar = function(c)
         if c == "\n" then
             emit()

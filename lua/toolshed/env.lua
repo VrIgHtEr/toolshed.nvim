@@ -98,7 +98,7 @@ function M.getPath()
 end
 
 local installing = false
-local installqueue = require'toolshed.queue'.new()
+local installqueue = require'toolshed.util.generic.queue'.new()
 installqueue:enqueue(a.spawn_async {"mkdir", "-p", M.root})
 installqueue:enqueue(a.spawn_async {"mkdir", "-p", M.var})
 installqueue:enqueue(a.spawn_async {"mkdir", "-p", M.opt})
@@ -242,7 +242,7 @@ function M.install_dependencies(deps)
     if not installing then install() end
 end
 
-if not require'toolshed.os-detect'.is_linux then
+if not require'toolshed.util.sys.os-detect'.is_linux then
     print("only linux is supported")
     return nil
 end
