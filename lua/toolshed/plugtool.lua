@@ -38,7 +38,8 @@ local function folder_exists(path) return 0 == assert(a.spawn_a {"ls", path}) en
 
 local function discover(plugin)
     if not plugdefs[plugin[1]] then
-        print("installing plugin: " .. vim.inspect(plugin))
+        print("discovered plugin: " .. vim.inspect(plugin))
+        num_discovered = num_discovered + 1
         local path = installconfig.install_path .. "/cache/" .. plugin[1]
         a.main_loop()
         local parentPath = vim.fn.fnamemodify(path, ":p:h:h")
