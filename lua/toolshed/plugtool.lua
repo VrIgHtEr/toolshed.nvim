@@ -43,7 +43,8 @@ local function discover(plugin)
     if not plugdefs[url] then
         num_discovered = num_discovered + 1
         print("discovering plugin " .. num_discovered .. ": " .. url)
-        local path = installconfig.install_path .. '/' .. plugin.reponame
+        local path = installconfig.install_path .. '/' .. plugin.username ..
+                         '/opt/' .. plugin.reponame
         a.main_loop()
         local parentPath = vim.fn.fnamemodify(path, ":p:h:h")
         local ret = assert(a.spawn_a {"mkdir", "-p", parentPath})
