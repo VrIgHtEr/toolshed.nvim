@@ -47,9 +47,5 @@ return function(plugdefs)
     for i = 1, math.floor(#sorted / 2) do
         sorted[i], sorted[#sorted - i + 1] = sorted[#sorted - i + 1], sorted[i]
     end
-    print "LOAD_ORDER:"
-    for i, v in ipairs(sorted) do
-        print(i .. ": " .. v.username .. '/' .. v.reponame)
-    end
     return sorted
 end
