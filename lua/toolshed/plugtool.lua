@@ -32,7 +32,7 @@ local function topological_sort()
         end
     end
     while #edges > 0 do
-        local edge = table.remove(edges, 1)
+        local edge = table.remove(edges, #edges)
         local url = edge.username .. '/' .. edge.reponame
         table.insert(sorted, edge)
         if edge.needs then
