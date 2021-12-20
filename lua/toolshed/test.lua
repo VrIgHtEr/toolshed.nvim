@@ -1,7 +1,7 @@
 local a = require 'toolshed.async'
 local plugtool = require 'toolshed.plugtool'
 a.run(function()
-    a.spawn_a({'rm', '-rf', '/home/cedric/.local/share/nvim/env/opt/plugtool'})
+    -- a.spawn_a({'rm', '-rf', '/home/cedric/.local/share/nvim/env/opt/plugtool'})
     a.main_loop()
     plugtool.setup {
         "vrighter/hue.nvim", 'hrsh7th/cmp-vsnip', 'hrsh7th/cmp-cmdline',
