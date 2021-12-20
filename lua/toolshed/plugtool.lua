@@ -68,7 +68,7 @@ local function discover(plugin)
             print("LOADED: " .. cfgpath)
             -- plugin specifies its own configuration
             local success
-            success, config = pcall(loadstring(table.concat(lines, "/n")))
+            success, config = pcall(loadstring(table.concat(lines, "\n")))
             if not success or type(config) ~= "table" then
                 print("PARSE_ERROR: " .. cfgpath)
                 config = nil
