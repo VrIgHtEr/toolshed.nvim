@@ -64,8 +64,8 @@ return {
         after = {'kyazdani42/nvim-tree.lua'}
     },
     ['arkav/lualine-lsp-progress'] = {
-        needs = {"nvim-lualine/lualine.nvim"},
-        after = {"nvim-lualine/lualine.nvim"}
+        needs = {"nvim-lualine/lualine.nvim", 'neovim/nvim-lspconfig'},
+        after = {"nvim-lualine/lualine.nvim", 'neovim/nvim-lspconfig'}
     },
     ['nvim-telescope/telescope.nvim'] = {
         needs = {'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter'},
