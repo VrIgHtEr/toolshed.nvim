@@ -6,6 +6,7 @@ local discovering = false
 local installconfig = {}
 local config_filename = "plugtool_cfg.lua"
 local config_repository = require 'toolshed.plugtool.repository'
+local num_discovered
 
 local function add_plugin(plugin)
     if type(plugin) == 'string' then plugin = {plugin} end
@@ -84,16 +85,14 @@ end
 
 local function discover_loop(config)
     if discovering then return end
+    num_discovered = 0
     discovering = true
     installconfig = config
     a.run(function()
-        local counter = 0
         while discoverqueue:size() > 0 do
-            local plugin = discoverqueue:dequeue()
-            counter = counter + 1
-            discover(plugin)
+            discover(discoverqueue:dequeue())
         end
-        print("discovered " .. counter .. ' plugins')
+        print("discovered " .. num_discovered .. ' plugins')
         discovering = false
     end)
 end
