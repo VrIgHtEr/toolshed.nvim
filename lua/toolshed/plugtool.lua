@@ -116,6 +116,7 @@ local function discover_loop(config)
             vim.cmd("packadd " .. x.reponame)
             if x.config then x.config() end
         end
+        print("Plugins loaded!")
         discovering = false
     end)
 end
