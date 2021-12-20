@@ -54,7 +54,7 @@ local function topological_sort()
         end
     end
     if others ~= 0 then error "loops detected in dependency graph" end
-    for i in 1, math.floor(#sorted / 2) do
+    for i = 1, math.floor(#sorted / 2) do
         sorted[i], sorted[#sorted - i + 1] = sorted[#sorted - i + 1], sorted[i]
     end
     for i, v in ipairs(sorted) do
