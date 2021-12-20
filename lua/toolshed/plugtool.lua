@@ -22,13 +22,13 @@ local function topological_sort()
     end
 
     local edges = {}
-    local others = 0
+    local remaining = 0
     local sorted = {}
     for _, v in pairs(plugdefs) do
         if #v.neededby == 0 then
             table.insert(edges, v)
         else
-            others = others + 1
+            remaining = remaining + 1
         end
     end
     while #edges > 0 do
@@ -47,13 +47,15 @@ local function topological_sort()
                 end
                 table.remove(need.neededby, index)
                 if #need.neededby == 0 then
-                    others = others - 1
+                    remaining = remaining - 1
                     table.insert(edges, need)
                 end
             end
         end
     end
-    if others ~= 0 then error "loops detected in dependency graph" end
+    print(#plugdefs)
+    print(#sorted)
+    if remaining ~= 0 then error "loops detected in dependency graph" end
     for i = 1, math.floor(#sorted / 2) do
         sorted[i], sorted[#sorted - i + 1] = sorted[#sorted - i + 1], sorted[i]
     end
