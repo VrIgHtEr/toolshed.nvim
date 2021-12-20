@@ -22,12 +22,13 @@ local function topological_sort()
     end
 
     local edges = {}
-    local others = #plugdefs
+    local others = 0
     local sorted = {}
     for _, v in pairs(plugdefs) do
         if #v.neededby == 0 then
             table.insert(edges, v)
-            others = others - 1
+        else
+            others = others + 1
         end
     end
     while #edges > 0 do
