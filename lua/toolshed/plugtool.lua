@@ -66,7 +66,7 @@ local function discover(plugin)
             config = {}
         end
         config[1] = plugin[1]
-        print(vim.inspect(config))
+        --        print(vim.inspect(config))
         plugdefs[plugin[1]] = config
         if config.needs ~= nil then
             for _, x in ipairs(config.needs) do add_plugin(x) end

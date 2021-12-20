@@ -13,7 +13,7 @@ return {
         needs = {"mfussenegger/nvim-dap", "nvim-treesitter/nvim-treesitter"}
     },
     ["Pocco81/DAPInstall.nvim"] = {needs = {"mfussenegger/nvim-dap"}},
-    ['kyazdani42/nvim-tree'] = {needs = {"kyazdani42/nvim-web-devicons"}},
+    ['kyazdani42/nvim-tree.lua'] = {needs = {"kyazdani42/nvim-web-devicons"}},
     ['rcarriga/nvim-notify'] = {needs = {"nvim-telescope/telescope.nvim"}},
     ['mfussenegger/nvim-jdtls'] = {needs = {"mfussenegger/nvim-dap"}},
     ['williamboman/nvim-lsp-installer'] = {needs = {'neovim/nvim-lspconfig'}},
