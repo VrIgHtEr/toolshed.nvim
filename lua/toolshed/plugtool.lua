@@ -41,17 +41,18 @@ end
 local function folder_exists(path) return 0 == assert(a.spawn_a {"ls", path}) end
 
 local function discover(plugin)
-    if not plugdefs[plugin[1]] then
-        print("discovered plugin: " .. vim.inspect(plugin))
+    local url = plugin.username .. '/' .. plugin.reponame
+    if not plugdefs[url] then
+        print("discovering plugin: " .. vim.inspect(plugin))
         num_discovered = num_discovered + 1
-        local path = installconfig.install_path .. "/cache/" .. plugin[1]
+        local path = installconfig.install_path .. "/cache/" .. url
         a.main_loop()
         local parentPath = vim.fn.fnamemodify(path, ":p:h:h")
         local ret = assert(a.spawn_a {"mkdir", "-p", parentPath})
         if ret ~= 0 then error("failed to create path: " .. parentPath) end
 
         if not folder_exists(path) then
-            local plugin_url = "https://github.com/" .. plugin[1] .. ".git"
+            local plugin_url = "https://github.com/" .. url .. ".git"
             ret = assert(a.spawn_lines_a({"git", "clone", plugin_url, path},
                                          function(x) print(x) end))
             if ret ~= 0 then
@@ -74,27 +75,23 @@ local function discover(plugin)
         end
         if not config then
             -- check config repository
-            config = config_repository[plugin[1]]
+            config = config_repository[url]
         end
         if not config then
             -- not in config repository, set to empty for now
             config = {}
         end
-        config[1] = plugin[1]
         if config.config == nil then
             -- try to load config function from repository
             local reqpath = 'toolshed.plugtool.repository.cfg.' ..
-                                plugin.username:gsub('\\.', "_") .. '.' ..
-                                plugin.reponame:gsub("\\.", "_")
+                                plugin.username:gsub('[.]', "_") .. '.' ..
+                                plugin.reponame:gsub("[.]", "_")
             local success, func = pcall(function()
                 return require(reqpath)
             end)
-            if success then
-                print("CFG: " .. reqpath)
-                config.config = func
-            end
+            if success then config.config = func end
         end
-        plugdefs[plugin[1]] = config
+        plugdefs[url] = config
         if config.needs ~= nil then
             for _, x in ipairs(config.needs) do add_plugin(x) end
         end
