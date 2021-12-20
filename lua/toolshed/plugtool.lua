@@ -8,6 +8,8 @@ local config_filename = "plugtool_cfg.lua"
 local config_repository = require 'toolshed.plugtool.repository'
 local num_discovered
 
+local function topological_sort() end
+
 local function add_plugin(plugin)
     if type(plugin) == 'string' then plugin = {plugin} end
     if type(plugin) == "table" then
