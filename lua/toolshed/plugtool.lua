@@ -14,6 +14,19 @@ local function add_plugin(plugin)
         if type(plugin_url) ~= "string" then
             error("plugin name should be a string, but got " .. type(plugin_url))
         end
+        local slash = plugin_url:find '/'
+        if slash == nil or slash == 0 then
+            error("invalid plugin url format: " .. vim.inspect(plugin_url))
+        end
+        local username = plugin_url:gsub(1, slash - 1):trim()
+        if username == "" then
+            error("invalid plugin url format: " .. vim.inspect(plugin_url))
+        end
+        local reponame = plugin_url:gsub(slash + 1):trim()
+        slash = reponame:find '/'
+        if slash then
+            error("invalid plugin url format: " .. vim.inspect(plugin_url))
+        end
         installqueue:enqueue(plugin)
     else
         error("invalid plugin specification type: " .. type(plugin))
@@ -23,12 +36,8 @@ end
 local function folder_exists(path) return 0 == assert(a.spawn_a {"ls", path}) end
 
 local function discover(plugin)
-    local downloaded = plugdefs[plugin[1]]
-    if downloaded then
-        return
-    else
+    if not plugdefs[plugin[1]] then
         print("installing plugin: " .. vim.inspect(plugin))
-        -- TODO validate plugin[1]
         local path = installconfig.install_path .. "/cache/" .. plugin[1]
         a.main_loop()
         local parentPath = vim.fn.fnamemodify(path, ":p:h:h")
@@ -66,7 +75,6 @@ local function discover(plugin)
             config = {}
         end
         config[1] = plugin[1]
-        --        print(vim.inspect(config))
         plugdefs[plugin[1]] = config
         if config.needs ~= nil then
             for _, x in ipairs(config.needs) do add_plugin(x) end
