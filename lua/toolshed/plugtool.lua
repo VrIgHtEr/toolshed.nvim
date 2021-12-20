@@ -53,15 +53,10 @@ local function topological_sort()
             end
         end
     end
-    print(#plugdefs)
-    print(#sorted)
+    for _, v in pairs(plugdefs) do v.neededby = nil end
     if remaining ~= 0 then error "loops detected in dependency graph" end
     for i = 1, math.floor(#sorted / 2) do
         sorted[i], sorted[#sorted - i + 1] = sorted[#sorted - i + 1], sorted[i]
-    end
-    for i, v in ipairs(sorted) do
-        v.neededby = nil
-        print(i .. ": " .. vim.inspect(v))
     end
 end
 
