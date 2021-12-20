@@ -30,6 +30,8 @@ local function add_plugin(plugin)
         if slash then
             error("invalid plugin url format: " .. vim.inspect(plugin_url))
         end
+        plugin.username = username
+        plugin.reponame = reponame
         discoverqueue:enqueue(plugin)
     else
         error("invalid plugin specification type: " .. type(plugin))
@@ -79,6 +81,17 @@ local function discover(plugin)
             config = {}
         end
         config[1] = plugin[1]
+        if config.config ~= nil then
+            -- try to load config function from repository
+            local success, func = pcall(function()
+                local reqpath = 'toolshed.plugtool.repository.cfg.' ..
+                                    plugin.username:gsub('\\.', "_") .. '.' ..
+                                    plugin.reponame:gsub("\\.", "_")
+                print("CFG: " .. reqpath)
+                return require(reqpath)
+            end)
+            if success then config.config = func end
+        end
         plugdefs[plugin[1]] = config
         if config.needs ~= nil then
             for _, x in ipairs(config.needs) do add_plugin(x) end
