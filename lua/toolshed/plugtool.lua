@@ -81,16 +81,18 @@ local function discover(plugin)
             config = {}
         end
         config[1] = plugin[1]
-        if config.config ~= nil then
+        if config.config == nil then
             -- try to load config function from repository
+            local reqpath = 'toolshed.plugtool.repository.cfg.' ..
+                                plugin.username:gsub('\\.', "_") .. '.' ..
+                                plugin.reponame:gsub("\\.", "_")
             local success, func = pcall(function()
-                local reqpath = 'toolshed.plugtool.repository.cfg.' ..
-                                    plugin.username:gsub('\\.', "_") .. '.' ..
-                                    plugin.reponame:gsub("\\.", "_")
-                print("CFG: " .. reqpath)
                 return require(reqpath)
             end)
-            if success then config.config = func end
+            if success then
+                print("CFG: " .. reqpath)
+                config.config = func
+            end
         end
         plugdefs[plugin[1]] = config
         if config.needs ~= nil then
