@@ -89,6 +89,7 @@ local function discover_loop(config)
     num_discovered = 0
     discovering = true
     installconfig = config
+    plugdefs = {}
     a.run(function()
         while discoverqueue:size() > 0 do
             discover(discoverqueue:dequeue())
@@ -102,6 +103,7 @@ function M.setup(plugins, config)
     if type(plugins) ~= nil and type(plugins) ~= "table" then
         error "options must be a table"
     end
+    if discovering then error("already discovering plugins") end
     config = config or require 'toolshed.plugtool.config'
     if plugins == nil then return end
     for _, plugin in ipairs(plugins) do add_plugin(plugin) end
