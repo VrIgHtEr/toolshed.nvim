@@ -22,17 +22,16 @@ local function topological_sort()
     end
 
     local edges = {}
-    local others = 0
+    local others = #plugdefs
     local sorted = {}
     for _, v in pairs(plugdefs) do
         if #v.neededby == 0 then
             table.insert(edges, v)
-        else
-            others = others + 1
+            others = others - 1
         end
     end
     while #edges > 0 do
-        local edge = table.remove(edges, #edges)
+        local edge = table.remove(edges, 1)
         local url = edge.username .. '/' .. edge.reponame
         table.insert(sorted, edge)
         if edge.needs then
