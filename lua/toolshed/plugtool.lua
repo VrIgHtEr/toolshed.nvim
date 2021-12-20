@@ -1,8 +1,8 @@
 local M = {}
 local a = require 'toolshed.async'
 local plugdefs = {}
-local installqueue = require'toolshed.util.generic.queue'.new()
-local installing = false
+local discoverqueue = require'toolshed.util.generic.queue'.new()
+local discovering = false
 local installconfig = {}
 local config_filename = "plugtool_cfg.lua"
 local config_repository = require 'toolshed.plugtool.repository'
@@ -27,7 +27,7 @@ local function add_plugin(plugin)
         if slash then
             error("invalid plugin url format: " .. vim.inspect(plugin_url))
         end
-        installqueue:enqueue(plugin)
+        discoverqueue:enqueue(plugin)
     else
         error("invalid plugin specification type: " .. type(plugin))
     end
@@ -83,15 +83,18 @@ local function discover(plugin)
 end
 
 local function discover_loop(config)
-    if installing then return end
-    installing = true
+    if discovering then return end
+    discovering = true
     installconfig = config
     a.run(function()
-        while installqueue:size() > 0 do
-            local plugin = installqueue:dequeue()
+        local counter = 0
+        while discoverqueue:size() > 0 do
+            local plugin = discoverqueue:dequeue()
+            counter = counter + 1
             discover(plugin)
         end
-        installing = false
+        print("discovered " .. counter .. ' plugins')
+        discovering = false
     end)
 end
 
