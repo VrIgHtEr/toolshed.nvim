@@ -110,7 +110,11 @@ local function discover_loop(config)
             discover(discoverqueue:dequeue())
         end
         print("discovered " .. num_discovered .. ' plugins')
-        require 'toolshed.plugtool.sort'(plugdefs)
+        for _, x in ipairs(require 'toolshed.plugtool.sort'(plugdefs)) do
+            print("Loading plugin: " .. x.username .. '/' .. x.reponame)
+            a.main_loop()
+            vim.cmd("packadd " .. x.reponame)
+        end
         discovering = false
     end)
 end
