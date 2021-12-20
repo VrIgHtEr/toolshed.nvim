@@ -5,7 +5,20 @@ local installqueue = require'toolshed.util.generic.queue'.new()
 local installing = false
 local installconfig = {}
 local config_filename = "plugtool_cfg.lua"
-local config_repository = {}
+local config_repository = require 'toolshed.plugtool.repository'
+
+local function add_plugin(plugin)
+    if type(plugin) == 'string' then plugin = {plugin} end
+    if type(plugin) == "table" then
+        local plugin_url = plugin[1]
+        if type(plugin_url) ~= "string" then
+            error("plugin name should be a string, but got " .. type(plugin_url))
+        end
+        installqueue:enqueue(plugin)
+    else
+        error("invalid plugin specification type: " .. type(plugin))
+    end
+end
 
 local function folder_exists(path) return 0 == assert(a.spawn_a {"ls", path}) end
 
@@ -14,6 +27,7 @@ local function discover(plugin)
     if downloaded then
         return
     else
+        print("installing plugin: " .. vim.inspect(plugin))
         -- TODO validate plugin[1]
         local path = installconfig.install_path .. "/cache/" .. plugin[1]
         a.main_loop()
@@ -53,6 +67,10 @@ local function discover(plugin)
         end
         config[1] = plugin[1]
         print(vim.inspect(config))
+        plugdefs[plugin[1]] = config
+        if config.needs ~= nil then
+            for _, x in ipairs(config.needs) do add_plugin(x) end
+        end
     end
 end
 
@@ -67,19 +85,6 @@ local function discover_loop(config)
         end
         installing = false
     end)
-end
-
-local function add_plugin(plugin)
-    if type(plugin) == 'string' then plugin = {plugin} end
-    if type(plugin) == "table" then
-        local plugin_url = plugin[1]
-        if type(plugin_url) ~= "string" then
-            error("plugin name should be a string, but got " .. type(plugin_url))
-        end
-        installqueue:enqueue(plugin)
-    else
-        error("invalid plugin specification type: " .. type(plugin))
-    end
 end
 
 function M.setup(plugins, config)
