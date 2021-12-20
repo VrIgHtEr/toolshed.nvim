@@ -114,6 +114,7 @@ local function discover_loop(config)
             print("Loading plugin: " .. x.username .. '/' .. x.reponame)
             a.main_loop()
             vim.cmd("packadd " .. x.reponame)
+            if x.config then x.config() end
         end
         discovering = false
     end)
