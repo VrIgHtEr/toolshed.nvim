@@ -50,6 +50,8 @@ return function(plugs)
         for _, x in ipairs(removed) do v.after[x] = nil end
     end
 
+    for k, v in pairs(plugs) do print("['" .. k .. "'] = " .. vim.inspect(v)) end
+
     local edges = {}
     local remaining = 0
     local sorted = {}
