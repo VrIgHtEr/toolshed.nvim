@@ -38,9 +38,10 @@ end
 
 local function folder_exists(path) return 0 == assert(a.spawn_a {"ls", path}) end
 
-local function discover(plugin)
+local function discover(plugin, update)
     local url = plugin.username .. '/' .. plugin.reponame
     if not plugdefs[url] then
+        local updated = false
         num_discovered = num_discovered + 1
         print("discovering plugin " .. num_discovered .. ": " .. url)
         local path = installconfig.install_path .. '/' .. plugin.username ..
@@ -57,6 +58,7 @@ local function discover(plugin)
             if ret ~= 0 then
                 error("failed to clone git repository: " .. plugin_url)
             end
+            updated = true
         end
         local cfgpath = path .. '/' .. config_filename
         local lines = {}
@@ -96,28 +98,68 @@ local function discover(plugin)
         if config.needs ~= nil then
             for _, x in ipairs(config.needs) do add_plugin(x) end
         end
+        return updated
+    elseif update then
+        local path = installconfig.install_path .. '/' .. plugin.username ..
+                         '/opt/' .. plugin.reponame
+        if not folder_exists(path) then
+            error("Folder does not exist: " .. path)
+        end
+        local git_pull_output = {}
+        local ret = assert(a.spawn_lines_a({"git", "pull", cwd = path},
+                                           function(x)
+            table.insert(git_pull_output, x)
+        end))
+        if ret ~= 0 then error("failed to check for updates: " .. url) end
+        git_pull_output = table.concat(git_pull_output, '\n')
+        print("-------------------------------------------------------------")
+        print("updated: " .. url)
+        print("return:  " .. ret)
+        print("output:  " .. git_pull_output)
+        return false
+    else
+        return false
     end
 end
 
+local plugins_loaded = false
+
 local function discover_loop(config)
     if discovering then return end
-    num_discovered = 0
     discovering = true
     installconfig = config
-    plugdefs = {}
     a.run(function()
+        local any_updated = false
+        num_discovered = 0
+        plugdefs = {}
         while discoverqueue:size() > 0 do
-            discover(discoverqueue:dequeue())
+            any_updated = any_updated or
+                              discover(discoverqueue:dequeue(), plugins_loaded)
         end
         print("discovered " .. num_discovered .. ' plugins')
-        local state = {}
-        for _, x in ipairs(require 'toolshed.plugtool.sort'(plugdefs)) do
-            print("Loading plugin: " .. x.username .. '/' .. x.reponame)
-            a.main_loop()
-            vim.cmd("packadd " .. x.reponame)
-            if x.config then x.config(plugdefs, state) end
+        if not plugins_loaded then
+            local state = {}
+            for _, x in ipairs(require 'toolshed.plugtool.sort'(plugdefs)) do
+                print("Loading plugin: " .. x.username .. '/' .. x.reponame)
+                a.main_loop()
+                vim.cmd("packadd " .. x.reponame)
+                if x.config then
+                    local success = pcall(x.config, plugdefs, state)
+                    if not success then
+                        print(
+                            "ERROR: an error occurred while configuring plugin: " ..
+                                x.username .. '/' .. x.reponame)
+                    end
+                end
+            end
+            plugins_loaded = true
+            print("Plugins loaded!")
+        else
+            if any_updated then
+                a.main_loop()
+                pcall(vim.api.nvim_exec, "quitall", true)
+            end
         end
-        print("Plugins loaded!")
         discovering = false
     end)
 end
