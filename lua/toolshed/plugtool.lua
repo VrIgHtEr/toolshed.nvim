@@ -128,6 +128,7 @@ local function discover(plugin, update)
 end
 
 local plugins_loaded = false
+local plugin_state
 
 local function discover_loop(config, callback)
     if discovering then return end
@@ -144,7 +145,7 @@ local function discover_loop(config, callback)
             any_updated = updated or any_updated
         end
         if not plugins_loaded then
-            local plugin_state = {}
+            plugin_state = {}
             for _, x in ipairs(require 'toolshed.plugtool.sort'(plugdefs)) do
                 print("loading: " .. x.username .. '/' .. x.reponame)
                 a.main_loop()
@@ -189,6 +190,20 @@ function M.setup(plugins, callback)
     plugins_added = {}
     for _, plugin in ipairs(plugins) do add_plugin(plugin) end
     discover_loop(config, callback)
+end
+
+function M.state(plugin)
+    if type(plugin) == "nil" then
+        return plugin_state
+    elseif type(plugin) ~= "string" then
+        return nil
+    end
+    local ret = plugin_state[plugin]
+    if not ret then
+        ret = {}
+        plugin_state[plugin] = ret
+    end
+    return ret
 end
 
 return M
