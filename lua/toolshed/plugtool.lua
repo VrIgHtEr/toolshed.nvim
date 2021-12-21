@@ -128,7 +128,6 @@ local function discover(plugin, update)
 end
 
 local plugins_loaded = false
-local plugin_state
 
 local function discover_loop(config, callback)
     if discovering then return end
@@ -145,7 +144,7 @@ local function discover_loop(config, callback)
             any_updated = updated or any_updated
         end
         if not plugins_loaded then
-            plugin_state = {}
+            local plugin_state = {}
             for _, x in ipairs(require 'toolshed.plugtool.sort'(plugdefs)) do
                 a.main_loop()
                 vim.cmd("packadd " .. x.reponame)
