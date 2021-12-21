@@ -129,8 +129,8 @@ local function discover_loop(config)
             any_updated = discover(discoverqueue:dequeue(), plugins_loaded) or
                               any_updated
         end
-        print("discovered " .. num_discovered .. ' plugins')
         if not plugins_loaded then
+            print("discovered " .. num_discovered .. ' plugins')
             local state = {}
             for _, x in ipairs(require 'toolshed.plugtool.sort'(plugdefs)) do
                 print("Loading plugin: " .. x.username .. '/' .. x.reponame)
@@ -150,6 +150,8 @@ local function discover_loop(config)
         elseif any_updated then
             a.main_loop()
             pcall(vim.api.nvim_exec, "quitall", true)
+        else
+            print("All plugins up to date")
         end
         discovering = false
     end)
