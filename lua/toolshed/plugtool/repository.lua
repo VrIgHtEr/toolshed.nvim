@@ -48,8 +48,8 @@ return {
         after = {'mfussenegger/nvim-dap'}
     },
     ['williamboman/nvim-lsp-installer'] = {
-        needs = {'neovim/nvim-lspconfig'},
-        after = {'neovim/nvim-lspconfig'}
+        needs = {'neovim/nvim-lspconfig', "rcarriga/nvim-notify"},
+        after = {'neovim/nvim-lspconfig', "rcarriga/nvim-notify"}
     },
     ['jbyuki/one-small-step-for-vimkind'] = {
         needs = {'mfussenegger/nvim-dap'},
@@ -84,5 +84,13 @@ return {
     ['nvim-telescope/telescope-packer.nvim'] = {
         needs = {'wbthomason/packer.nvim', 'nvim-telescope/telescope.nvim'},
         after = {'wbthomason/packer.nvim', 'nvim-telescope/telescope.nvim'}
+    },
+    ['andrejlevkovitch/vim-lua-format'] = {
+        needs = {"rcarriga/nvim-notify"},
+        after = {"rcarriga/nvim-notify"}
+    },
+    ['neovim/nvim-lspconfig'] = {
+        needs = {"rcarriga/nvim-notify"},
+        after = {"rcarriga/nvim-notify"}
     }
 }
