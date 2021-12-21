@@ -40,9 +40,8 @@ return function(plugs, state)
         cmp.setup.cmdline(':', {sources = cmp.config.sources(sources)})
     end
     if state.nvim_lsp then
-        local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp
+        state.capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp
                                                                              .protocol
                                                                              .make_client_capabilities())
-        require'lsp/lsp'.setup(capabilities)
     end
 end

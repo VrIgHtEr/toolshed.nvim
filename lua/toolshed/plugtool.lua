@@ -128,8 +128,9 @@ local function discover(plugin, update)
 end
 
 local plugins_loaded = false
+local plugin_state
 
-local function discover_loop(config)
+local function discover_loop(config, callback)
     if discovering then return end
     discovering = true
     installconfig = config
@@ -144,12 +145,12 @@ local function discover_loop(config)
             any_updated = updated or any_updated
         end
         if not plugins_loaded then
-            local state = {}
+            plugin_state = {}
             for _, x in ipairs(require 'toolshed.plugtool.sort'(plugdefs)) do
                 a.main_loop()
                 vim.cmd("packadd " .. x.reponame)
                 if x.config then
-                    local success = pcall(x.config, plugdefs, state)
+                    local success = pcall(x.config, plugdefs, plugin_state)
                     if not success then
                         print(
                             "ERROR: an error occurred while configuring plugin: " ..
@@ -159,6 +160,9 @@ local function discover_loop(config)
             end
             if any_updated then print("Plugin setup complete!") end
             plugins_loaded = true
+            if type(callback) == "function" then
+                callback(plugin_state)
+            end
         elseif any_updated then
             a.main_loop()
             local success = pcall(vim.api.nvim_exec, "quitall", true)
@@ -173,17 +177,17 @@ local function discover_loop(config)
     end)
 end
 
-function M.setup(plugins, config)
+function M.setup(plugins, callback)
     if discovering then return end
     if type(plugins) ~= nil and type(plugins) ~= "table" then
         error "options must be a table"
     end
-    config = config or require 'toolshed.plugtool.config'
+    local config = require 'toolshed.plugtool.config'
     if plugins == nil then return end
     num_added = 0
     plugins_added = {}
     for _, plugin in ipairs(plugins) do add_plugin(plugin) end
-    discover_loop(config)
+    discover_loop(config, callback)
 end
 
 return M
