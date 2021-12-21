@@ -59,6 +59,22 @@ local function discover(plugin, update)
                 error("failed to clone git repository: " .. plugin_url)
             end
             updated = true
+        elseif update then
+            local git_pull_output = {}
+            ret = assert(a.spawn_lines_a({"git", "pull", cwd = path},
+                                         function(x)
+                table.insert(git_pull_output, x)
+            end))
+            if ret ~= 0 then
+                error("failed to check for updates: " .. url)
+            end
+            git_pull_output = table.concat(git_pull_output, '\n')
+            print(
+                "-------------------------------------------------------------")
+            print("updated: " .. url)
+            print("return:  " .. ret)
+            print("output:  " .. git_pull_output)
+            updated = git_pull_output ~= 'Already up to date.'
         end
         local cfgpath = path .. '/' .. config_filename
         local lines = {}
@@ -98,25 +114,6 @@ local function discover(plugin, update)
         if config.needs ~= nil then
             for _, x in ipairs(config.needs) do add_plugin(x) end
         end
-        return updated
-    elseif update then
-        local path = installconfig.install_path .. '/' .. plugin.username ..
-                         '/opt/' .. plugin.reponame
-        if not folder_exists(path) then
-            error("Folder does not exist: " .. path)
-        end
-        local git_pull_output = {}
-        local ret = assert(a.spawn_lines_a({"git", "pull", cwd = path},
-                                           function(x)
-            table.insert(git_pull_output, x)
-        end))
-        if ret ~= 0 then error("failed to check for updates: " .. url) end
-        git_pull_output = table.concat(git_pull_output, '\n')
-        print("-------------------------------------------------------------")
-        print("updated: " .. url)
-        print("return:  " .. ret)
-        print("output:  " .. git_pull_output)
-        local updated = git_pull_output ~= 'Already up to date.'
         return updated
     else
         return false
