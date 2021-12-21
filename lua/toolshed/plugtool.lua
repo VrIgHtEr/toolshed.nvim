@@ -7,6 +7,8 @@ local installconfig = {}
 local config_filename = "plugtool_cfg.lua"
 local config_repository = require 'toolshed.plugtool.repository'
 local num_discovered
+local num_added
+local plugins_added
 
 local function add_plugin(plugin)
     if type(plugin) == 'string' then plugin = {plugin} end
@@ -30,7 +32,12 @@ local function add_plugin(plugin)
         end
         plugin.username = username
         plugin.reponame = reponame
-        discoverqueue:enqueue(plugin)
+        plugin_url = plugin.username .. '/' .. plugin.reponame
+        if not plugins_added[plugin_url] then
+            plugins_added[plugin_url] = true
+            num_added = num_added + 1
+            discoverqueue:enqueue(plugin)
+        end
     else
         error("invalid plugin specification type: " .. type(plugin))
     end
@@ -42,8 +49,6 @@ local function discover(plugin, update)
     local url = plugin.username .. '/' .. plugin.reponame
     if not plugdefs[url] then
         local updated = false
-        num_discovered = num_discovered + 1
-        print("discovering plugin " .. num_discovered .. ": " .. url)
         local path = installconfig.install_path .. '/' .. plugin.username ..
                          '/opt/' .. plugin.reponame
         a.main_loop()
@@ -51,7 +56,12 @@ local function discover(plugin, update)
         local ret = assert(a.spawn_a {"mkdir", "-p", parentPath})
         if ret ~= 0 then error("failed to create path: " .. parentPath) end
 
+        local progress = math.floor((num_discovered / num_added) * 100)
+        num_discovered = num_discovered + 1
         if not folder_exists(path) then
+            print(
+                "[" .. progress .. "%] discovering plugin " .. num_discovered ..
+                    ": " .. url)
             local plugin_url = "https://github.com/" .. url .. ".git"
             ret = assert(a.spawn_lines_a({"git", "clone", plugin_url, path},
                                          function(x) print(x) end))
@@ -60,6 +70,8 @@ local function discover(plugin, update)
             end
             updated = true
         elseif update then
+            print("[" .. progress .. "%] updating plugin " .. num_discovered ..
+                      ": " .. url)
             local git_pull_output = {}
             ret = assert(a.spawn_lines_a({"git", "pull", cwd = path},
                                          function(x)
@@ -164,6 +176,8 @@ function M.setup(plugins, config)
     end
     config = config or require 'toolshed.plugtool.config'
     if plugins == nil then return end
+    num_added = 0
+    plugins_added = {}
     for _, plugin in ipairs(plugins) do add_plugin(plugin) end
     discover_loop(config)
 end
