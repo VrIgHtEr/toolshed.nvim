@@ -155,6 +155,7 @@ local function discover_loop(config)
                     end
                 end
             end
+            if any_updated then print("plugin setup complete!") end
             plugins_loaded = true
         elseif any_updated then
             a.main_loop()
