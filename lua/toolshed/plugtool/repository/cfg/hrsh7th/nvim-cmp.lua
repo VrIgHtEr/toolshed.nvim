@@ -11,6 +11,7 @@ return function(plugs, state)
     if state.path then table.insert(sources, {name = 'path'}) end
     local snippet = {}
     if state.vsnip then
+        print("detected vsnip")
         snippet.expand = function(args)
             vim.fn["vsnip#anonymous"](args.body)
         end
@@ -31,6 +32,7 @@ return function(plugs, state)
         sources = cmp.config.sources(sources)
     })
     if state.cmdline then
+        print('detected cmdline')
         sources = {}
         if state.buffer then table.insert(sources, {name = 'buffer'}) end
         cmp.setup.cmdline('/', {sources = sources})
@@ -40,8 +42,10 @@ return function(plugs, state)
         cmp.setup.cmdline(':', {sources = cmp.config.sources(sources)})
     end
     if state.nvim_lsp then
+        print('detected nvim_lsp')
         state.capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp
                                                                              .protocol
                                                                              .make_client_capabilities())
     end
+    print("nvim-cmp configuration complete")
 end
