@@ -28,7 +28,9 @@ return function(plugs, state)
             }),
             ['<CR>'] = cmp.mapping.confirm({select = true})
         },
-        sources = cmp.config.sources(sources)
+        -- sources = cmp.config.sources(sources)
+        sources = cmp.config.sources({{name = 'nvim_lsp'}, {name = 'vsnip'}},
+                                     {{name = 'buffer'}}, {{name = 'path'}})
     })
     if state.cmdline then
         sources = {}
