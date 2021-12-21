@@ -19,6 +19,7 @@ return function(plugs, state)
     end
     if state.cmdline then
         require('cmp').register_source('cmdline', require('cmp_cmdline').new())
+        table.insert(sources, {name = 'cmdline'})
     end
     if state.path then
         require('cmp').register_source('path', require('cmp_path').new())
