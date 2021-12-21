@@ -150,7 +150,7 @@ local function discover_loop(config, callback)
                 a.main_loop()
                 vim.cmd("packadd " .. x.reponame)
                 if x.config then
-                    local success = pcall(x.config, plugdefs, plugin_state)
+                    local success = x.config(plugdefs, plugin_state)
                     if not success then
                         print(
                             "ERROR: an error occurred while configuring plugin: " ..
