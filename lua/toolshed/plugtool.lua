@@ -149,6 +149,7 @@ local function discover_loop(config, callback)
                 print("loading: " .. x.username .. '/' .. x.reponame)
                 a.main_loop()
                 vim.cmd("packadd " .. x.reponame)
+                a.main_loop()
                 if x.config then
                     local success = pcall(x.config, plugdefs, plugin_state)
                     if not success then
