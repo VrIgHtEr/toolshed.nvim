@@ -4,6 +4,7 @@ local function count(tbl)
     return counter
 end
 return function(plugs)
+    for k, v in pairs(plugs) do print("['" .. k .. "'] = " .. vim.inspect(v)) end
     for k, v in pairs(plugs) do
         if not v.after then v.after = {} end
         local set = {}
@@ -49,8 +50,6 @@ return function(plugs)
         end
         for _, x in ipairs(removed) do v.after[x] = nil end
     end
-
-    for k, v in pairs(plugs) do print("['" .. k .. "'] = " .. vim.inspect(v)) end
 
     local edges = {}
     local remaining = 0
