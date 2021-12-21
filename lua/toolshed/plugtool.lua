@@ -147,11 +147,9 @@ local function discover_loop(config)
             end
             plugins_loaded = true
             print("Plugins loaded!")
-        else
-            if any_updated then
-                a.main_loop()
-                pcall(vim.api.nvim_exec, "quitall", true)
-            end
+        elseif any_updated then
+            a.main_loop()
+            pcall(vim.api.nvim_exec, "quitall", true)
         end
         discovering = false
     end)
