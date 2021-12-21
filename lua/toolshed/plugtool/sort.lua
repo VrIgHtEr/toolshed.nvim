@@ -4,7 +4,7 @@ local function count(tbl)
     return counter
 end
 
-local testdata = {
+--[[local testdata = {
     ['arkav/lualine-lsp-progress'] = {
         after = {"nvim-lualine/lualine.nvim", "neovim/nvim-lspconfig"},
         needs = {"nvim-lualine/lualine.nvim", "neovim/nvim-lspconfig"},
@@ -188,10 +188,8 @@ local testdata = {
         reponame = "nvim-lspconfig",
         username = "neovim"
     }
-}
+}]]
 local sort = function(plugs)
-    for k, v in pairs(plugs) do print("['" .. k .. "'] = " .. vim.inspect(v)) end
-
     for _, v in pairs(plugs) do
         local set = {}
         if v.before then
