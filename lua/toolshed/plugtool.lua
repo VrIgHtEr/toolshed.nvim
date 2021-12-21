@@ -116,7 +116,8 @@ local function discover(plugin, update)
         print("updated: " .. url)
         print("return:  " .. ret)
         print("output:  " .. git_pull_output)
-        return false
+        local updated = git_pull_output ~= 'Already up to date.'
+        return updated
     else
         return false
     end
