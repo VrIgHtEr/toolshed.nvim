@@ -69,10 +69,6 @@ local function discover(plugin, update)
                 error("failed to check for updates: " .. url)
             end
             git_pull_output = table.concat(git_pull_output, '\n')
-            print(
-                "-------------------------------------------------------------")
-            print("updated: " .. ret .. ": " .. url)
-            print("output:  " .. git_pull_output)
             updated = git_pull_output ~= 'Already up to date.'
         end
         local cfgpath = path .. '/' .. config_filename
