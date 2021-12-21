@@ -9,13 +9,14 @@ return function(plugs, state)
     if state.vsnip then table.insert(sources, {name = 'vsnip'}) end
     if state.buffer then table.insert(sources, {name = 'buffer'}) end
     if state.path then table.insert(sources, {name = 'path'}) end
-
+    local snippet = {}
+    if state.vsnip then
+        snippet.expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+        end
+    end
     cmp.setup({
-        snippet = {
-            expand = function(args)
-                vim.fn["vsnip#anonymous"](args.body)
-            end
-        },
+        snippet = snippet,
         mapping = {
             ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), {'i', 'c'}),
             ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), {'i', 'c'}),
@@ -34,7 +35,7 @@ return function(plugs, state)
         if state.buffer then table.insert(sources, {name = 'buffer'}) end
         cmp.setup.cmdline('/', {sources = sources})
 
-        sources = {"cmdline"}
+        sources = {{name = "cmdline"}}
         if state.path then table.insert(sources, {name = 'path'}) end
         cmp.setup.cmdline(':', {sources = cmp.config.sources(sources)})
     end

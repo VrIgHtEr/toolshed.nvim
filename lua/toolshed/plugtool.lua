@@ -65,16 +65,11 @@ local function discover(plugin)
         end))
         local config = nil
         if ret == 0 then
-            print("LOADED: " .. cfgpath)
             -- plugin specifies its own configuration
             local success
             success, config = pcall(loadstring(table.concat(lines, "\n")))
             if not success or type(config) ~= "table" then
-                print("PARSE_ERROR: " .. cfgpath)
                 config = nil
-            else
-                print("PARSE_SUCCESS: " .. cfgpath)
-                print(vim.inspect(config))
             end
         end
         if not config then
