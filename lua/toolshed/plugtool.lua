@@ -135,11 +135,13 @@ local function discover_loop(config)
     installconfig = config
     a.run(function()
         local any_updated = false
+        local num_updated = 0
         num_discovered = 0
         plugdefs = {}
         while discoverqueue:size() > 0 do
-            any_updated = discover(discoverqueue:dequeue(), plugins_loaded) or
-                              any_updated
+            local updated = discover(discoverqueue:dequeue(), plugins_loaded)
+            if updated then num_updated = num_updated + 1 end
+            any_updated = updated or any_updated
         end
         if not plugins_loaded then
             local state = {}
@@ -159,6 +161,7 @@ local function discover_loop(config)
             plugins_loaded = true
         elseif any_updated then
             a.main_loop()
+            print("updated " .. num_updated .. " plugins")
             pcall(vim.api.nvim_exec, "quitall", true)
         else
             print("All plugins up to date")
