@@ -161,8 +161,11 @@ local function discover_loop(config)
             plugins_loaded = true
         elseif any_updated then
             a.main_loop()
-            print("updated " .. num_updated .. " plugins")
-            pcall(vim.api.nvim_exec, "quitall", true)
+            local success = pcall(vim.api.nvim_exec, "quitall", true)
+            if not success then
+                print("updated " .. num_updated ..
+                          " plugins. Please restart neovim")
+            end
         else
             print("All plugins up to date")
         end
