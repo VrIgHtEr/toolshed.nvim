@@ -98,7 +98,6 @@ local function discover(plugin, update)
         if config.needs ~= nil then
             for _, x in ipairs(config.needs) do add_plugin(x) end
         end
-        a.spawn_a {"bash", "-c", "echo success > ~/dbgout"}
         return updated
     elseif update then
         local path = installconfig.install_path .. '/' .. plugin.username ..
@@ -134,8 +133,8 @@ local function discover_loop(config)
         num_discovered = 0
         plugdefs = {}
         while discoverqueue:size() > 0 do
-            any_updated = any_updated or
-                              discover(discoverqueue:dequeue(), plugins_loaded)
+            any_updated = discover(discoverqueue:dequeue(), plugins_loaded) or
+                              any_updated
         end
         print("discovered " .. num_discovered .. ' plugins')
         if not plugins_loaded then
