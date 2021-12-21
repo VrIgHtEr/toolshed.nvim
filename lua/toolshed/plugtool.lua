@@ -71,8 +71,7 @@ local function discover(plugin, update)
             git_pull_output = table.concat(git_pull_output, '\n')
             print(
                 "-------------------------------------------------------------")
-            print("updated: " .. url)
-            print("return:  " .. ret)
+            print("updated: " .. ret .. ": " .. url)
             print("output:  " .. git_pull_output)
             updated = git_pull_output ~= 'Already up to date.'
         end
