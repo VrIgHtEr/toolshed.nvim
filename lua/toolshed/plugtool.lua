@@ -142,10 +142,8 @@ local function discover_loop(config)
                               any_updated
         end
         if not plugins_loaded then
-            print("discovered " .. num_discovered .. ' plugins')
             local state = {}
             for _, x in ipairs(require 'toolshed.plugtool.sort'(plugdefs)) do
-                print("Loading plugin: " .. x.username .. '/' .. x.reponame)
                 a.main_loop()
                 vim.cmd("packadd " .. x.reponame)
                 if x.config then
@@ -158,7 +156,6 @@ local function discover_loop(config)
                 end
             end
             plugins_loaded = true
-            print("Plugins loaded!")
         elseif any_updated then
             a.main_loop()
             pcall(vim.api.nvim_exec, "quitall", true)
