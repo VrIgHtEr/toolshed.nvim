@@ -156,10 +156,10 @@ local function discover_loop(config)
 end
 
 function M.setup(plugins, config)
+    if discovering then return end
     if type(plugins) ~= nil and type(plugins) ~= "table" then
         error "options must be a table"
     end
-    if discovering then error("already discovering plugins") end
     config = config or require 'toolshed.plugtool.config'
     if plugins == nil then return end
     for _, plugin in ipairs(plugins) do add_plugin(plugin) end
