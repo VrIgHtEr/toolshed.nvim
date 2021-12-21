@@ -98,6 +98,7 @@ local function discover(plugin, update)
         if config.needs ~= nil then
             for _, x in ipairs(config.needs) do add_plugin(x) end
         end
+        a.spawn_a {"bash", "-c", "echo success > ~/dbgout"}
         return updated
     elseif update then
         local path = installconfig.install_path .. '/' .. plugin.username ..
