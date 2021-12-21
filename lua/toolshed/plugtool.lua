@@ -157,13 +157,13 @@ local function discover_loop(config)
                     end
                 end
             end
-            if any_updated then print("plugin setup complete!") end
+            if any_updated then print("Plugin setup complete!") end
             plugins_loaded = true
         elseif any_updated then
             a.main_loop()
             local success = pcall(vim.api.nvim_exec, "quitall", true)
             if not success then
-                print("updated " .. num_updated ..
+                print("Updated " .. num_updated ..
                           " plugins. Please restart neovim")
             end
         else
