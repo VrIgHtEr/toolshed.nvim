@@ -1,4 +1,4 @@
---[[local testdata = {
+local testdata = {
     ['arkav/lualine-lsp-progress'] = {
         after = {"nvim-lualine/lualine.nvim", "neovim/nvim-lspconfig"},
         needs = {"nvim-lualine/lualine.nvim", "neovim/nvim-lspconfig"},
@@ -182,7 +182,8 @@
         reponame = "nvim-lspconfig",
         username = "neovim"
     }
-}]] local sort = function(plugs)
+}
+local sort = function(plugs)
     for _, v in pairs(plugs) do
         local set = {}
         if v.before then
@@ -229,7 +230,7 @@
     local remaining = 0
     local sorted = {}
     for _, v in pairs(plugs) do
-        if not pairs(v.before)() then
+        if not pairs(v.before)(v.before) then
             table.insert(edges, v)
         else
             remaining = remaining + 1
@@ -242,7 +243,7 @@
         for n in pairs(edge.after) do
             local plug = plugs[n]
             plug.before[url] = nil
-            if not pairs(plug.before)() then
+            if not pairs(plug.before)(plug.before) then
                 remaining = remaining - 1
                 table.insert(edges, plug)
             end
@@ -255,4 +256,5 @@
     end
     return sorted
 end
+sort(testdata)
 return sort
