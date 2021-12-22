@@ -73,13 +73,16 @@ local function discover(plugin, update)
         local updated = false
         local path = installconfig.install_path .. '/' .. plugin.username ..
                          '/opt/' .. plugin.reponame
-        local parentPath = vim.fn.fnamemodify(path, ":p:h:h")
-        local ret = assert(a.spawn_a {"mkdir", "-p", parentPath})
-        if ret ~= 0 then error("failed to create path: " .. parentPath) end
-
+        local ret
         local progress = math.floor((num_discovered / num_added) * 100)
         num_discovered = num_discovered + 1
         if not folder_exists(path) then
+            a.main_loop()
+            local parentPath = vim.fn.fnamemodify(path, ":p:h:h")
+            ret = assert(a.spawn_a {"mkdir", "-p", parentPath})
+            if ret ~= 0 then
+                error("failed to create path: " .. parentPath)
+            end
             print(
                 "[" .. progress .. "%] discovering plugin " .. num_discovered ..
                     ": " .. url)
