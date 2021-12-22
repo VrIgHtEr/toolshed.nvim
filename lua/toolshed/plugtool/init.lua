@@ -168,7 +168,9 @@ local function discover_loop(config, callback)
         if not plugins_loaded then
             plugin_state = {}
             for _, x in ipairs(require 'toolshed.plugtool.sort'(plugdefs)) do
-                print("loading: " .. x.username .. '/' .. x.reponame)
+                if any_updated then
+                    print("loading: " .. x.username .. '/' .. x.reponame)
+                end
                 vim.cmd("packadd " .. x.reponame)
                 if x.config then
                     local success = pcall(x.config, plugdefs, plugin_state)
