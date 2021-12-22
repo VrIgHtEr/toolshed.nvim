@@ -1,9 +1,3 @@
-local function count(tbl)
-    local counter = 0
-    for _ in pairs(tbl) do counter = counter + 1 end
-    return counter
-end
-
 --[[local testdata = {
     ['arkav/lualine-lsp-progress'] = {
         after = {"nvim-lualine/lualine.nvim", "neovim/nvim-lspconfig"},
@@ -188,8 +182,7 @@ end
         reponame = "nvim-lspconfig",
         username = "neovim"
     }
-}]]
-local sort = function(plugs)
+}]] local sort = function(plugs)
     for _, v in pairs(plugs) do
         local set = {}
         if v.before then
@@ -236,7 +229,7 @@ local sort = function(plugs)
     local remaining = 0
     local sorted = {}
     for _, v in pairs(plugs) do
-        if count(v.before) == 0 then
+        if not pairs(v.before)() then
             table.insert(edges, v)
         else
             remaining = remaining + 1
@@ -249,7 +242,7 @@ local sort = function(plugs)
         for n in pairs(edge.after) do
             local plug = plugs[n]
             plug.before[url] = nil
-            if count(plug.before) == 0 then
+            if not pairs(plug.before)() then
                 remaining = remaining - 1
                 table.insert(edges, plug)
             end
