@@ -43,7 +43,29 @@ local function add_plugin(plugin)
     end
 end
 
-local function folder_exists(path) return 0 == assert(a.spawn_a {"ls", path}) end
+local function read_file(path)
+    local fd = assert(vim.loop.fs_open(path, "r", 438))
+    if not fd then return nil, fd end
+    local stat = assert(vim.loop.fs_fstat(fd))
+    if not stat then
+        vim.loop.fs_close(fd)
+        return nil, stat
+    end
+    local data = assert(vim.loop.fs_read(fd, stat.size, 0))
+    if not data then
+        vim.loop.fs_close(fd)
+        return nil, data
+    end
+    vim.loop.fs_close(fd)
+    return data
+end
+
+local function folder_exists(path)
+    local dir = vim.loop.fs_opendir(path, nil, 1)
+    if not dir then return false end
+    vim.loop.fs_closedir(dir)
+    return true
+end
 
 local function discover(plugin, update)
     local url = plugin.username .. '/' .. plugin.reponame
@@ -84,15 +106,12 @@ local function discover(plugin, update)
             updated = git_pull_output ~= 'Already up to date.'
         end
         local cfgpath = path .. '/' .. config_filename
-        local lines = {}
-        ret = assert(a.spawn_lines_a({"cat", cfgpath}, function(line)
-            table.insert(lines, line)
-        end))
+        local lines = read_file(cfgpath)
         local config = nil
-        if ret == 0 then
+        if lines then
             -- plugin specifies its own configuration
             local success
-            success, config = pcall(loadstring(table.concat(lines, "\n")))
+            success, config = pcall(loadstring(lines))
             if not success or type(config) ~= "table" then
                 config = nil
             end
