@@ -67,7 +67,7 @@ local sort = function(plugins)
     local sorted = {}
     while #edges > 0 do
         local edge = table.remove(edges)
-        table.insert(sorted, edge.value)
+        table.insert(sorted, edge)
         for _, plug in pairs(edge.after) do
             plug.before[edge.url] = nil
             if not pairs(plug.before)(plug.before) then
@@ -75,6 +75,8 @@ local sort = function(plugins)
                 table.insert(edges, plug)
             end
         end
+        edge.before = nil
+        edge.after = nil
     end
     if remaining ~= 0 then error "loops detected in dependency graph" end
     for i = 1, math.floor(#sorted / 2) do
