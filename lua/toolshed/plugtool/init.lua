@@ -3,7 +3,6 @@ local a = require 'toolshed.async'
 local plugdefs = {}
 local discoverqueue = require'toolshed.util.generic.queue'.new()
 local discovering = false
-local installconfig = {}
 local config_filename = "plugtool_cfg.lua"
 local config_repository = require 'toolshed.plugtool.repository'
 local num_discovered
@@ -67,12 +66,14 @@ local function folder_exists(path)
     return true
 end
 
+local install_path = vim.fn.stdpath("data") .. "/site/pack"
+
 local function discover(plugin, update)
     local url = plugin.username .. '/' .. plugin.reponame
     if not plugdefs[url] then
         local updated = false
-        local path = installconfig.install_path .. '/' .. plugin.username ..
-                         '/opt/' .. plugin.reponame
+        local path = install_path .. '/' .. plugin.username .. '/opt/' ..
+                         plugin.reponame
         local ret
         local progress = math.floor((num_discovered / num_added) * 100)
         num_discovered = num_discovered + 1
@@ -151,10 +152,9 @@ end
 local plugins_loaded = false
 local plugin_state
 
-local function discover_loop(config, callback)
+local function discover_loop(callback)
     if discovering then return end
     discovering = true
-    installconfig = config
     a.run(function()
         local any_updated = false
         local num_updated = 0
@@ -205,12 +205,11 @@ function M.setup(plugins, callback)
     if type(plugins) ~= nil and type(plugins) ~= "table" then
         error "options must be a table"
     end
-    local config = require 'toolshed.plugtool.config'
     if plugins == nil then return end
     num_added = 0
     plugins_added = {}
     for _, plugin in ipairs(plugins) do add_plugin(plugin) end
-    discover_loop(config, callback)
+    discover_loop(callback)
 end
 
 function M.state(plugin)
