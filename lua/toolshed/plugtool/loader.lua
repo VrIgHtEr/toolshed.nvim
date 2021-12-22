@@ -160,7 +160,30 @@ local function create_entries(plugins)
     return plugs
 end
 
-local function setup_configurations(entries) end
+local function setup_configurations(entries)
+    for _, x in ipairs(entries) do
+        for _, v in ipairs(x.config) do
+            if type(v) == "table" then
+                if v.after then
+                    if not v.after.config.post then
+                        v.after.config.post = {}
+                    end
+                    table.insert(v.after.config.post, v[1])
+                elseif v.before then
+                    if not v.before.config.pre then
+                        v.before.config.pre = {}
+                    end
+                    table.insert(v.before.config.pre, v[1])
+                end
+            end
+        end
+        for i = #x.config, 2, -1 do table.remove(x.config, i) end
+        if x.config[1] ~= nil and type(x.config[1]) ~= "function" then
+            table.remove(x.config, 1)
+        end
+    end
+    return entries
+end
 
 local sort = function(plugins)
     plugins = create_entries(plugins)
@@ -191,7 +214,7 @@ local sort = function(plugins)
     for i = 1, math.floor(#sorted / 2) do
         sorted[i], sorted[#sorted - i + 1] = sorted[#sorted - i + 1], sorted[i]
     end
-    return sorted
+    return setup_configurations(sorted)
 end
 
 return sort
