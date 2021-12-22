@@ -5,34 +5,13 @@ return function(plugs, state)
     if state['hrsh7th/nvim-cmp'] == nil then state['hrsh7th/nvim-cmp'] = {} end
     state = state['hrsh7th/nvim-cmp']
     local sources = {}
-    if state.nvim_lsp then
-        require('cmp_nvim_lsp').setup()
-        table.insert(sources, {name = 'nvim_lsp'})
-    end
-    if state.vsnip then
-        require'cmp'.register_source('vsnip', require'cmp_vsnip'.new())
-        table.insert(sources, {name = 'vsnip'})
-    end
-    if state.buffer then
-        require('cmp').register_source('buffer', require('cmp_buffer'))
-        table.insert(sources, {name = 'buffer'})
-    end
-    if state.cmdline then
-        require('cmp').register_source('cmdline', require('cmp_cmdline').new())
-        table.insert(sources, {name = 'cmdline'})
-    end
-    if state.path then
-        require('cmp').register_source('path', require('cmp_path').new())
-        table.insert(sources, {name = 'path'})
-    end
-    local snippet = {}
-    if state.vsnip then
-        snippet.expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body)
-        end
-    end
+    if state.nvim_lsp then table.insert(sources, {name = 'nvim_lsp'}) end
+    if state.vsnip then table.insert(sources, {name = 'vsnip'}) end
+    if state.buffer then table.insert(sources, {name = 'buffer'}) end
+    if state.cmdline then table.insert(sources, {name = 'cmdline'}) end
+    if state.path then table.insert(sources, {name = 'path'}) end
     cmp.setup({
-        snippet = snippet,
+        snippet = state.snippet,
         mapping = {
             ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), {'i', 'c'}),
             ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), {'i', 'c'}),
