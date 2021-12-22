@@ -41,7 +41,7 @@ return {
     },
     ['rcarriga/nvim-notify'] = {
         needs = {"nvim-telescope/telescope.nvim"},
-        after = {'nvim-telescope/telescope.nvim'}
+        after = {'nvim-telescope/telescope.nvim', "ray-x/aurora"}
     },
     ['mfussenegger/nvim-jdtls'] = {
         needs = {"mfussenegger/nvim-dap"},
