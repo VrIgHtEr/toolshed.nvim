@@ -167,6 +167,7 @@ local function discover_loop(config, callback)
         end
         if not plugins_loaded then
             plugin_state = {}
+            if any_updated then a.main_loop() end
             for _, x in ipairs(require 'toolshed.plugtool.sort'(plugdefs)) do
                 if any_updated then
                     print("loading: " .. x.username .. '/' .. x.reponame)
