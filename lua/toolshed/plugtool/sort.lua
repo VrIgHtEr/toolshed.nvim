@@ -1,6 +1,11 @@
-local sort = function(plugs)
-    local pl = {}
-    for k, v in pairs(plugs) do
+local MT = {
+    __tostring = function(x)
+        return x.value.username .. '/' .. x.value.reponame
+    end
+}
+local sort = function(plugins)
+    local plugs = {}
+    for k, v in pairs(plugins) do
         local entry = {}
         local set = {}
         if v.before then
@@ -11,9 +16,10 @@ local sort = function(plugs)
         if v.after then for _, d in ipairs(v.after) do set[d] = true end end
         entry.after = set
         entry.value = v
-        pl[k] = entry
+        setmetatable(entry, MT)
+        entry.url = tostring(entry)
+        plugs[k] = entry
     end
-    plugs = pl
     for k, v in pairs(plugs) do
         local removed = {}
         for x in pairs(v.before) do
@@ -45,9 +51,12 @@ local sort = function(plugs)
         end
         for _, x in ipairs(removed) do v.after[x] = nil end
     end
+    for _, plug in pairs(plugs) do
+        for k in pairs(plug.before) do plug.before[k] = plugs[k] end
+        for k in pairs(plug.after) do plug.after[k] = plugs[k] end
+    end
     local edges = {}
     local remaining = 0
-    local sorted = {}
     for _, v in pairs(plugs) do
         if not pairs(v.before)(v.before) then
             table.insert(edges, v)
@@ -55,25 +64,22 @@ local sort = function(plugs)
             remaining = remaining + 1
         end
     end
+    local sorted = {}
     while #edges > 0 do
         local edge = table.remove(edges)
-        table.insert(sorted, edge)
-        local url = edge.value.username .. '/' .. edge.value.reponame
-        for n in pairs(edge.after) do
-            local plug = plugs[n]
-            plug.before[url] = nil
+        table.insert(sorted, edge.value)
+        for _, plug in pairs(edge.after) do
+            plug.before[edge.url] = nil
             if not pairs(plug.before)(plug.before) then
                 remaining = remaining - 1
                 table.insert(edges, plug)
             end
         end
     end
-    for _, v in pairs(plugs) do v.before = nil end
     if remaining ~= 0 then error "loops detected in dependency graph" end
     for i = 1, math.floor(#sorted / 2) do
         sorted[i], sorted[#sorted - i + 1] = sorted[#sorted - i + 1], sorted[i]
     end
-    for i = 1, #sorted do sorted[i] = sorted[i].value end
     return sorted
 end
 return sort
