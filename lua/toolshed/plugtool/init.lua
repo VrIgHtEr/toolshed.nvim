@@ -44,14 +44,14 @@ local function add_plugin(plugin)
 end
 
 local function read_file(path)
-    local fd = assert(vim.loop.fs_open(path, "r", 438))
+    local fd = vim.loop.fs_open(path, "r", 438)
     if not fd then return nil, fd end
-    local stat = assert(vim.loop.fs_fstat(fd))
+    local stat = vim.loop.fs_fstat(fd)
     if not stat then
         vim.loop.fs_close(fd)
         return nil, stat
     end
-    local data = assert(vim.loop.fs_read(fd, stat.size, 0))
+    local data = vim.loop.fs_read(fd, stat.size, 0)
     if not data then
         vim.loop.fs_close(fd)
         return nil, data
