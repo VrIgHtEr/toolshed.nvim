@@ -1,6 +1,7 @@
 local M = {}
 local a = require 'toolshed.async'
 local plugdefs = {}
+local display
 local discoverqueue = require'toolshed.util.generic.queue'.new()
 local discovering = false
 local config_filename = "plugtool_cfg.lua"
@@ -34,6 +35,7 @@ local function add_plugin(plugin)
         plugin.reponame = reponame
         plugin_url = plugin.username .. '/' .. plugin.reponame
         if not plugins_added[plugin_url] then
+            display.displayer(plugin_url) "Queued"
             plugins_added[plugin_url] = true
             num_added = num_added + 1
             discoverqueue:enqueue(plugin)
@@ -69,7 +71,7 @@ end
 
 local install_path = vim.fn.stdpath("data") .. "/site/pack"
 
-local function discover(display, plugin, update)
+local function discover(plugin, update)
     local url = plugin.username .. '/' .. plugin.reponame
     if not plugdefs[url] then
         local updated = false
@@ -177,10 +179,8 @@ local function discover_loop(callback)
         local num_updated = 0
         num_discovered = 0
         plugdefs = {}
-        local display = require'toolshed.plugtool.display'.new()
         while discoverqueue:size() > 0 do
-            local updated = discover(display, discoverqueue:dequeue(),
-                                     plugins_loaded)
+            local updated = discover(discoverqueue:dequeue(), plugins_loaded)
             if updated then num_updated = num_updated + 1 end
             any_updated = updated or any_updated
         end
@@ -223,6 +223,7 @@ function M.setup(plugins, callback)
     if plugins == nil then return end
     num_added = 0
     plugins_added = {}
+    display = require'toolshed.plugtool.display'.new()
     for _, plugin in ipairs(plugins) do add_plugin(plugin) end
     discover_loop(callback)
 end
