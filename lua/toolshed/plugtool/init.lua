@@ -167,11 +167,19 @@ local function discover_loop(callback)
             any_updated = updated or any_updated
         end
         if not plugins_loaded then
-            if any_updated then a.main_loop() end
-            loader(plugdefs)
-            if any_updated then print("Plugin setup complete!") end
-            plugins_loaded = true
-            if type(callback) == "function" then callback(loader()) end
+            if any_updated then
+                a.main_loop()
+                local success = pcall(vim.api.nvim_exec, "quitall", true)
+                if not success then
+                    print("Plugin installation complete. Please restart neovim")
+                end
+            else
+                loader(plugdefs)
+                plugins_loaded = true
+                if type(callback) == "function" then
+                    callback(loader())
+                end
+            end
         elseif any_updated then
             a.main_loop()
             local success = pcall(vim.api.nvim_exec, "quitall", true)
