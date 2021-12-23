@@ -80,10 +80,12 @@ local function discover(display, plugin, update)
         num_discovered = num_discovered + 1
         local displayer = display.displayer(url)
         if not folder_exists(path) then
+            displayer("cloning")
             a.main_loop()
             local parentPath = vim.fn.fnamemodify(path, ":p:h:h")
             ret = assert(a.spawn_a {"mkdir", "-p", parentPath})
             if ret ~= 0 then
+                displayer("Failed to create directory")
                 error("failed to create path: " .. parentPath)
             end
             print(
@@ -92,8 +94,10 @@ local function discover(display, plugin, update)
             local plugin_url = "https://github.com/" .. url .. ".git"
             ret = git.clone_a(plugin_url, {dest = path, progress = displayer})
             if ret ~= 0 then
+                displayer("Failed to clone")
                 error("failed to clone git repository: " .. plugin_url)
             end
+            displayer "cloned successfully!"
             updated = true
         elseif update then
             print("[" .. progress .. "%] updating plugin " .. num_discovered ..
