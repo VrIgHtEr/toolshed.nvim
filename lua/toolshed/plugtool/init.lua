@@ -125,6 +125,8 @@ local function discover(plugin, update)
             else
                 displayer "Up to date!"
             end
+        else
+            displayer "Discovered"
         end
         local cfgpath = path .. '/' .. config_filename
         local lines = read_file(cfgpath)
