@@ -105,23 +105,18 @@ local function discover(plugin, update)
             print("[" .. progress .. "%] updating plugin " .. num_discovered ..
                       ": " .. url)
             displayer "Updating"
-            ret = assert(a.spawn_lines_a({
-                "git",
-                "pull",
-                "--progress",
-                cwd = path
-            }, nil, function(line)
-                if (line) then
-                    updated = true
-                    displayer(line)
-                end
-            end))
-            if ret ~= 0 then
+            ret = git.update_a(path, {progress = displayer})
+            if not ret then
                 displayer "Failed to check for updates"
                 error("failed to check for updates: " .. url)
             end
-            if updated then
-                displayer "Updated!"
+
+            local amt = #ret
+            if amt > 0 then
+                local str = "Updated with " .. amt .. 'commit'
+                if amt > 1 then str = str .. 's' end
+                str = str .. '!'
+                displayer(str)
             else
                 displayer "Up to date!"
             end
