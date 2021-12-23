@@ -217,4 +217,47 @@ local sort = function(plugins)
     return setup_configurations(sorted)
 end
 
-return sort
+local plugdefs
+local plugin_state
+
+local function configure_plugin(entry)
+    local configspec = entry.config
+    if configspec.pre then
+        for i, v in ipairs(configspec.pre) do
+            local success = pcall(v, plugdefs, plugin_state)
+            if not success then
+                print(
+                    "ERROR: an error occurred while performing plugin preconfiguration " ..
+                        i .. " for " .. entry.url)
+            end
+        end
+    end
+    if configspec[1] then
+        local success = pcall(configspec[1], plugdefs, plugin_state)
+        if not success then
+            print(
+                "ERROR: an error occurred while performing plugin configuration for " ..
+                    entry.url)
+        end
+    end
+    if configspec.post then
+        for i, v in ipairs(configspec.post) do
+            local success = pcall(v, plugdefs, plugin_state)
+            if not success then
+                print(
+                    "ERROR: an error occurred while performing plugin postconfiguration " ..
+                        i .. " for " .. entry.url)
+            end
+        end
+    end
+end
+
+return function(plugins)
+    if plugins == nil then return plugin_state end
+    plugdefs = plugins
+    plugin_state = {}
+    for _, x in ipairs(sort(plugins)) do
+        vim.cmd("packadd " .. x.value.reponame)
+        configure_plugin(x)
+    end
+end

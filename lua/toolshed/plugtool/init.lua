@@ -150,39 +150,8 @@ local function discover(plugin, update)
 end
 
 local plugins_loaded = false
-local plugin_state
 
-local function configure_plugin(entry)
-    local configspec = entry.config
-    if configspec.pre then
-        for i, v in ipairs(configspec.pre) do
-            local success = pcall(v, plugdefs, plugin_state)
-            if not success then
-                print(
-                    "ERROR: an error occurred while performing plugin preconfiguration " ..
-                        i .. " for " .. entry.url)
-            end
-        end
-    end
-    if configspec[1] then
-        local success = pcall(configspec[1], plugdefs, plugin_state)
-        if not success then
-            print(
-                "ERROR: an error occurred while performing plugin configuration for " ..
-                    entry.url)
-        end
-    end
-    if configspec.post then
-        for i, v in ipairs(configspec.post) do
-            local success = pcall(v, plugdefs, plugin_state)
-            if not success then
-                print(
-                    "ERROR: an error occurred while performing plugin postconfiguration " ..
-                        i .. " for " .. entry.url)
-            end
-        end
-    end
-end
+local loader = require 'toolshed.plugtool.loader'
 
 local function discover_loop(callback)
     if discovering then return end
@@ -198,18 +167,11 @@ local function discover_loop(callback)
             any_updated = updated or any_updated
         end
         if not plugins_loaded then
-            plugin_state = {}
             if any_updated then a.main_loop() end
-            for _, x in ipairs(require 'toolshed.plugtool.loader'(plugdefs)) do
-                if any_updated then print("loading: " .. x.url) end
-                vim.cmd("packadd " .. x.value.reponame)
-                configure_plugin(x)
-            end
+            loader(plugdefs)
             if any_updated then print("Plugin setup complete!") end
             plugins_loaded = true
-            if type(callback) == "function" then
-                callback(plugin_state)
-            end
+            if type(callback) == "function" then callback(loader()) end
         elseif any_updated then
             a.main_loop()
             local success = pcall(vim.api.nvim_exec, "quitall", true)
@@ -237,6 +199,7 @@ function M.setup(plugins, callback)
 end
 
 function M.state(plugin)
+    local plugin_state = loader()
     if type(plugin) == "nil" then
         return plugin_state
     elseif type(plugin) ~= "string" then
