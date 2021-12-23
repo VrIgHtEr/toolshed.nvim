@@ -191,9 +191,12 @@ local function discover_loop(callback)
                     if not plugins_loaded then
                         plugins_loaded = true
                         for _, v in ipairs(found) do
-                            plugdefs[v.username .. '/' .. v.reponame] = nil
+                            local plugname = v.username .. '/' .. v.reponame
+                            plugdefs[plugname] = nil
+                            plugins_added[plugname] = nil
                             add_plugin(v)
                         end
+                        found = {}
                     end
                 end
             elseif not firstupdated then
