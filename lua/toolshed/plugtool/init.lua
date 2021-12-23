@@ -177,13 +177,33 @@ local function discover_loop(callback)
         local num_updated = 0
         num_discovered = 0
         plugdefs = {}
+
+        local firstupdated = false
+        local found = {}
+
         while discoverqueue:size() > 0 do
-            local updated = discover(discoverqueue:dequeue(), plugins_loaded)
-            if updated then num_updated = num_updated + 1 end
+            local plug = discoverqueue:dequeue()
+            local updated = discover(plug, plugins_loaded)
+            if updated then
+                num_updated = num_updated + 1
+                if not firstupdated then
+                    firstupdated = true
+                    if not plugins_loaded then
+                        plugins_loaded = true
+                        for _, v in ipairs(found) do
+                            plugdefs[v.usernamename .. '/' .. v.reponame] = nil
+                            add_plugin(v)
+                        end
+                    end
+                end
+            elseif not firstupdated then
+                table.insert(found, plug)
+            end
             any_updated = updated or any_updated
         end
         if not plugins_loaded then
             if any_updated then
+                plugins_loaded = true
                 print("Plugin installation complete. Please restart neovim")
             else
                 display.close()
@@ -194,8 +214,10 @@ local function discover_loop(callback)
                 end
             end
         elseif any_updated then
+            plugins_loaded = true
             print("Updated " .. num_updated .. " plugins. Please restart neovim")
         else
+            plugins_loaded = true
             a.main_loop()
             display.close()
             print("All plugins up to date")
