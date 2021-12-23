@@ -68,7 +68,7 @@ end
 
 local install_path = vim.fn.stdpath("data") .. "/site/pack"
 
-local function discover(plugin, update)
+local function discover(display, plugin, update)
     local url = plugin.username .. '/' .. plugin.reponame
     if not plugdefs[url] then
         local updated = false
@@ -77,6 +77,8 @@ local function discover(plugin, update)
         local ret
         local progress = math.floor((num_discovered / num_added) * 100)
         num_discovered = num_discovered + 1
+        local displayer = display.displayer(url)
+        displayer(url)
         if not folder_exists(path) then
             a.main_loop()
             local parentPath = vim.fn.fnamemodify(path, ":p:h:h")
@@ -161,8 +163,10 @@ local function discover_loop(callback)
         local num_updated = 0
         num_discovered = 0
         plugdefs = {}
+        local display = require'toolshed.plugtool.display'.new()
         while discoverqueue:size() > 0 do
-            local updated = discover(discoverqueue:dequeue(), plugins_loaded)
+            local updated = discover(display, discoverqueue:dequeue(),
+                                     plugins_loaded)
             if updated then num_updated = num_updated + 1 end
             any_updated = updated or any_updated
         end
@@ -174,6 +178,7 @@ local function discover_loop(callback)
                     print("Plugin installation complete. Please restart neovim")
                 end
             else
+                display.close()
                 loader(plugdefs)
                 plugins_loaded = true
                 if type(callback) == "function" then
