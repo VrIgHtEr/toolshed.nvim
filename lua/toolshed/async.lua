@@ -103,7 +103,7 @@ end
 -- libuv process functions
 ----------------------------------------------------------------------------------
 
-function a.spawn_lines_async(var, callback)
+local function wrap_spawn_callback(callback)
     local builder = {}
     local function emit()
         if callback then callback(table.concat(builder)) end
@@ -118,7 +118,7 @@ function a.spawn_lines_async(var, callback)
             table.insert(builder, c)
         end
     end
-    var.stdout = function(err, data)
+    return function(err, data)
         if finished or err then return end
         if data then
             for c in stream(data) do processChar(c) end
@@ -128,6 +128,11 @@ function a.spawn_lines_async(var, callback)
             if #builder > 0 then emit() end
         end
     end
+end
+
+function a.spawn_lines_async(var, cb_stdout, cb_stderr)
+    if cb_stdout then var.stdout = wrap_spawn_callback(cb_stdout) end
+    if cb_stderr then var.stderr = wrap_spawn_callback(cb_stderr) end
     return a.spawn_async(var)
 end
 
