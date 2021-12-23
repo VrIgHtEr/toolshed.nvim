@@ -8,6 +8,7 @@ local config_repository = require 'toolshed.plugtool.repository'
 local num_discovered
 local num_added
 local plugins_added
+local git = require 'toolshed.git'
 
 local function add_plugin(plugin)
     if type(plugin) == 'string' then plugin = {plugin} end
@@ -78,7 +79,6 @@ local function discover(display, plugin, update)
         local progress = math.floor((num_discovered / num_added) * 100)
         num_discovered = num_discovered + 1
         local displayer = display.displayer(url)
-        displayer(url)
         if not folder_exists(path) then
             a.main_loop()
             local parentPath = vim.fn.fnamemodify(path, ":p:h:h")
@@ -90,8 +90,7 @@ local function discover(display, plugin, update)
                 "[" .. progress .. "%] discovering plugin " .. num_discovered ..
                     ": " .. url)
             local plugin_url = "https://github.com/" .. url .. ".git"
-            ret = assert(a.spawn_lines_a({"git", "clone", plugin_url, path},
-                                         function(x) print(x) end))
+            ret = git.clone_a(plugin_url, {dest = path, progress = displayer})
             if ret ~= 0 then
                 error("failed to clone git repository: " .. plugin_url)
             end
@@ -103,7 +102,7 @@ local function discover(display, plugin, update)
             ret = assert(a.spawn_lines_a({"git", "pull", cwd = path},
                                          function(x)
                 table.insert(git_pull_output, x)
-            end))
+            end, displayer))
             if ret ~= 0 then
                 error("failed to check for updates: " .. url)
             end
@@ -193,6 +192,8 @@ local function discover_loop(callback)
                           " plugins. Please restart neovim")
             end
         else
+            a.main_loop()
+            display.close()
             print("All plugins up to date")
         end
         discovering = false
