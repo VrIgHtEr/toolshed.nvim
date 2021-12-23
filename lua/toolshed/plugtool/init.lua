@@ -112,8 +112,9 @@ local function discover(plugin, update)
             end
 
             local amt = #ret
+            updated = amt > 0
             if amt > 0 then
-                local str = "Updated with " .. amt .. 'commit'
+                local str = "Updated with " .. amt .. ' commit'
                 if amt > 1 then str = str .. 's' end
                 str = str .. '!'
                 displayer(str)
