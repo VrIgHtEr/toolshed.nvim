@@ -191,7 +191,7 @@ local function discover_loop(callback)
                     if not plugins_loaded then
                         plugins_loaded = true
                         for _, v in ipairs(found) do
-                            plugdefs[v.usernamename .. '/' .. v.reponame] = nil
+                            plugdefs[v.username .. '/' .. v.reponame] = nil
                             add_plugin(v)
                         end
                     end
