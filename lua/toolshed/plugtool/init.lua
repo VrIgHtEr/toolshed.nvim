@@ -80,7 +80,7 @@ local function discover(display, plugin, update)
         num_discovered = num_discovered + 1
         local displayer = display.displayer(url)
         if not folder_exists(path) then
-            displayer("cloning")
+            displayer("Cloning")
             a.main_loop()
             local parentPath = vim.fn.fnamemodify(path, ":p:h:h")
             ret = assert(a.spawn_a {"mkdir", "-p", parentPath})
@@ -97,23 +97,32 @@ local function discover(display, plugin, update)
                 displayer("Failed to clone")
                 error("failed to clone git repository: " .. plugin_url)
             end
-            displayer "cloned successfully!"
+            displayer "Cloned successfully!"
             updated = true
         elseif update then
             print("[" .. progress .. "%] updating plugin " .. num_discovered ..
                       ": " .. url)
-            local git_pull_output = {}
+            displayer "Updating"
             ret = assert(a.spawn_lines_a({
                 "git",
                 "pull",
                 "--progress",
                 cwd = path
-            }, function(x) table.insert(git_pull_output, x) end, displayer))
+            }, nil, function(line)
+                if (line) then
+                    updated = true
+                    displayer(line)
+                end
+            end))
             if ret ~= 0 then
+                displayer "Failed to check for updates"
                 error("failed to check for updates: " .. url)
             end
-            git_pull_output = table.concat(git_pull_output, '\n')
-            updated = git_pull_output ~= 'Already up to date.'
+            if updated then
+                displayer "Updated!"
+            else
+                displayer "Up to date!"
+            end
         end
         local cfgpath = path .. '/' .. config_filename
         local lines = read_file(cfgpath)

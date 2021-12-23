@@ -10,8 +10,7 @@ function display.new()
     local function make_display_string(url, str)
         if url == nil or type(url) ~= "string" then url = "" end
         if str == nil or type(str) ~= "string" then str = "" end
-
-        local maxlen = 30
+        local maxlen = 35
         if url:len() > maxlen then url = url:sub(1, maxlen) end
         while url:len() < maxlen do url = url .. ' ' end
         return url .. ': ' .. str
