@@ -226,6 +226,7 @@ function M.setup(plugins, callback)
     num_added = 0
     plugins_added = {}
     display = require'toolshed.plugtool.display'.new()
+    add_plugin("vrighter/toolshed.nvim")
     for _, plugin in ipairs(plugins) do add_plugin(plugin) end
     discover_loop(callback)
 end
