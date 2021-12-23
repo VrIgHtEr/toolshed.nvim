@@ -11,7 +11,7 @@ local num_added
 local plugins_added
 local git = require 'toolshed.git'
 
-local function add_plugin(plugin)
+local function add_plugin(plugin, front)
     if type(plugin) == 'string' then plugin = {plugin} end
     if type(plugin) == "table" then
         local plugin_url = plugin[1]
@@ -38,7 +38,11 @@ local function add_plugin(plugin)
             display.displayer(plugin_url) "Queued"
             plugins_added[plugin_url] = true
             num_added = num_added + 1
-            discoverqueue:enqueue(plugin)
+            if front then
+                discoverqueue:prequeue(plugin)
+            else
+                discoverqueue:enqueue(plugin)
+            end
         end
     else
         error("invalid plugin specification type: " .. type(plugin))
@@ -190,11 +194,16 @@ local function discover_loop(callback)
                     firstupdated = true
                     if not plugins_loaded then
                         plugins_loaded = true
-                        for _, v in ipairs(found) do
-                            local plugname = v.username .. '/' .. v.reponame
+                        local plugname = plug.username .. '/' .. plug.reponame
+                        plugdefs[plugname] = nil
+                        plugins_added[plugname] = nil
+                        add_plugin(plug, true)
+                        for i = #found, 1, -1 do
+                            local v = found[i]
+                            plugname = v.username .. '/' .. v.reponame
                             plugdefs[plugname] = nil
                             plugins_added[plugname] = nil
-                            add_plugin(v)
+                            add_plugin(v, true)
                         end
                         found = {}
                     end

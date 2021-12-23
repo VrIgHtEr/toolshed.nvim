@@ -30,6 +30,17 @@ function MT.enqueue(q, item)
     q.version = q.version + 1
 end
 
+function MT.prequeue(q, item)
+    if q.parity and q.head == q.tail then grow(q) end
+    if q.tail == 0 then
+        q.tail = q.capacity
+        q.parity = not q.parity
+    end
+    q.buf[q.tail] = item
+    q.tail = q.tail - 1
+    q.version = q.version + 1
+end
+
 function MT.dequeue(q)
     if q.parity or q.head ~= q.tail then
         q.tail = q.tail + 1
