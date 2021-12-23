@@ -99,10 +99,12 @@ local function discover(display, plugin, update)
             print("[" .. progress .. "%] updating plugin " .. num_discovered ..
                       ": " .. url)
             local git_pull_output = {}
-            ret = assert(a.spawn_lines_a({"git", "pull", cwd = path},
-                                         function(x)
-                table.insert(git_pull_output, x)
-            end, displayer))
+            ret = assert(a.spawn_lines_a({
+                "git",
+                "pull",
+                "--progress",
+                cwd = path
+            }, function(x) table.insert(git_pull_output, x) end, displayer))
             if ret ~= 0 then
                 error("failed to check for updates: " .. url)
             end

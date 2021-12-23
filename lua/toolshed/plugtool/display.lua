@@ -7,13 +7,23 @@ function display.new()
     local maxline = 0
     local plugins = {}
 
+    local function make_display_string(url, str)
+        if url == nil or type(url) ~= "string" then url = "" end
+        if str == nil or type(str) ~= "string" then str = "" end
+
+        local maxlen = 30
+        if url:len() > maxlen then url = url:sub(1, maxlen) end
+        while url:len() < maxlen do url = url .. ' ' end
+        url = url .. ': ' .. str
+    end
+
     local function make_displayer(url)
+        local line = maxline
         maxline = maxline + 1
-        local line = tostring(maxline)
-        while #line < 3 do line = ' ' .. line end
         return function(str)
             vim.schedule(function()
-                print("DISPLAYER " .. line .. ": " .. url .. ': ' .. str)
+                str = make_display_string(url, str)
+                vim.api.nvim_buf_set_lines(buf, line, line + 1, false, {str})
             end)
         end
     end
