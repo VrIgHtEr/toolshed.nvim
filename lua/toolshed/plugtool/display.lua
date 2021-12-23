@@ -28,7 +28,11 @@ function display.new()
     end
 
     return {
-        close = function() vim.api.nvim_buf_delete(buf, {force = true}) end,
+        close = function()
+            vim.schedule(function()
+                vim.api.nvim_buf_delete(buf, {force = true})
+            end)
+        end,
         displayer = function(url)
             if not plugins[url] then
                 plugins[url] = make_displayer(url)
