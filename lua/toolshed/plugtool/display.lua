@@ -14,7 +14,7 @@ function display.new()
         local maxlen = 30
         if url:len() > maxlen then url = url:sub(1, maxlen) end
         while url:len() < maxlen do url = url .. ' ' end
-        url = url .. ': ' .. str
+        return url .. ': ' .. str
     end
 
     local function make_displayer(url)
