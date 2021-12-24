@@ -143,6 +143,7 @@ local function discover(plugin, update)
             local reqpath = 'toolshed.plugtool.repository.' ..
                                 plugin.username:gsub('[.]', "_") .. '.' ..
                                 plugin.reponame:gsub("[.]", "_")
+            package.loaded[reqpath] = nil
             local success, cfg = pcall(function()
                 return require(reqpath)
             end)
