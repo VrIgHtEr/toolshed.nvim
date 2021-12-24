@@ -5,7 +5,6 @@ local display
 local discoverqueue = require'toolshed.util.generic.queue'.new()
 local discovering = false
 local config_filename = "plugtool_cfg.lua"
-local config_repository = require 'toolshed.plugtool.repository'
 local num_discovered
 local num_added
 local plugins_added
@@ -141,21 +140,17 @@ local function discover(plugin, update)
         end
         if not config then
             -- check config repository
-            config = config_repository[url]
+            local reqpath = 'toolshed.plugtool.repository.' ..
+                                plugin.username:gsub('[.]', "_") .. '.' ..
+                                plugin.reponame:gsub("[.]", "_")
+            local success, cfg = pcall(function()
+                return require(reqpath)
+            end)
+            if success then config = cfg end
         end
         if not config then
             -- not in config repository, set to empty for now
             config = {}
-        end
-        if config.config == nil then
-            -- try to load config function from repository
-            local reqpath = 'toolshed.plugtool.repository.cfg.' ..
-                                plugin.username:gsub('[.]', "_") .. '.' ..
-                                plugin.reponame:gsub("[.]", "_")
-            local success, func = pcall(function()
-                return require(reqpath)
-            end)
-            if success then config.config = func end
         end
         config.username = plugin.username
         config.reponame = plugin.reponame
