@@ -10,6 +10,7 @@ return {
         if not state['hrsh7th/nvim-cmp']['snippet'] then
             state['hrsh7th/nvim-cmp']['snippet'] = {
                 expand = function(args)
+
                     vim.fn["vsnip#anonymous"](args.body)
                 end
             }

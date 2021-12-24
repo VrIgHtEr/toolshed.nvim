@@ -147,7 +147,11 @@ local function setup(state)
                           ]], true)
 end
 
-return function(plugs, state)
-    install_dependencies()
-    setup(require'toolshed.plugtool'.state('mfussenegger/nvim-jdtls'))
-end
+return {
+    needs = {"mfussenegger/nvim-dap"},
+    after = {'mfussenegger/nvim-dap'},
+    config = function()
+        install_dependencies()
+        setup(require'toolshed.plugtool'.state('mfussenegger/nvim-jdtls'))
+    end
+}
