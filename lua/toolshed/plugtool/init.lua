@@ -81,7 +81,6 @@ local function discover(plugin, update)
         local path = install_path .. '/' .. plugin.username .. '/opt/' ..
                          plugin.reponame
         local ret
-        local progress = math.floor((num_discovered / num_added) * 100)
         num_discovered = num_discovered + 1
         local displayer = display.displayer(url)
         if not folder_exists(path) then
@@ -93,9 +92,6 @@ local function discover(plugin, update)
                 displayer("Failed to create directory")
                 error("failed to create path: " .. parentPath)
             end
-            print(
-                "[" .. progress .. "%] discovering plugin " .. num_discovered ..
-                    ": " .. url)
             local plugin_url = "https://github.com/" .. url .. ".git"
             ret = git.clone_a(plugin_url, {dest = path, progress = displayer})
             if ret ~= 0 then
@@ -105,8 +101,6 @@ local function discover(plugin, update)
             displayer "Cloned successfully!"
             updated = true
         elseif update then
-            print("[" .. progress .. "%] updating plugin " .. num_discovered ..
-                      ": " .. url)
             displayer "Updating"
             ret = git.update_a(path, {progress = displayer})
             if not ret then
@@ -121,6 +115,10 @@ local function discover(plugin, update)
                 if amt > 1 then str = str .. 's' end
                 str = str .. '!'
                 displayer(str)
+                for _, x in ipairs(ret) do
+                    print("HASH: " .. x.hash .. " : " .. x.time .. " : " ..
+                              x.message)
+                end
             else
                 displayer "Up to date!"
             end
