@@ -10,31 +10,35 @@ local function create_entries(plugins)
     -- convert plugin definitions to entries
     for k, v in pairs(plugins) do
         local entry = {}
+        entry.def = v.def
         local set = {}
-        if v.before then
-            for _, d in ipairs(v.before) do set[d] = true end
+        if v.def.before then
+            for _, d in ipairs(v.def.before) do set[d] = true end
         end
         entry.before = set
         set = {}
-        if v.after then for _, d in ipairs(v.after) do set[d] = true end end
+        if v.def.after then
+            for _, d in ipairs(v.def.after) do set[d] = true end
+        end
         entry.after = set
-        entry.value = v
+        entry.value = v.def
         setmetatable(entry, MT)
         entry.url = tostring(entry)
-        if type(v.config) == "nil" then
+        if type(v.def.config) == "nil" then
             entry.config = {}
-        elseif type(v.config) == "function" then
-            entry.config = {v.config}
-        elseif type(v.config) ~= "table" then
-            error("plugin configuration has an invalid type: " .. type(v.config))
+        elseif type(v.def.config) == "function" then
+            entry.config = {v.def.config}
+        elseif type(v.def.config) ~= "table" then
+            error("plugin configuration has an invalid type: " ..
+                      type(v.def.config))
         else
-            local numentries = #v.config
+            local numentries = #v.def.config
             if numentries == 0 then
                 entry.config = {}
             else
-                local conf = v.config[1]
+                local conf = v.def.config[1]
                 if type(conf) == "function" then
-                    entry.config = {v.config[1]}
+                    entry.config = {v.def.config[1]}
                 elseif type(conf) ~= "table" then
                     error("invalid type for plugin configuration: " ..
                               type(conf))
@@ -61,8 +65,8 @@ local function create_entries(plugins)
                         entry.config = {conf[1]}
                     end
                 end
-                for i = 2, #v.config do
-                    conf = v.config[i]
+                for i = 2, #v.def.config do
+                    conf = v.def.config[i]
                     if type(conf) ~= "table" then
                         error("invalid type for plugin configuration: " ..
                                   type(conf))

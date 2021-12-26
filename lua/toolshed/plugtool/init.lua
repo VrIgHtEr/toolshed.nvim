@@ -155,7 +155,7 @@ local function discover(plugin, update)
         end
         config.username = plugin.username
         config.reponame = plugin.reponame
-        plugdefs[url] = config
+        plugdefs[url] = {def = config}
         if config.needs ~= nil then
             for _, x in ipairs(config.needs) do add_plugin(x) end
         end
