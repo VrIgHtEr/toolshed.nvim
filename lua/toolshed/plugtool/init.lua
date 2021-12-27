@@ -129,6 +129,7 @@ local function discover(plugin, update)
                     table.insert(str, "        " .. x.hash:sub(1, 8) .. " - " ..
                                      x.time .. " - " .. x.message)
                 end
+                table.insert(str, "")
                 displayer(table.concat(str, '\n'))
                 for _, x in ipairs(ret) do
                     print("HASH: " .. x.hash .. " : " .. x.time .. " : " ..
