@@ -44,13 +44,9 @@ function display.new()
         function displayer.get_next_line() return lineindex + #lines end
         function displayer.set_line_index(idx) lineindex = idx end
         function displayer.redraw()
-            print(
-                "redrawing displayer " .. index .. ' : ' .. lineindex .. '-' ..
-                    displayer.get_next_line(), vim.inspect(lines))
             vim.api.nvim_buf_set_lines(buf, lineindex,
                                        displayer.get_next_line(), false, lines)
         end
-
         return displayer.message
     end
 
