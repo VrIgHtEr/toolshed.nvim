@@ -73,12 +73,10 @@ function M.lines(str)
     return function()
         local line = {}
         for c in codepoints do
-            if c == nil or c == '\n' then
-                if c or #line > 0 then return table.concat(line) end
-                return
-            end
+            if c == '\n' then return table.concat(line) end
             table.insert(line, c)
         end
+        if #line > 0 then return table.concat(line) end
     end
 end
 string.lines = M.lines

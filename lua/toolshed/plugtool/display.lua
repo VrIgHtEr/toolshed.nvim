@@ -5,25 +5,53 @@ function display.new()
     vim.api.nvim_win_set_buf(win, buf)
     local maxline = 0
     local plugins = {}
+    local displayers = {}
 
-    local function make_display_string(url, str)
-        if url == nil or type(url) ~= "string" then url = "" end
-        if str == nil or type(str) ~= "string" then str = "" end
-        local maxlen = 35
-        if url:len() > maxlen then url = url:sub(1, maxlen) end
-        while url:len() < maxlen do url = url .. ' ' end
-        return url .. ': ' .. str
+    local function get_last_line()
+        if #displayers == 0 then
+            return 0
+        else
+            return displayers[#displayers].get_next_line()
+        end
     end
 
-    local function make_displayer(url)
-        local line = maxline
+    local function make_displayer()
         maxline = maxline + 1
-        return function(str)
+        local index = maxline
+        local lines = {}
+        local displayer = {}
+        local lineindex = get_last_line()
+        displayers[index] = displayer
+
+        function displayer.message(str)
             vim.schedule(function()
-                str = make_display_string(url, str)
-                vim.api.nvim_buf_set_lines(buf, line, line + 1, false, {str})
+                local newlines = {}
+                for x in str:lines() do table.insert(newlines, x) end
+                local redraw_following = #lines ~= #newlines
+                lines = newlines
+                displayer.redraw()
+                if redraw_following then
+                    local prev = displayer
+                    for x = index + 1, #displayers do
+                        displayers[x].set_line_index(prev.get_next_line())
+                        prev = displayers[x]
+                        prev.redraw()
+                    end
+                end
             end)
         end
+
+        function displayer.get_next_line() return lineindex + #lines end
+        function displayer.set_line_index(idx) lineindex = idx end
+        function displayer.redraw()
+            print(
+                "redrawing displayer " .. index .. ' : ' .. lineindex .. '-' ..
+                    displayer.get_next_line(), vim.inspect(lines))
+            vim.api.nvim_buf_set_lines(buf, lineindex,
+                                       displayer.get_next_line(), false, lines)
+        end
+
+        return displayer.message
     end
 
     return {
@@ -33,9 +61,7 @@ function display.new()
             end)
         end,
         displayer = function(url)
-            if not plugins[url] then
-                plugins[url] = make_displayer(url)
-            end
+            if not plugins[url] then plugins[url] = make_displayer() end
             return plugins[url]
         end
     }
