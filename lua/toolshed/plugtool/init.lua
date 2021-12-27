@@ -131,10 +131,6 @@ local function discover(plugin, update)
                 end
                 table.insert(str, "")
                 displayer(table.concat(str, '\n'))
-                for _, x in ipairs(ret) do
-                    print("HASH: " .. x.hash .. " : " .. x.time .. " : " ..
-                              x.message)
-                end
             else
                 displayer(url .. ": Up to date!")
             end
