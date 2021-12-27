@@ -130,6 +130,7 @@ local function discover(plugin, update)
                                      x.time .. " - " .. x.message)
                 end
                 table.insert(str, "")
+                table.insert(str, "")
                 displayer(table.concat(str, '\n'))
             else
                 displayer(url .. ": Up to date!")
