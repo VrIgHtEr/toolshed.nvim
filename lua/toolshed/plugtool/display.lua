@@ -27,6 +27,7 @@ function display.new()
             vim.schedule(function()
                 local newlines = {}
                 for x in str:lines() do table.insert(newlines, x) end
+                local last_line = get_last_line()
                 local redraw_following = #lines ~= #newlines
                 lines = newlines
                 displayer.redraw()
@@ -36,6 +37,11 @@ function display.new()
                         displayers[x].set_line_index(prev.get_next_line())
                         prev = displayers[x]
                         prev.redraw()
+                    end
+                    local new_last_line = get_last_line()
+                    if new_last_line < last_line then
+                        vim.api.nvim_buf_set_lines(buf, new_last_line,
+                                                   last_line, false, {})
                     end
                 end
             end)
