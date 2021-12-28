@@ -1,7 +1,13 @@
 local display = {}
+local buf = 0
+
 function display.new()
     local win = vim.api.nvim_get_current_win()
-    local buf = vim.api.nvim_create_buf(false, true)
+    if buf ~= 0 then
+        vim.api.nvim_buf_delete(buf, {force = true})
+        buf = 0
+    end
+    buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_win_set_buf(win, buf)
     local maxline = 0
     local plugins = {}
@@ -59,7 +65,10 @@ function display.new()
     return {
         close = function()
             vim.schedule(function()
-                vim.api.nvim_buf_delete(buf, {force = true})
+                if buf ~= 0 then
+                    vim.api.nvim_buf_delete(buf, {force = true})
+                    buf = 0
+                end
             end)
         end,
         displayer = function(url)
