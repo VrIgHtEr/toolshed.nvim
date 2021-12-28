@@ -43,6 +43,7 @@ local function parse_git_line(line)
     local ret = {}
     if index then
         ret.hash = line:sub(1, index - 1)
+        ret.hash = ret.hash:sub(2, ret.hash:len())
     else
         error "malformed git log string"
     end
@@ -55,6 +56,7 @@ local function parse_git_line(line)
     end
 
     ret.message = line:sub(index2 + 1)
+    ret.message = ret.message:sub(1, ret.message:len() - 1)
 
     return ret
 end
