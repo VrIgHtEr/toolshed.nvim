@@ -85,5 +85,5 @@ function M.new()
         buf = {}
     }, MT)
 end
-function MT.__index(o, k) return MT[k] end
+function MT.__index(_, k) return MT[k] end
 return M
