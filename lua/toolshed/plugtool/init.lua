@@ -131,7 +131,7 @@ local function discover(plugin, update)
                 end
                 table.insert(str, "")
                 table.insert(str, "")
-                displayer(table.concat(str, '\n'))
+                displayer(table.concat(str, '\n'), ret)
             else
                 displayer(url .. ": Up to date!")
             end
