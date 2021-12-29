@@ -41,7 +41,6 @@ function display.new()
                 len = len + 1
             end
         end
-        displayer.padurl()
 
         local function create_lines()
             local newlines = {}
@@ -112,6 +111,8 @@ function display.new()
                 emptypadding = emptypadding .. ' '
                 len = len + 1
             end
+        else
+            displayer.padurl()
         end
         return displayer.message
     end
