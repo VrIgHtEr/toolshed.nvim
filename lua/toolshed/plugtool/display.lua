@@ -41,6 +41,7 @@ function display.new()
                 len = len + 1
             end
         end
+        displayer.padurl()
 
         local function create_lines()
             local newlines = {}
