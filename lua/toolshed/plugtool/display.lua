@@ -27,6 +27,9 @@ function display.new()
     end
 
     local function make_displayer(url)
+        local name = url
+        local nsname = "toolshed.plugtool.display/" .. name
+        local ns = nil
         maxline = maxline + 1
         local index = maxline
         local lines = {}
@@ -62,11 +65,7 @@ function display.new()
 
         function displayer.message(str, changes)
             vim.schedule(function()
-                if changes then
-                    changelogs = changes
-                else
-                    changelogs = {}
-                end
+                changelogs = changes or {}
                 message = str
                 local newlines = create_lines()
                 local last_line = get_last_line()
@@ -99,9 +98,15 @@ function display.new()
         function displayer.get_next_line() return lineindex + #lines end
         function displayer.set_line_index(idx) lineindex = idx end
         function displayer.redraw()
+            if not ns then ns = vim.api.nvim_create_namespace(nsname) end
+            vim.api.nvim_buf_clear_namespace(buf, ns, lineindex,
+                                             displayer.get_next_line())
             lines = create_lines()
             vim.api.nvim_buf_set_lines(buf, lineindex,
                                        displayer.get_next_line(), false, lines)
+
+            vim.api.nvim_buf_add_highlight(buf, ns, 'Title', lineindex, 0,
+                                           name:len())
         end
         if url:len() > urlwidth then
             urlwidth = url:len()
