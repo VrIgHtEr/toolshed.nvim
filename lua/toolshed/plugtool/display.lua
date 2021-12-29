@@ -46,12 +46,12 @@ function display.new()
             local newlines = {}
             for x in message:lines() do table.insert(newlines, x) end
             for _, x in ipairs(changelogs) do
-                table.insert(newlines, '    - ' .. x.hash:sub(1, 8) .. ' - ' ..
+                table.insert(newlines, '- ' .. x.hash:sub(1, 8) .. ' - ' ..
                                  x.time .. ' - ' .. x.message)
             end
             if #newlines == 0 then table.insert(newlines, "") end
             if #newlines > 1 then table.insert(newlines, "") end
-            newlines[1] = url .. newlines[1]
+            newlines[1] = url .. ': ' .. newlines[1]
             for i = 2, #newlines do
                 newlines[i] = emptypadding .. newlines[i]
             end
@@ -101,13 +101,12 @@ function display.new()
             vim.api.nvim_buf_set_lines(buf, lineindex,
                                        displayer.get_next_line(), false, lines)
         end
-        url = url .. ': '
         if url:len() > urlwidth then
             urlwidth = url:len()
             for _, x in ipairs(displayers) do x.padurl() end
             redraw_all = true
             local len = emptypadding:len()
-            while len < urlwidth do
+            while len < urlwidth + 2 do
                 emptypadding = emptypadding .. ' '
                 len = len + 1
             end
