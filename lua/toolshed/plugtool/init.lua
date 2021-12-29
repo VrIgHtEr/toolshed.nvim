@@ -34,7 +34,7 @@ local function add_plugin(plugin, front)
         plugin.reponame = reponame
         plugin_url = plugin.username .. '/' .. plugin.reponame
         if not plugins_added[plugin_url] then
-            display.displayer(plugin_url)(plugin_url .. ": Queued")
+            display.displayer(plugin_url)("Queued")
             plugins_added[plugin_url] = true
             num_added = num_added + 1
             if front then
@@ -84,59 +84,48 @@ local function discover(plugin, update)
         num_discovered = num_discovered + 1
         local displayer = display.displayer(url)
         if not folder_exists(path) then
-            displayer(url .. ": Cloning")
+            displayer("Cloning")
             a.main_loop()
             local parentPath = vim.fn.fnamemodify(path, ":p:h:h")
             ret = assert(a.spawn_a {"mkdir", "-p", parentPath})
             if ret ~= 0 then
-                displayer(url .. ": Failed to create directory")
+                displayer("Failed to create directory")
                 error("failed to create path: " .. parentPath)
             end
             local plugin_url = "https://github.com/" .. url .. ".git"
-            ret = git.clone_a(plugin_url,
-                              {
+            ret = git.clone_a(plugin_url, {
                 dest = path,
-                progress = function(line)
-                    displayer(url .. ': ' .. line)
-                end
+                progress = function(line) displayer(line) end
             })
             if ret ~= 0 then
-                displayer(url .. ": Failed to clone")
+                displayer("Failed to clone")
                 error("failed to clone git repository: " .. plugin_url)
             end
-            displayer(url .. ": Cloned successfully!")
+            displayer("Cloned successfully!")
             updated = true
         elseif update then
-            displayer(url .. ": Updating")
-            ret = git.update_a(path, {
-                progress = function(line)
-                    displayer(url .. ': ' .. line)
-                end
-            })
+            displayer("Updating")
+            ret = git.update_a(path,
+                               {progress = function(line)
+                displayer(line)
+            end})
             if not ret then
-                displayer(url .. ": Failed to check for updates")
+                displayer("Failed to check for updates")
                 error("failed to check for updates: " .. url)
             end
 
             local amt = #ret
             updated = amt > 0
             if amt > 0 then
-                local str = url .. ": Updated with " .. amt .. ' commit'
+                local str = "Updated with " .. amt .. ' commit'
                 if amt > 1 then str = str .. 's' end
                 str = str .. '!'
-                str = {str}
-                for _, x in ipairs(ret) do
-                    table.insert(str, "        " .. x.hash:sub(1, 8) .. " - " ..
-                                     x.time .. " - " .. x.message)
-                end
-                table.insert(str, "")
-                table.insert(str, "")
-                displayer(table.concat(str, '\n'), ret)
+                displayer(str, ret)
             else
-                displayer(url .. ": Up to date!")
+                displayer("Up to date!")
             end
         else
-            displayer(url .. ": Discovered")
+            displayer("Discovered")
         end
         local cfgpath = path .. '/' .. config_filename
         local lines = read_file(cfgpath)
