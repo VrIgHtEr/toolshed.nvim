@@ -1,5 +1,7 @@
 local display = {}
 local buf = 0
+local separator = ' : '
+local separator_length = separator:len()
 
 function display.new()
     local win = vim.api.nvim_get_current_win()
@@ -51,7 +53,7 @@ function display.new()
             end
             if #newlines == 0 then table.insert(newlines, "") end
             if #newlines > 1 then table.insert(newlines, "") end
-            newlines[1] = url .. ': ' .. newlines[1]
+            newlines[1] = url .. separator .. newlines[1]
             for i = 2, #newlines do
                 newlines[i] = emptypadding .. newlines[i]
             end
@@ -106,7 +108,7 @@ function display.new()
             for _, x in ipairs(displayers) do x.padurl() end
             redraw_all = true
             local len = emptypadding:len()
-            while len < urlwidth + 2 do
+            while len < urlwidth + separator_length do
                 emptypadding = emptypadding .. ' '
                 len = len + 1
             end
