@@ -134,7 +134,6 @@ local function setup(state)
                     end
                 }):find()
             end
-        vim.lsp.buf.code_action = require'jdtls'.code_action
     end
     state.setup = function() require'jdtls'.start_or_attach(config) end
     vim.api.nvim_exec([[
