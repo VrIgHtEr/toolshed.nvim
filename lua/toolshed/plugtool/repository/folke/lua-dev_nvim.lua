@@ -2,10 +2,6 @@ return {
     needs = {'neovim/nvim-lspconfig', 'mfussenegger/nvim-dap'},
     after = {'neovim/nvim-lspconfig', 'mfussenegger/nvim-dap'},
     config = function()
-        local runtime_path = vim.split(package.path, ';')
-        table.insert(runtime_path, "lua/?.lua")
-        table.insert(runtime_path, "lua/?/init.lua")
-
         local luadev = require("lua-dev").setup({
             library = {
                 vimruntime = true, -- runtime path
@@ -14,6 +10,7 @@ return {
                 -- you can also specify the list of plugins to make available as a workspace library
                 -- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },
             },
+            runtime_path = true,
             lspconfig = {
                 capabilities = require'lsp/lsp'.capabilities,
                 cmd = {require'toolshed.env'.bin .. "/lua-language-server"}
