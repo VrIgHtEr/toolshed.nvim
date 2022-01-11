@@ -147,8 +147,10 @@ function display.new()
                                                    lineindex + i - 1, x[1], x[2])
                 end
             end
-            vim.api.nvim_win_set_cursor(win, {displayer.get_next_line() - 1, 1})
-            vim.api.nvim_win_set_cursor(win, {lineindex, 1})
+            if displayer.get_next_line() ~= lineindex then
+                vim.api.nvim_win_set_cursor(win, {displayer.get_next_line(), 0})
+                vim.api.nvim_win_set_cursor(win, {lineindex + 1, 0})
+            end
         end
 
         if url:len() > urlwidth then
