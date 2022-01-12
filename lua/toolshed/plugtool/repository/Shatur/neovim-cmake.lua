@@ -1,8 +1,7 @@
 return {
-    needs = {"mfussenegger/nvim-dap", "nvim-telescope/telescope.nvim"},
-    after = {"mfussenegger/nvim-dap", "nvim-telescope/telescope.nvim"},
+    needs = {"mfussenegger/nvim-dap"},
+    after = {"mfussenegger/nvim-dap"},
     config = function()
-        require'telescope'.load_extension("cmake")
         require('cmake').setup({
             dap_configuration = {
                 type = 'codelldb',
@@ -19,7 +18,6 @@ return {
                               autocmd BufWritePre *.c lua vim.lsp.buf.formatting_sync()
                               autocmd BufWritePre *.h lua vim.lsp.buf.formatting_sync()
                             augroup end
-                        nnoremap <buffer> <leader>cc :JdtCompile<cr>
                           ]], true)
 
     end
