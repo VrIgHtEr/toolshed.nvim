@@ -32,27 +32,36 @@ return {
         }
 
         local state = require('toolshed.plugtool').state 'nvim-lualine/lualine.nvim'
-
         if state.sections then
             if state.sections.lualine_a then
                 for _, x in ipairs(state.sections.lualine_a) do
                     table.insert(config.sections.lualine_a, x)
                 end
-                for _, x in ipairs(state.sections.lualine_b) do
-                    table.insert(config.sections.lualine_b, x)
-                end
-                for _, x in ipairs(state.sections.lualine_c) do
-                    table.insert(config.sections.lualine_c, x)
-                end
-                for _, x in ipairs(state.sections.lualine_x) do
-                    table.insert(config.sections.lualine_x, x)
-                end
-                for _, x in ipairs(state.sections.lualine_y) do
-                    table.insert(config.sections.lualine_y, x)
-                end
-                for _, x in ipairs(state.sections.lualine_z) do
-                    table.insert(config.sections.lualine_z, x)
-                end
+            end
+        end
+        if state.sections.lualine_b then
+            for _, x in ipairs(state.sections.lualine_b) do
+                table.insert(config.sections.lualine_b, x)
+            end
+        end
+        if state.sections.lualine_c then
+            for _, x in ipairs(state.sections.lualine_c) do
+                table.insert(config.sections.lualine_c, x)
+            end
+        end
+        if state.sections.lualine_x then
+            for _, x in ipairs(state.sections.lualine_x) do
+                table.insert(config.sections.lualine_x, x)
+            end
+        end
+        if state.sections.lualine_y then
+            for _, x in ipairs(state.sections.lualine_y) do
+                table.insert(config.sections.lualine_y, x)
+            end
+        end
+        if state.sections.lualine_z then
+            for _, x in ipairs(state.sections.lualine_z) do
+                table.insert(config.sections.lualine_z, x)
             end
         end
         require('lualine').setup(config)

@@ -70,6 +70,7 @@ return {
                         '🌘 ',
                     },
                 })
+                print('STATE CONFIG: ' .. vim.inspect(config))
             end,
             before = 'nvim-lualine/lualine.nvim',
         },
