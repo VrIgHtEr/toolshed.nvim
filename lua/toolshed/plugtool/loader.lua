@@ -237,11 +237,12 @@ local function configure_plugin(entry)
         end
     end
     if configspec[1] then
-        local success = pcall(configspec[1], plugdefs, plugin_state)
+        local success, err = pcall(configspec[1], plugdefs, plugin_state)
         if not success then
             print(
                 "ERROR: an error occurred while performing plugin configuration for " ..
                     entry.url)
+            print(err)
         end
     end
     if configspec.post then

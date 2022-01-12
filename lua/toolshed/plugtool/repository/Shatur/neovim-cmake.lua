@@ -1,6 +1,6 @@
 return {
-    needs = {"mfussenegger/nvim-dap"},
-    after = {"mfussenegger/nvim-dap"},
+    needs = {"mfussenegger/nvim-dap", 'nvim-lua/plenary.nvim'},
+    after = {"mfussenegger/nvim-dap", 'nvim-lua/plenary.nvim'},
     config = function()
         require('cmake').setup({
             dap_configuration = {
