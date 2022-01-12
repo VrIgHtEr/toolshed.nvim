@@ -31,5 +31,6 @@ return {
                 TRACE = "✎"
             }
         })
+        vim.notify = require 'notify'
     end
 }
