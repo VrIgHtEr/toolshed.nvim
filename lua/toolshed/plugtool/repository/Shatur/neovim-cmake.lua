@@ -1,7 +1,7 @@
 return {
     needs = {"mfussenegger/nvim-dap", 'nvim-lua/plenary.nvim'},
     after = {"mfussenegger/nvim-dap", 'nvim-lua/plenary.nvim'},
-    config = function()
+    config = {function()
         require('cmake').setup({
             dap_configuration = {
                 type = 'codelldb',
@@ -20,5 +20,5 @@ return {
                             augroup end
                           ]], true)
 
-    end
+    end}
 }

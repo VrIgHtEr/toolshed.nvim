@@ -41,15 +41,5 @@ return {
         dap.adapters.nlua = function(callback, config)
             callback({type = 'server', host = config.host, port = config.port})
         end
-
-        if vim.fn.has('nvim-0.5') then
-            vim.api.nvim_exec([[
-            augroup lua_formatting
-                au!
-        autocmd FileType lua nnoremap <buffer> <c-k> :call LuaFormat()<cr>
-                autocmd BufWrite *.lua call LuaFormat()
-            augroup end
-    ]], true)
-        end
     end
 }
