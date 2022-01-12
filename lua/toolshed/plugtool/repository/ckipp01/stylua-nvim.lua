@@ -15,11 +15,6 @@ return {
         local env = require 'toolshed.env'
         local a = require 'toolshed.async'
         return a.run(function()
-            local nproc = a.wait(env.nproc_async())
-            if not nproc or nproc <= 0 then
-                nproc = 1
-            end
-            nproc = tostring(nproc + 1)
             return env.install_dependencies {
                 {
                     dirname = 'StyLua',
