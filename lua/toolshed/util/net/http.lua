@@ -8,7 +8,7 @@ local function alert(msg, err)
     else
         err = "info"
     end
-    vim.notify(msg, err, {title = "http"})
+    vim.schedule(function() vim.notify(msg, err, {title = "http"}) end)
 end
 
 local stringstream = require 'toolshed.util.string.stream'

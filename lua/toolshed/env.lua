@@ -133,7 +133,8 @@ local install_dependency_async = a.syncwrap(function(v)
         else
             t = "info"
         end
-        vim.notify(msg, t, {title = v.dirname})
+        vim.schedule(function()
+        vim.notify(msg, t, {title = v.dirname})end)
     end
     if not M.file_exists(metafilepath) then
         local dependency_check = check_dependencies(v.builddeps)
