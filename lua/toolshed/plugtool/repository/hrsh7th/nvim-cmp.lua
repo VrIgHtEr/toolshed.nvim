@@ -52,9 +52,7 @@ return {
             cmp.setup.cmdline(':', { sources = cmp.config.sources(sources) })
         end
         if state.nvim_lsp then
-            state.capabilities = require('cmp_nvim_lsp').update_capabilities(
-                vim.lsp.protocol.make_client_capabilities()
-            )
+            state.capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
         end
     end,
 }

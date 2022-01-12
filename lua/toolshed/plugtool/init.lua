@@ -150,10 +150,7 @@ local function discover(plugin, update)
         end
         if not config then
             -- check config repository
-            local reqpath = 'toolshed.plugtool.repository.'
-                .. plugin.username:gsub('[.]', '_')
-                .. '.'
-                .. plugin.reponame:gsub('[.]', '_')
+            local reqpath = 'toolshed.plugtool.repository.' .. plugin.username:gsub('[.]', '_') .. '.' .. plugin.reponame:gsub('[.]', '_')
             package.loaded[reqpath] = nil
             local success, cfg = pcall(function()
                 return require(reqpath)

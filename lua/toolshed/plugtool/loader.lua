@@ -260,9 +260,7 @@ local function configure_plugin(entry)
         for i, v in ipairs(configspec.post) do
             local success = pcall(v, plugdefs, plugin_state)
             if not success then
-                print(
-                    'ERROR: an error occurred while performing plugin postconfiguration ' .. i .. ' for ' .. entry.url
-                )
+                print('ERROR: an error occurred while performing plugin postconfiguration ' .. i .. ' for ' .. entry.url)
             end
         end
     end

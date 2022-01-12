@@ -34,9 +34,7 @@ local function install_dependencies()
             launchscript = {
                 name = 'jdtls',
                 script = [[#!/bin/env sh
-dir=]] .. env.bashescape(
-                    env.get_dependency_path(dirname) .. '/org.eclipse.jdt.ls.product/target/repository'
-                ) .. [[
+dir=]] .. env.bashescape(env.get_dependency_path(dirname) .. '/org.eclipse.jdt.ls.product/target/repository') .. [[
  
 if ! [ -z $dir ] ; then
     java \
@@ -75,9 +73,7 @@ local function setup(state)
     local pworkspace = env.var .. '/jdtls/workspace'
 
     local bund = {
-        vim.fn.glob(
-            env.opt .. '/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar'
-        ),
+        vim.fn.glob(env.opt .. '/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar'),
     }
     vim.list_extend(bund, vim.split(vim.fn.glob(env.opt .. '/vscode-java-test/server/*.jar'), '\n'))
     local projectroot = require('jdtls.setup').find_root {

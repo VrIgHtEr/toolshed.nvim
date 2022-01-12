@@ -17,9 +17,7 @@ return {
                 launchscript = {
                     name = 'lua-language-server',
                     script = [[#!/bin/env sh
-]] .. env.bashescape(path .. '/bin/lua-language-server') .. ' -E ' .. env.bashescape(
-                        path .. '/bin/main.lua'
-                    ) .. ' $@',
+]] .. env.bashescape(path .. '/bin/lua-language-server') .. ' -E ' .. env.bashescape(path .. '/bin/main.lua') .. ' $@',
                 },
                 builddeps = { env.exec_checker 'ninja' },
             },
