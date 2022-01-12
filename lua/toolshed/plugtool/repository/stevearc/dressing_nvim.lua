@@ -1,1 +1,1 @@
-return {after = {"nvim-telescope/telescope.nvim"}}
+return { after = { 'nvim-telescope/telescope.nvim' } }

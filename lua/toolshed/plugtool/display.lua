@@ -6,7 +6,7 @@ local separator_length = separator:len()
 function display.new()
     local win = vim.api.nvim_get_current_win()
     if buf ~= 0 then
-        vim.api.nvim_buf_delete(buf, {force = true})
+        vim.api.nvim_buf_delete(buf, { force = true })
         buf = 0
     end
     buf = vim.api.nvim_create_buf(false, true)
@@ -16,7 +16,7 @@ function display.new()
     local plugins = {}
     local displayers = {}
     local redraw_all = false
-    local emptypadding = ""
+    local emptypadding = ''
 
     local function get_last_line()
         if #displayers == 0 then
@@ -27,18 +27,18 @@ function display.new()
     end
 
     local theme = {
-        title = "Title",
-        commithash = "Label",
-        committime = "Identifier",
-        commitmessage = "String",
-        info = "Normal",
-        error = "Error",
-        warning = "Special"
+        title = 'Title',
+        commithash = 'Label',
+        committime = 'Identifier',
+        commitmessage = 'String',
+        info = 'Normal',
+        error = 'Error',
+        warning = 'Special',
     }
 
     local function make_displayer(url)
         local name = url
-        local nsname = "toolshed.plugtool.display/" .. name
+        local nsname = 'toolshed.plugtool.display/' .. name
         local ns = nil
         maxline = maxline + 1
         local index = maxline
@@ -46,7 +46,7 @@ function display.new()
         local displayer = {}
         local lineindex = get_last_line()
         displayers[index] = displayer
-        local message = ""
+        local message = ''
         local changelogs = {}
         local highlights = {}
 
@@ -64,33 +64,35 @@ function display.new()
             local indent = emptypadding:len()
             for x in message:lines() do
                 table.insert(newlines, x)
-                local hl = {{indent, indent + x:len(), theme.info}}
+                local hl = { { indent, indent + x:len(), theme.info } }
                 table.insert(newhighlights, hl)
             end
             for _, x in ipairs(changelogs) do
-                local line = x.hash:sub(1, 8) .. ' - ' .. x.time .. ' - ' ..
-                                 x.message
+                local line = x.hash:sub(1, 8) .. ' - ' .. x.time .. ' - ' .. x.message
                 table.insert(newlines, line)
                 local hl = {
-                    {indent + 0, indent + 8, theme.commithash},
+                    { indent + 0, indent + 8, theme.commithash },
                     {
                         indent + 8 + 3,
                         indent + line:len() - x.message:len() - 3,
-                        theme.committime
+                        theme.committime,
                     },
                     {
-                        indent + line:len() - x.message:len(), -1,
-                        theme.commitmessage
-                    }
+                        indent + line:len() - x.message:len(),
+                        -1,
+                        theme.commitmessage,
+                    },
                 }
                 table.insert(newhighlights, hl)
             end
             if #newlines == 0 then
-                table.insert(newlines, "")
+                table.insert(newlines, '')
                 table.insert(newhighlights, {})
             end
-            if #newlines > 1 then table.insert(newlines, "") end
-            table.insert(newhighlights[1], {0, name:len(), theme.title})
+            if #newlines > 1 then
+                table.insert(newlines, '')
+            end
+            table.insert(newhighlights[1], { 0, name:len(), theme.title })
             newlines[1] = url .. separator .. newlines[1]
             for i = 2, #newlines do
                 newlines[i] = emptypadding .. newlines[i]
@@ -123,39 +125,43 @@ function display.new()
                     end
                     local new_last_line = get_last_line()
                     if new_last_line < last_line then
-                        vim.api.nvim_buf_set_lines(buf, new_last_line,
-                                                   last_line, false, {})
+                        vim.api.nvim_buf_set_lines(buf, new_last_line, last_line, false, {})
                     end
                 end
             end)
         end
 
-        function displayer.get_next_line() return lineindex + #lines end
+        function displayer.get_next_line()
+            return lineindex + #lines
+        end
 
-        function displayer.set_line_index(idx) lineindex = idx end
+        function displayer.set_line_index(idx)
+            lineindex = idx
+        end
 
         function displayer.redraw()
-            if not ns then ns = vim.api.nvim_create_namespace(nsname) end
-            vim.api.nvim_buf_clear_namespace(buf, ns, lineindex,
-                                             displayer.get_next_line())
+            if not ns then
+                ns = vim.api.nvim_create_namespace(nsname)
+            end
+            vim.api.nvim_buf_clear_namespace(buf, ns, lineindex, displayer.get_next_line())
             lines, highlights = create_lines()
-            vim.api.nvim_buf_set_lines(buf, lineindex,
-                                       displayer.get_next_line(), false, lines)
+            vim.api.nvim_buf_set_lines(buf, lineindex, displayer.get_next_line(), false, lines)
             for i, hl in ipairs(highlights) do
                 for _, x in ipairs(hl) do
-                    vim.api.nvim_buf_add_highlight(buf, ns, x[3],
-                                                   lineindex + i - 1, x[1], x[2])
+                    vim.api.nvim_buf_add_highlight(buf, ns, x[3], lineindex + i - 1, x[1], x[2])
                 end
             end
             if displayer.get_next_line() ~= lineindex then
-                vim.api.nvim_win_set_cursor(win, {displayer.get_next_line(), 0})
-                vim.api.nvim_win_set_cursor(win, {lineindex + 1, 0})
+                vim.api.nvim_win_set_cursor(win, { displayer.get_next_line(), 0 })
+                vim.api.nvim_win_set_cursor(win, { lineindex + 1, 0 })
             end
         end
 
         if url:len() > urlwidth then
             urlwidth = url:len()
-            for _, x in ipairs(displayers) do x.padurl() end
+            for _, x in ipairs(displayers) do
+                x.padurl()
+            end
             redraw_all = true
             local len = emptypadding:len()
             while len < urlwidth + separator_length do
@@ -172,7 +178,7 @@ function display.new()
         close = function()
             vim.schedule(function()
                 if buf ~= 0 then
-                    vim.api.nvim_buf_delete(buf, {force = true})
+                    vim.api.nvim_buf_delete(buf, { force = true })
                     buf = 0
                 end
             end)
@@ -182,7 +188,7 @@ function display.new()
                 plugins[url] = make_displayer(url)
             end
             return plugins[url]
-        end
+        end,
     }
 end
 return display

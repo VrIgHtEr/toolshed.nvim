@@ -1,1 +1,1 @@
-return {http = require 'toolshed.util.net.http'}
+return { http = require 'toolshed.util.net.http' }

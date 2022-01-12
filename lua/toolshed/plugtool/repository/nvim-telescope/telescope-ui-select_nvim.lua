@@ -1,24 +1,26 @@
 return {
-    needs = {'nvim-telescope/telescope.nvim'},
-    before = {'nvim-telescope/telescope.nvim'},
+    needs = { 'nvim-telescope/telescope.nvim' },
+    before = { 'nvim-telescope/telescope.nvim' },
     config = {
         {
             function()
-                local st =
-                    require'toolshed.plugtool'.state "nvim-telescope/telescope.nvim"
-                if st.extensions == nil then st.extensions = {} end
-                st.extensions["ui-select"] = {
-                    require("telescope.themes").get_dropdown {
+                local st = require('toolshed.plugtool').state 'nvim-telescope/telescope.nvim'
+                if st.extensions == nil then
+                    st.extensions = {}
+                end
+                st.extensions['ui-select'] = {
+                    require('telescope.themes').get_dropdown {
                         -- even more opts
-                    }
+                    },
                 }
             end,
-            before = "nvim-telescope/telescope.nvim"
-        }, {
+            before = 'nvim-telescope/telescope.nvim',
+        },
+        {
             function()
-                require("telescope").load_extension("ui-select")
+                require('telescope').load_extension 'ui-select'
             end,
-            after = "nvim-telescope/telescope.nvim"
-        }
-    }
+            after = 'nvim-telescope/telescope.nvim',
+        },
+    },
 }

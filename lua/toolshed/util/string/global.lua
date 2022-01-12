@@ -27,23 +27,27 @@ function M.codepoints(str)
     return function()
         local c = cache or nxt()
         cache = nil
-        if c == nil then return end
-        if c <= 127 then return string.char(c) end
-        assert(c >= 194 and c <= 244,
-               "invalid byte in utf-8 sequence: " .. tostring(c))
-        local ret = {c}
+        if c == nil then
+            return
+        end
+        if c <= 127 then
+            return string.char(c)
+        end
+        assert(c >= 194 and c <= 244, 'invalid byte in utf-8 sequence: ' .. tostring(c))
+        local ret = { c }
         c = nxt()
-        assert(c, "unexpected eof in utf-8 string")
-        assert(c >= 128 and c <= 191,
-               "expected multibyte sequence: " .. tostring(c))
+        assert(c, 'unexpected eof in utf-8 string')
+        assert(c >= 128 and c <= 191, 'expected multibyte sequence: ' .. tostring(c))
         table.insert(ret, c)
         local count = 2
         while true do
             cache = nxt()
-            if not cache or cache < 128 or cache > 191 then break end
+            if not cache or cache < 128 or cache > 191 then
+                break
+            end
             count = count + 1
             if count > 4 then
-                error "multibyte sequence too long in utf-8 string"
+                error 'multibyte sequence too long in utf-8 string'
             end
             table.insert(ret, cache)
         end
@@ -59,8 +63,10 @@ function M.filteredcodepoints(str)
         cache = nil
         if cp == '\r' then
             cache = codepoint()
-            if cache == "\n" then cache = nil end
-            return "\n"
+            if cache == '\n' then
+                cache = nil
+            end
+            return '\n'
         elseif cp then
             return cp
         end
@@ -73,32 +79,48 @@ function M.lines(str)
     return function()
         local line = {}
         for c in codepoints do
-            if c == '\n' then return table.concat(line) end
+            if c == '\n' then
+                return table.concat(line)
+            end
             table.insert(line, c)
         end
-        if #line > 0 then return table.concat(line) end
+        if #line > 0 then
+            return table.concat(line)
+        end
     end
 end
 string.lines = M.lines
 
 function M.trim(s)
-    local from = s:match "^%s*()"
-    return from > #s and "" or s:match(".*%S", from)
+    local from = s:match '^%s*()'
+    return from > #s and '' or s:match('.*%S', from)
 end
 string.trim = M.trim
 
 function M.distance(A, B)
     local la, lb, x = A:len(), B:len(), {}
-    if la == 0 then return lb end
-    if lb == 0 then return la end
-    if la < lb then A, la, B, lb = B, lb, A, la end
-    for i = 1, lb do x[i] = i end
+    if la == 0 then
+        return lb
+    end
+    if lb == 0 then
+        return la
+    end
+    if la < lb then
+        A, la, B, lb = B, lb, A, la
+    end
+    for i = 1, lb do
+        x[i] = i
+    end
     for r = 1, la do
         local t, l, v = r - 1, r, A:sub(r, r)
         for c = 1, lb do
             if v ~= B:sub(c, c) then
-                if x[c] < t then t = x[c] end
-                if l < t then t = l end
+                if x[c] < t then
+                    t = x[c]
+                end
+                if l < t then
+                    t = l
+                end
                 t = t + 1
             end
             x[c], l, t = t, t, x[c]

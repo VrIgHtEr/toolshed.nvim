@@ -4,7 +4,7 @@ local states = {
     codepointmultibyte = 1,
     codepointfinished = 2,
     finished = 3,
-    err = 4
+    err = 4,
 }
 
 function M.new()
@@ -17,9 +17,11 @@ function M.new()
 
     return function(str)
         if not partiallydone then
-            error "must iterate previous string completely before adding the next one"
+            error 'must iterate previous string completely before adding the next one'
         end
-        if state == states.finished then error "stream is finished" end
+        if state == states.finished then
+            error 'stream is finished'
+        end
         partiallydone = false
         if str == nil then
             return function()
@@ -29,10 +31,10 @@ function M.new()
                     state = states.finished
                     return
                 elseif state == states.codepointfinished then
-                    if codepoint == "\r" then
+                    if codepoint == '\r' then
                         if prevcr then
                             prevcr = false
-                            return "\n"
+                            return '\n'
                         else
                             prevcr = true
                             partiallydone = true
@@ -42,11 +44,11 @@ function M.new()
                     else
                         if prevcr then
                             prevcr = false
-                            if codepoint == "\n" then
+                            if codepoint == '\n' then
                                 partiallydone = true
                                 state = states.finished
                             end
-                            return "\n"
+                            return '\n'
                         else
                             prevcr = false
                             state = states.finished
@@ -56,7 +58,7 @@ function M.new()
                     end
                 elseif state == states.codepointmultibyte then
                     if #codepointbuilder < 2 or #codepointbuilder > 4 then
-                        error("invalid utf8 sequence")
+                        error 'invalid utf8 sequence'
                     end
                     codepoint = table.concat(codepointbuilder)
                     state = states.codepointfinished
@@ -64,7 +66,7 @@ function M.new()
                 elseif state == states.finished then
                     return
                 elseif state == states.err then
-                    error "error state"
+                    error 'error state'
                 end
             end
         else
@@ -88,7 +90,9 @@ function M.new()
                 ::continue::
                 if state == states.begin then
                     local c = nc()
-                    if not c then return end
+                    if not c then
+                        return
+                    end
                     local byte = string.byte(c)
                     if byte >= 0 and byte <= 127 then
                         codepoint = c
@@ -99,18 +103,20 @@ function M.new()
                         state = states.codepointmultibyte
                         goto continue
                     else
-                        error("invalid byte in utf8 string")
+                        error 'invalid byte in utf8 string'
                     end
                 elseif state == states.codepointmultibyte then
                     local c = nc()
-                    if not c then return end
+                    if not c then
+                        return
+                    end
                     local byte = string.byte(c)
                     if byte >= 128 and byte <= 191 then
                         table.insert(codepointbuilder, c)
                         goto continue
                     else
                         if #codepointbuilder < 2 or #codepointbuilder > 4 then
-                            error("invalid utf8 sequence")
+                            error 'invalid utf8 sequence'
                         end
                         bytecache = c
                         codepoint = table.concat(codepointbuilder)
@@ -119,10 +125,10 @@ function M.new()
                         goto continue
                     end
                 elseif state == states.codepointfinished then
-                    if codepoint == "\r" then
+                    if codepoint == '\r' then
                         if prevcr then
                             prevcr = false
-                            return "\n"
+                            return '\n'
                         else
                             prevcr = true
                             state = states.begin
@@ -131,10 +137,10 @@ function M.new()
                     else
                         if prevcr then
                             prevcr = false
-                            if codepoint == "\n" then
+                            if codepoint == '\n' then
                                 state = states.begin
                             end
-                            return "\n"
+                            return '\n'
                         else
                             prevcr = false
                             state = states.begin
@@ -142,7 +148,7 @@ function M.new()
                         end
                     end
                 elseif state == states.err then
-                    error("error state")
+                    error 'error state'
                 elseif state == states.finished then
                     return
                 end

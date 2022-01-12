@@ -1,4 +1,4 @@
-local state = {1, 0, 0, 0, 0}
+local state = { 1, 0, 0, 0, 0 }
 local counter = 0
 
 return function()

@@ -11,7 +11,9 @@ end
 
 local function grow(q)
     local newbuf = {}
-    for x in q:iterator() do table.insert(newbuf, x) end
+    for x in q:iterator() do
+        table.insert(newbuf, x)
+    end
     q.head = q:size()
     q.buf = newbuf
     q.capacity = q.capacity * 2
@@ -20,7 +22,9 @@ local function grow(q)
 end
 
 function MT.enqueue(q, item)
-    if q.parity and q.head == q.tail then grow(q) end
+    if q.parity and q.head == q.tail then
+        grow(q)
+    end
     q.head = q.head + 1
     q.buf[q.head] = item
     if q.head == q.capacity then
@@ -31,7 +35,9 @@ function MT.enqueue(q, item)
 end
 
 function MT.prequeue(q, item)
-    if q.parity and q.head == q.tail then grow(q) end
+    if q.parity and q.head == q.tail then
+        grow(q)
+    end
     if q.tail == 0 then
         q.tail = q.capacity
         q.parity = not q.parity
@@ -62,9 +68,11 @@ function MT.iterator(q)
 
     return function()
         if version ~= q.version then
-            error "collection modified while being iterated"
+            error 'collection modified while being iterated'
         end
-        if head == q.tail and not parity then return nil end
+        if head == q.tail and not parity then
+            return nil
+        end
         head = head + 1
         local ret = q.buf[head]
         if head == q.capacity then
@@ -82,8 +90,10 @@ function M.new()
         tail = 0,
         capacity = 1,
         version = 0,
-        buf = {}
+        buf = {},
     }, MT)
 end
-function MT.__index(_, k) return MT[k] end
+function MT.__index(_, k)
+    return MT[k]
+end
 return M

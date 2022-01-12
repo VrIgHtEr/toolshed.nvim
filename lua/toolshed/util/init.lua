@@ -3,5 +3,5 @@ return {
     sys = require 'toolshed.util.sys',
     net = require 'toolshed.util.net',
     random = require 'toolshed.util.random',
-    generic = require 'toolshed.util.generic'
+    generic = require 'toolshed.util.generic',
 }

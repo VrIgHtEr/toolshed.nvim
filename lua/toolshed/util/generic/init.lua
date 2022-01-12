@@ -1,4 +1,4 @@
 return {
     queue = require 'toolshed.util.generic.queue',
-    pqueue = require 'toolshed.util.generic.pqueue'
+    pqueue = require 'toolshed.util.generic.pqueue',
 }
