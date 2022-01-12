@@ -1,20 +1,8 @@
 return {
     needs = { 'kyazdani42/nvim-tree.lua' },
     after = { 'kyazdani42/nvim-tree.lua' },
-    config = function()
+    config = function(plugins)
         -- Color for highlights
-        local colors = {
-            yellow = '#ECBE7B',
-            cyan = '#008080',
-            darkblue = '#081633',
-            green = '#98be65',
-            orange = '#FF8800',
-            violet = '#a9a1e1',
-            magenta = '#c678dd',
-            blue = '#51afef',
-            red = '#ec5f67',
-        }
-
         local config = {
             options = {
                 icons_enabled = true,
@@ -43,58 +31,30 @@ return {
             extensions = {},
         }
 
-        -- Inserts a component in lualine_c at left section
-        local function ins_left(component)
-            table.insert(config.sections.lualine_c, component)
-        end
-        ins_left {
-            'lsp_progress',
-            -- With spinner
-            -- display_components = { 'lsp_client_name', 'spinner', { 'title', 'percentage', 'message' }},
-            colors = {
-                percentage = colors.cyan,
-                title = colors.cyan,
-                message = colors.cyan,
-                spinner = colors.cyan,
-                lsp_client_name = colors.magenta,
-                use = true,
-            },
-            separators = {
-                component = ' ',
-                progress = ' | ',
-                percentage = { pre = '', post = '%% ' },
-                title = { pre = '', post = ': ' },
-                lsp_client_name = { pre = '[', post = ']' },
-                spinner = { pre = '', post = '' },
-                message = {
-                    pre = '(',
-                    post = ')',
-                    commenced = 'In Progress',
-                    completed = 'Completed',
-                },
-            },
-            display_components = {
-                'lsp_client_name',
-                'spinner',
-                { 'title', 'percentage', 'message' },
-            },
-            timer = {
-                progress_enddelay = 500,
-                spinner = 1000,
-                lsp_client_name_enddelay = 1000,
-            },
-            spinner_symbols = {
-                '🌑 ',
-                '🌒 ',
-                '🌓 ',
-                '🌔 ',
-                '🌕 ',
-                '🌖 ',
-                '🌗 ',
-                '🌘 ',
-            },
-        }
+        local state = require('toolshed.plugtool').state 'nvim-lualine/lualine.nvim'
 
+        if state.sections then
+            if state.sections.lualine_a then
+                for _, x in ipairs(state.sections.lualine_a) do
+                    table.insert(config.sections.lualine_a, x)
+                end
+                for _, x in ipairs(state.sections.lualine_b) do
+                    table.insert(config.sections.lualine_b, x)
+                end
+                for _, x in ipairs(state.sections.lualine_c) do
+                    table.insert(config.sections.lualine_c, x)
+                end
+                for _, x in ipairs(state.sections.lualine_x) do
+                    table.insert(config.sections.lualine_x, x)
+                end
+                for _, x in ipairs(state.sections.lualine_y) do
+                    table.insert(config.sections.lualine_y, x)
+                end
+                for _, x in ipairs(state.sections.lualine_z) do
+                    table.insert(config.sections.lualine_z, x)
+                end
+            end
+        end
         require('lualine').setup(config)
 
         local timer = vim.loop.new_timer()
