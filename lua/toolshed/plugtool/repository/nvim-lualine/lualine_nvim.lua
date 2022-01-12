@@ -1,7 +1,7 @@
 return {
     needs = { 'kyazdani42/nvim-tree.lua' },
     after = { 'kyazdani42/nvim-tree.lua' },
-    config = function(plugins)
+    config = function()
         -- Color for highlights
         local config = {
             options = {
