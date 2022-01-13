@@ -1,27 +1,12 @@
 local gps = nil
 
-local function get_location()
-    return gps.get_location()
-end
-
-local function is_available()
-    if not gps then
-        local success
-        success, gps = pcall(require, 'nvim-gps')
-        if not success then
-            gps = nil
-            return false
-        end
-    end
-    return gps.is_available()
-end
-
 return {
     needs = { 'nvim-treesitter/nvim-treesitter' },
     after = { 'nvim-treesitter/nvim-treesitter', 'nvim-lualine/lualine.nvim' },
     config = {
         function()
-            require('nvim-gps').setup()
+            gps = require 'nvim-gps'
+            gps.setup()
         end,
         {
             function()
@@ -29,10 +14,34 @@ return {
                 if config.sections == nil then
                     config.sections = {}
                 end
-                if config.sections.lualine_c == nil then
-                    config.sections.lualine_c = {}
+                local section = 'lualine_x'
+                if config.sections[section] == nil then
+                    config.sections[section] = {}
                 end
-                table.insert(config.sections.lualine_c, { get_location, cond = is_available })
+                table.insert(config.sections[section], {
+                    function()
+                        local success, ret = pcall(require, 'nvim-gps')
+                        if not success then
+                            return ''
+                        end
+                        success, ret = pcall(ret.get_location)
+                        if not success then
+                            return ''
+                        end
+                        return ret
+                    end,
+                    cond = function()
+                        local success, ret = pcall(require, 'nvim-gps')
+                        if not success then
+                            return false
+                        end
+                        success, ret = pcall(ret.is_available)
+                        if not success then
+                            return ''
+                        end
+                        return ret
+                    end,
+                })
             end,
             before = 'nvim-lualine/lualine.nvim',
         },
