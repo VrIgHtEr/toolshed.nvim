@@ -121,7 +121,6 @@ local function discover(plugin, update)
                 displayer 'Failed to check for updates'
                 error('failed to check for updates: ' .. url)
             end
-
             local amt = #ret
             updated = amt > 0
             if amt > 0 then
