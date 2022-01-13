@@ -13,6 +13,7 @@ return {
             show_end_of_line = true,
             show_foldtext = true,
             show_current_context_start = true,
+            show_current_context_start_on_current_line = true,
             show_current_context = true,
             space_char_blankline = ' ',
         }
