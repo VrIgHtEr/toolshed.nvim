@@ -9,6 +9,7 @@ function display.new()
         vim.api.nvim_buf_delete(buf, { force = true })
         buf = 0
     end
+    local error_occurred = false
     buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_win_set_buf(win, buf)
     local urlwidth = 0
@@ -125,7 +126,7 @@ function display.new()
                     end
                     local new_last_line = get_last_line()
                     if new_last_line < last_line then
-                        vim.api.nvim_buf_set_lines(buf, new_last_line, last_line, false, {})
+                        error_occurred = error_occurred or not pcall(vim.api.nvim_buf_set_lines, buf, new_last_line, last_line, false, {})
                     end
                 end
             end)
@@ -145,15 +146,24 @@ function display.new()
             end
             vim.api.nvim_buf_clear_namespace(buf, ns, lineindex, displayer.get_next_line())
             lines, highlights = create_lines()
-            vim.api.nvim_buf_set_lines(buf, lineindex, displayer.get_next_line(), false, lines)
-            for i, hl in ipairs(highlights) do
-                for _, x in ipairs(hl) do
-                    vim.api.nvim_buf_add_highlight(buf, ns, x[3], lineindex + i - 1, x[1], x[2])
+            error_occurred = error_occurred or not pcall(vim.api.nvim_buf_set_lines, buf, lineindex, displayer.get_next_line(), false, lines)
+            if not error_occurred then
+                for i, hl in ipairs(highlights) do
+                    for _, x in ipairs(hl) do
+                        vim.api.nvim_buf_add_highlight(buf, ns, x[3], lineindex + i - 1, x[1], x[2])
+                    end
                 end
             end
+
+            local cur_win = vim.api.nvim_get_current_win()
             if displayer.get_next_line() ~= lineindex then
-                vim.api.nvim_win_set_cursor(win, { displayer.get_next_line(), 0 })
-                vim.api.nvim_win_set_cursor(win, { lineindex + 1, 0 })
+                if cur_win == win then
+                    local cur_buf = vim.api.nvim_win_get_buf(win)
+                    if cur_buf == buf then
+                        error_occurred = error_occurred or not pcall(vim.api.nvim_win_set_cursor, win, { displayer.get_next_line(), 0 })
+                        error_occurred = error_occurred or not pcall(vim.api.nvim_win_set_cursor, win, { lineindex + 1, 0 })
+                    end
+                end
             end
         end
 
@@ -176,12 +186,14 @@ function display.new()
 
     return {
         close = function()
-            vim.schedule(function()
-                if buf ~= 0 then
-                    vim.api.nvim_buf_delete(buf, { force = true })
-                    buf = 0
-                end
-            end)
+            if not error_occurred then
+                vim.schedule(function()
+                    if buf ~= 0 then
+                        vim.api.nvim_buf_delete(buf, { force = true })
+                        buf = 0
+                    end
+                end)
+            end
         end,
         displayer = function(url)
             if not plugins[url] then
