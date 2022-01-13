@@ -1,6 +1,6 @@
 return {
-    needs = { 'nvim-lua/plenary.nvim' },
-    after = { 'nvim-lua/plenary.nvim' },
+    needs = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' },
+    after = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' },
     config = function()
         local neogit = require 'neogit'
 
@@ -37,7 +37,7 @@ return {
                 --   }
                 -- }
                 --
-                diffview = false,
+                diffview = true,
             },
             -- Setting any section to `false` will make the section not render at all
             sections = {
@@ -69,8 +69,6 @@ return {
                 status = {
                     -- Adds a mapping with "B" as key that does the "BranchPopup" command
                     ['B'] = 'BranchPopup',
-                    -- Removes the default mapping of "s"
-                    ['s'] = '',
                 },
             },
         }
