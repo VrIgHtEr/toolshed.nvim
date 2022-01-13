@@ -8,8 +8,6 @@ local function is_available()
     if not gps then
         local success
         success, gps = pcall(require, 'nvim-gps')
-        print(vim.inspect(success))
-        print(vim.inspect(gps))
         if not success then
             gps = nil
             return false
