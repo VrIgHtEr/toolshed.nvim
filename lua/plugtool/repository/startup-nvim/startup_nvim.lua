@@ -51,6 +51,7 @@ return {
                 '██          ██  ███                 ███               ███   █████        ██    ████',
                 '██████████████  ███ ███       █████       █████████ ███              ████      ██  ',
             }
+            settings.header.highlight = 'String'
             require('startup').setup(settings)
         end,
         {
