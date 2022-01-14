@@ -39,7 +39,7 @@ function display.new()
 
     local function make_displayer(url)
         local name = url
-        local nsname = 'toolshed.plugtool.display/' .. name
+        local nsname = 'plugtool.display/' .. name
         local ns = nil
         maxline = maxline + 1
         local index = maxline

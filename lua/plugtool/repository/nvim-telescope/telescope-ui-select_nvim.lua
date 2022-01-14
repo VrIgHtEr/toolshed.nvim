@@ -4,7 +4,7 @@ return {
     config = {
         {
             function()
-                local st = require('toolshed.plugtool').state 'nvim-telescope/telescope.nvim'
+                local st = require('plugtool').state 'nvim-telescope/telescope.nvim'
                 if st.extensions == nil then
                     st.extensions = {}
                 end

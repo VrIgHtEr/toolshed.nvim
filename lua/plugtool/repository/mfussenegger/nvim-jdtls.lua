@@ -109,7 +109,7 @@ local function setup(state)
         [[augroup NvimJdtlsFormatAutogroup
               autocmd!
               autocmd BufWritePre *.java lua vim.lsp.buf.formatting_sync()
-              autocmd BufRead,BufNewFile *.java lua require'toolshed.plugtool'.state"mfussenegger/nvim-jdtls".setup()
+              autocmd BufRead,BufNewFile *.java lua require'plugtool'.state"mfussenegger/nvim-jdtls".setup()
           augroup end
           nnoremap <buffer> <leader>cc :JdtCompile<cr>]],
         true
@@ -121,6 +121,6 @@ return {
     after = { 'mfussenegger/nvim-dap' },
     config = function()
         install_dependencies()
-        setup(require('toolshed.plugtool').state 'mfussenegger/nvim-jdtls')
+        setup(require('plugtool').state 'mfussenegger/nvim-jdtls')
     end,
 }

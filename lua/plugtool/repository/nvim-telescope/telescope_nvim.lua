@@ -3,7 +3,7 @@ return {
     after = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter' },
     config = function()
         require('telescope').setup {
-            extensions = require('toolshed.plugtool').state 'nvim-telescope/telescope.nvim',
+            extensions = require('plugtool').state 'nvim-telescope/telescope.nvim',
         }
     end,
 }

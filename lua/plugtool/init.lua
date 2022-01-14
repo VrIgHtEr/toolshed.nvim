@@ -149,7 +149,7 @@ local function discover(plugin, update)
         end
         if not config then
             -- check config repository
-            local reqpath = 'toolshed.plugtool.repository.' .. plugin.username:gsub('[.]', '_') .. '.' .. plugin.reponame:gsub('[.]', '_')
+            local reqpath = 'plugtool.repository.' .. plugin.username:gsub('[.]', '_') .. '.' .. plugin.reponame:gsub('[.]', '_')
             package.loaded[reqpath] = nil
             local success, cfg = pcall(function()
                 return require(reqpath)
@@ -178,7 +178,7 @@ end
 
 local plugins_loaded = false
 
-local loader = require 'toolshed.plugtool.loader'
+local loader = require 'plugtool.loader'
 
 local function discover_loop(callback)
     if discovering then
@@ -259,7 +259,7 @@ function M.setup(plugins, callback)
     end
     num_added = 0
     plugins_added = {}
-    display = require('toolshed.plugtool.display').new()
+    display = require('plugtool.display').new()
     add_plugin 'vrighter/toolshed.nvim'
     for _, plugin in ipairs(plugins) do
         add_plugin(plugin)

@@ -31,7 +31,7 @@ return {
             extensions = {},
         }
 
-        local state = require('toolshed.plugtool').state 'nvim-lualine/lualine.nvim'
+        local state = require('plugtool').state 'nvim-lualine/lualine.nvim'
         if state.sections then
             if state.sections.lualine_a then
                 for _, x in ipairs(state.sections.lualine_a) do

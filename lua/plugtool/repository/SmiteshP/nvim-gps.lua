@@ -10,7 +10,7 @@ return {
         end,
         {
             function()
-                local config = require('toolshed.plugtool').state 'nvim-lualine/lualine.nvim'
+                local config = require('plugtool').state 'nvim-lualine/lualine.nvim'
                 if config.sections == nil then
                     config.sections = {}
                 end
