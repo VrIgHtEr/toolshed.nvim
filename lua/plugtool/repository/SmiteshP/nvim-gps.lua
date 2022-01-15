@@ -15,7 +15,7 @@ return {
                 if config.sections == nil then
                     config.sections = {}
                 end
-                local section = 'lualine_x'
+                local section = 'lualine_c'
                 if config.sections[section] == nil then
                     config.sections[section] = {}
                 end
