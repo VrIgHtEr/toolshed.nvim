@@ -272,8 +272,10 @@ return function(plugins)
     end
     plugdefs = plugins
     plugin_state = {}
-    for _, x in ipairs(sort(plugins)) do
+    plugins = sort(plugins)
+    for _, x in ipairs(plugins) do
         vim.cmd('packadd ' .. x.value.reponame)
         configure_plugin(x)
     end
+    return plugins
 end

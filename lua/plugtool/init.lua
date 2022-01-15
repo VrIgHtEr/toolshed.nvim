@@ -179,11 +179,12 @@ end
 local plugins_loaded = false
 
 local loader = require 'plugtool.loader'
-
+local load_sequence = {}
 local function discover_loop(callback)
     if discovering then
         return
     end
+    load_sequence = {}
     discovering = true
     a.run(function()
         local any_updated = false
@@ -228,7 +229,7 @@ local function discover_loop(callback)
                 print 'Plugin installation complete. Please restart neovim'
             else
                 display.close()
-                loader(plugdefs)
+                load_sequence = loader(plugdefs)
                 plugins_loaded = true
                 if type(callback) == 'function' then
                     callback(loader())
@@ -265,6 +266,16 @@ function M.setup(plugins, callback)
         add_plugin(plugin)
     end
     discover_loop(callback)
+end
+function M.load_sequence()
+    return load_sequence
+end
+
+local fun = require 'toolshed.util.fun'
+function M.loaded()
+    return fun.tolist(fun.map(load_sequence, function(x)
+        return x.url
+    end))
 end
 
 function M.state(plugin)
