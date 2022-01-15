@@ -2,7 +2,8 @@ local gps = nil
 
 return {
     needs = { 'nvim-treesitter/nvim-treesitter' },
-    after = { 'nvim-treesitter/nvim-treesitter', 'nvim-lualine/lualine.nvim' },
+    after = { 'nvim-treesitter/nvim-treesitter' },
+    before = { 'nvim-lualine/lualine.nvim' },
     config = {
         function()
             gps = require 'nvim-gps'
