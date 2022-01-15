@@ -37,17 +37,13 @@ return {
         end,
         {
             function()
-                vim.api.nvim_exec(
-                    [[augroup indentblanklineplugtoolaugroup
-              autocmd!
-              autocmd BufEnter startup :IndentBlanklineDisable
-              autocmd BufLeave startup :IndentBlanklineEnable
-              autocmd FileType startup :IndentBlanklineDisable
-          augroup end]],
-                    true
-                )
+                local state = require('plugtool').state 'lukas-reineke/indent-blankline.nvim'
+                if not state.excludedfiletypes then
+                    state.excludedfiletypes = {}
+                end
+                table.insert(state.excludedfiletypes, 'startup')
             end,
-            after = 'lukas-reineke/indent-blankline.nvim',
+            before = 'lukas-reineke/indent-blankline.nvim',
         },
     },
 }
