@@ -32,6 +32,7 @@ return {
                 '█▄▄▄▄▄█ █ ▄    ▄▄ ▀  ▄▄▄▄ ▄▀  ▀▀  ▄▄▀  █▀',
             }
             settings.header.highlight = 'String'
+            settings.footer.content = { '' }
             require('startup').setup(settings)
         end,
         {
