@@ -38,7 +38,7 @@ return {
                         end
                         success, ret = pcall(ret.is_available)
                         if not success then
-                            return ''
+                            return false
                         end
                         return ret
                     end,
