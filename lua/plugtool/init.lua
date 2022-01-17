@@ -278,6 +278,50 @@ function M.loaded()
     end))
 end
 
+function M.find_unmanaged()
+    local loaded = {}
+    for _, x in ipairs(M.loaded()) do
+        loaded[x] = true
+    end
+
+    local detected = require 'plugtool.detect'()
+    for namespace, namespace_contents in pairs(detected) do
+        local plugnameprefix = namespace .. '/'
+        for _, mode_contents in pairs(namespace_contents) do
+            for i = #mode_contents, 1, -1 do
+                local plugname = mode_contents[i]
+                local plugfullname = plugnameprefix .. plugname
+                if loaded[plugfullname] then
+                    table.remove(mode_contents, i)
+                end
+            end
+        end
+    end
+    local namespaces_to_remove = {}
+    for namespace, namespace_contents in pairs(detected) do
+        local keys_to_remove = {}
+        for mode, mode_contents in pairs(namespace_contents) do
+            if #mode_contents == 0 then
+                table.insert(keys_to_remove, mode)
+            end
+        end
+        for _, x in ipairs(keys_to_remove) do
+            namespace_contents[x] = nil
+        end
+        local namespace_empty = true
+        if pairs(namespace_contents)(namespace_contents) then
+            namespace_empty = false
+        end
+        if namespace_empty then
+            table.insert(namespaces_to_remove, namespace)
+        end
+    end
+    for _, x in ipairs(namespaces_to_remove) do
+        detected[x] = nil
+    end
+    return detected
+end
+
 function M.state(plugin)
     local plugin_state = loader()
     if type(plugin) == 'nil' then
