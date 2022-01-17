@@ -322,6 +322,38 @@ function M.find_unmanaged()
     return detected
 end
 
+local function list_dirs(directory)
+    local pfile = assert(io.popen(("find '%s' -mindepth 1 -maxdepth 1 -type d -printf '%%f\\0'"):format(directory), 'r'))
+    local list = pfile:read '*a'
+    pfile:close()
+    local folders = {}
+    for filename in string.gmatch(list, '[^%z]+') do
+        table.insert(folders, filename)
+    end
+    return folders
+end
+
+function M.purge_unmanaged()
+    local path = vim.fn.stdpath 'data' .. '/site/pack'
+    for namespace, ns_contents in pairs(M.find_unmanaged()) do
+        local nspath = path .. '/' .. namespace
+        for mode, m_contents in pairs(ns_contents) do
+            local modepath = nspath .. '/' .. mode
+            for _, x in ipairs(m_contents) do
+                vim.loop.spawn('rm', { args = { '-rf', modepath .. '/' .. x } })
+            end
+            local mdirs = list_dirs(modepath)
+            if #mdirs == 0 then
+                vim.loop.spawn('rm', { args = { '-rf', modepath } })
+            end
+        end
+        local ndirs = list_dirs(nspath)
+        if #ndirs == 0 then
+            vim.loop.spawn('rm', { args = { '-rf', nspath } })
+        end
+    end
+end
+
 function M.state(plugin)
     local plugin_state = loader()
     if type(plugin) == 'nil' then
