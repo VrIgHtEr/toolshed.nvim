@@ -14,6 +14,13 @@ return {
             lspconfig = {
                 capabilities = require('lsp/lsp').capabilities,
                 cmd = { require('toolshed.env').bin .. '/lua-language-server' },
+                settings = {
+                    Lua = {
+                        workspace = {
+                            preloadFileSize = 1024,
+                        },
+                    },
+                },
             },
         }
         local lspconfig = require 'lspconfig'
