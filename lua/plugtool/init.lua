@@ -280,7 +280,7 @@ function M.setup(plugins, callback)
     end
 
     local newplugins = { cache_plugin_name }
-    for i, x in ipairs(plugins) do
+    for _, x in ipairs(plugins) do
         table.insert(newplugins, x)
     end
     plugins = newplugins
