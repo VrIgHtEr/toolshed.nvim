@@ -38,7 +38,7 @@ local function format_plugin_list(plugins)
         cols[i] = {}
     end
 
-    local numplugs, col = #plugins, 0
+    local col = 0
     for _, x in ipairs(plugins) do
         col = col + 1
         table.insert(cols[col], x)
@@ -127,6 +127,7 @@ return {
                             { ' File Browser', 'Telescope file_browser', '<leader>fb' },
                             { ' Colorschemes', 'Telescope colorscheme', '<leader>cs' },
                             { ' New File', "lua require'startup'.new_file()", '<leader>nf' },
+                            { ' Update Plugins', "lua require'plugtool'.update()", '<leader>pu' },
                         },
                         highlight = 'String',
                         default_color = '',

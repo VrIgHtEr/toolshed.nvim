@@ -252,6 +252,14 @@ local function discover_loop(callback)
     end)
 end
 
+local pluginlist = nil
+function M.update(callback)
+    if pluginlist == nil then
+        error 'cannot update before loading'
+    end
+    return M.setup(pluginlist, callback)
+end
+
 function M.setup(plugins, callback)
     if discovering then
         return
@@ -265,6 +273,7 @@ function M.setup(plugins, callback)
     end
     num_added = 0
     plugins_added = {}
+    pluginlist = plugins
     display = require('plugtool.display').new()
     add_plugin 'vrighter/toolshed.nvim'
     for _, plugin in ipairs(plugins) do
