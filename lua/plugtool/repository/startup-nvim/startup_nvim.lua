@@ -46,13 +46,6 @@ local function format_plugin_list(plugins)
             col = 0
         end
     end
-    while col ~= 0 do
-        col = col + 1
-        table.insert(cols[col], '/')
-        if col == num_cols then
-            col = 0
-        end
-    end
 
     for _, c in ipairs(cols) do
         adjust_column(c)
@@ -60,7 +53,7 @@ local function format_plugin_list(plugins)
 
     for i = 2, num_cols do
         for j, z in ipairs(cols[i]) do
-            cols[i][j] = ' : ' .. z
+            cols[i][j] = '  ' .. z
         end
     end
 
@@ -71,6 +64,13 @@ local function format_plugin_list(plugins)
             table.insert(row, cols[c][r])
         end
         table.insert(ret, table.concat(row, ''))
+    end
+    local linelen = #ret[1]
+    for i, x in ipairs(ret) do
+        while #x < linelen do
+            x = x .. ' '
+        end
+        ret[i] = x
     end
     return ret
 end
