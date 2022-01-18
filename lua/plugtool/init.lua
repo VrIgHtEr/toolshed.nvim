@@ -9,6 +9,7 @@ local num_discovered
 local num_added
 local plugins_added
 local git = require 'toolshed.git'
+local startupfunc = nil
 
 local function add_plugin(plugin, front)
     if type(plugin) == 'string' then
@@ -234,6 +235,9 @@ local function discover_loop(callback)
                 if type(callback) == 'function' then
                     callback(loader())
                 end
+                if startupfunc then
+                    startupfunc()
+                end
             end
         elseif any_updated then
             plugins_loaded = true
@@ -252,6 +256,7 @@ function M.setup(plugins, callback)
     if discovering then
         return
     end
+    startupfunc = nil
     if type(plugins) ~= nil and type(plugins) ~= 'table' then
         error 'options must be a table'
     end
@@ -267,6 +272,14 @@ function M.setup(plugins, callback)
     end
     discover_loop(callback)
 end
+
+function M.set_startup_func(func)
+    if type(func) ~= 'function' then
+        error 'parameter passed to set_startup_func must be a function'
+    end
+    startupfunc = func
+end
+
 function M.load_sequence()
     return load_sequence
 end
