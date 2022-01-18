@@ -4,7 +4,7 @@ return {
     config = {
         {
             function()
-                vim.o.termguicolors = true
+                vim.api.nvim_exec('set termguicolors', true)
                 require('nvim-treesitter.configs').setup {
                     highlight = {},
                     rainbow = {
