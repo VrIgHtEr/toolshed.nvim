@@ -191,6 +191,7 @@ return {
                     options = {
                         after = function()
                             require('startup.utils').oldfiles_mappings()
+                            vim.wo.wrap = false
                         end,
                         mapping_keys = true,
                         cursor_column = 0.5,
@@ -213,9 +214,6 @@ return {
                     },
                 }
                 require('startup').setup(settings)
-                vim.schedule(function()
-                    vim.wo.wrap = false
-                end)
             end)
         end,
         {
