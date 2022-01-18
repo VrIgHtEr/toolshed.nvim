@@ -13,6 +13,7 @@ function display.new()
     buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_win_set_buf(win, buf)
     vim.bo.filetype = filetype
+    vim.wo.wrap = false
     local urlwidth = 0
     local maxline = 0
     local plugins = {}
