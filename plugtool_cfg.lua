@@ -1,4 +1,6 @@
 return {
+    needs = { 'lewis6991/impatient.nvim' },
+    after = { 'lewis6991/impatient.nvim' },
     config = {
         {
             function()
