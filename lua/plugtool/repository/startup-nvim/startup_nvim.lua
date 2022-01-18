@@ -213,6 +213,9 @@ return {
                     },
                 }
                 require('startup').setup(settings)
+                vim.schedule(function()
+                    vim.wo.wrap = false
+                end)
             end)
         end,
         {
