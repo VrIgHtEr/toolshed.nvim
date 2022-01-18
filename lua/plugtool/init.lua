@@ -277,7 +277,15 @@ function M.set_startup_func(func)
     if type(func) ~= 'function' then
         error 'parameter passed to set_startup_func must be a function'
     end
-    startupfunc = func
+    if not startupfunc then
+        startupfunc = func
+    else
+        local oldfunc = startupfunc
+        startupfunc = function()
+            oldfunc()
+            func()
+        end
+    end
 end
 
 function M.load_sequence()

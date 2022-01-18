@@ -3,6 +3,78 @@ local function quote()
     return quotes[math.floor(math.random() * #quotes) + 1]
 end
 
+local function format_plugin_list(plugins)
+    local function get_sizes(s)
+        local index = s:find '/'
+        return index - 1, #s - index
+    end
+    local function adjust_column(c)
+        local sizes, ls, rs = {}, 0, 0
+        for _, x in ipairs(c) do
+            local s = { get_sizes(x) }
+            if s[1] > ls then
+                ls = s[1]
+            end
+            if s[2] > rs then
+                rs = s[2]
+            end
+            table.insert(sizes, s)
+        end
+        for i, x in ipairs(c) do
+            local l, r = ls - sizes[i][1], rs - sizes[i][2]
+            for _ = 1, l do
+                x = ' ' .. x
+            end
+            for _ = 1, r do
+                x = x .. ' '
+            end
+            c[i] = x
+        end
+        c.width = ls + rs + 1
+    end
+    local num_cols = 3
+    local cols = {}
+    for i = 1, num_cols do
+        cols[i] = {}
+    end
+
+    local numplugs, col = #plugins, 0
+    for _, x in ipairs(plugins) do
+        col = col + 1
+        table.insert(cols[col], x)
+        if col == num_cols then
+            col = 0
+        end
+    end
+    while col ~= 0 do
+        col = col + 1
+        table.insert(cols[col], '/')
+        if col == num_cols then
+            col = 0
+        end
+    end
+
+    for _, c in ipairs(cols) do
+        adjust_column(c)
+    end
+
+    for i = 2, num_cols do
+        for j, z in ipairs(cols[i]) do
+            cols[i][j] = ' : ' .. z
+        end
+    end
+
+    local ret = {}
+    for r = 1, #cols[1] do
+        local row = {}
+        for c = 1, num_cols do
+            table.insert(row, cols[c][r])
+        end
+        table.insert(ret, table.concat(row, ''))
+    end
+    return ret
+end
+
 return {
     needs = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
     after = {
@@ -14,6 +86,8 @@ return {
         function()
             require('plugtool').set_startup_func(function()
                 math.randomseed(os.clock())
+                local loaded = require('plugtool').loaded()
+                local formatted = format_plugin_list(loaded)
                 local settings = {
                     -- every line should be same width without escaped \
                     header = {
@@ -102,11 +176,11 @@ return {
 
                     footer_2 = {
                         type = 'text',
-                        content = { 'Plugins loaded (plugtool): ' .. #(require('plugtool').loaded()) },
+                        content = formatted,
                         oldfiles_directory = false,
                         align = 'center',
                         fold_section = false,
-                        title = '',
+                        title = 'Plugtool loaded plugins: ' .. #loaded,
                         margin = 5,
                         highlight = 'TSString',
                         default_color = '#FFFFFF',
@@ -137,11 +211,6 @@ return {
                         'footer_2',
                     },
                 }
-                --            settings = require 'startup.themes.dashboard'
-                --            settings.header.content = require 'plugtool.header'
-                --            settings.header.highlight = 'String'
-                --            settings.footer.content = { '' }
-
                 require('startup').setup(settings)
             end)
         end,
