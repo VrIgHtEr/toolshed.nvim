@@ -15,6 +15,7 @@ local function add_plugin(plugin, front)
     if type(plugin) == 'string' then
         plugin = { plugin }
     end
+    local ev = require 'toolshed.env'
     if type(plugin) == 'table' then
         local plugin_url = plugin[1]
         if type(plugin_url) ~= 'string' then
