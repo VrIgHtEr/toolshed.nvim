@@ -13,6 +13,18 @@ local startupfunc = nil
 
 local flags = {}
 
+local function contains(tbl, value)
+    if tbl == nil then
+        return false
+    end
+    for _, x in ipairs(tbl) do
+        if x == value then
+            return true
+        end
+    end
+    return false
+end
+
 local function add_plugin(plugin, front)
     if type(plugin) == 'string' then
         plugin = { plugin }
@@ -176,6 +188,20 @@ local function discover(plugin, update)
                 end
             elseif plugdefs[flags.cache_plugin_name] then
                 table.insert(plugdefs[flags.cache_plugin_name].def.before, url)
+            end
+        end
+        if url == 'vrighter/toolshed.nvim' then
+            if not plugdefs[url].def.before then
+                plugdefs[url].def.before = {}
+            end
+        elseif plugdefs['vrighter/toolshed.nvim'] then
+            local tnvim = plugdefs['vrighter/toolshed.nvim']
+            if
+                not contains(tnvim.def.after, url)
+                and not contains(tnvim.def.before, url)
+                and not contains(plugdefs[url].def.before, 'vrighter/toolshed.nvim')
+            then
+                table.insert(tnvim.def.before, url)
             end
         end
         if config.needs ~= nil then
