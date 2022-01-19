@@ -1,6 +1,6 @@
 return {
-    needs = { 'kyazdani42/nvim-web-devicons' },
-    after = { 'kyazdani42/nvim-web-devicons' },
+    needs = { 'kyazdani42/nvim-web-devicons', 'b0o/mapx.nvim' },
+    after = { 'kyazdani42/nvim-web-devicons', 'b0o/mapx.nvim' },
     preload = function()
         vim.o.termguicolors = true
         vim.g.bufferline = {
@@ -71,28 +71,27 @@ return {
         }
     end,
     config = function()
-        local map = vim.api.nvim_set_keymap
-        local opts = { noremap = true, silent = true }
+        local nnoremap = _G['nnoremap']
 
         -- Move to previous/next
-        map('n', '<A-,>', ':BufferPrevious<CR>', opts)
-        map('n', '<A-.>', ':BufferNext<CR>', opts)
+        nnoremap('<A-,>', ':BufferPrevious<CR>', 'silent', '')
+        nnoremap('<A-.>', ':BufferNext<CR>', 'silent', '')
         -- Re-order to previous/next
-        map('n', '<A-<>', ':BufferMovePrevious<CR>', opts)
-        map('n', '<A->>', ' :BufferMoveNext<CR>', opts)
+        nnoremap('<A-<>', ':BufferMovePrevious<CR>', 'silent', '')
+        nnoremap('<A->>', ' :BufferMoveNext<CR>', 'silent', '')
         -- Goto buffer in position...
-        map('n', '<A-1>', ':BufferGoto 1<CR>', opts)
-        map('n', '<A-2>', ':BufferGoto 2<CR>', opts)
-        map('n', '<A-3>', ':BufferGoto 3<CR>', opts)
-        map('n', '<A-4>', ':BufferGoto 4<CR>', opts)
-        map('n', '<A-5>', ':BufferGoto 5<CR>', opts)
-        map('n', '<A-6>', ':BufferGoto 6<CR>', opts)
-        map('n', '<A-7>', ':BufferGoto 7<CR>', opts)
-        map('n', '<A-8>', ':BufferGoto 8<CR>', opts)
-        map('n', '<A-9>', ':BufferGoto 9<CR>', opts)
-        map('n', '<A-0>', ':BufferLast<CR>', opts)
+        nnoremap('<A-1>', ':BufferGoto 1<CR>', 'silent', '')
+        nnoremap('<A-2>', ':BufferGoto 2<CR>', 'silent', '')
+        nnoremap('<A-3>', ':BufferGoto 3<CR>', 'silent', '')
+        nnoremap('<A-4>', ':BufferGoto 4<CR>', 'silent', '')
+        nnoremap('<A-5>', ':BufferGoto 5<CR>', 'silent', '')
+        nnoremap('<A-6>', ':BufferGoto 6<CR>', 'silent', '')
+        nnoremap('<A-7>', ':BufferGoto 7<CR>', 'silent', '')
+        nnoremap('<A-8>', ':BufferGoto 8<CR>', 'silent', '')
+        nnoremap('<A-9>', ':BufferGoto 9<CR>', 'silent', '')
+        nnoremap('<A-0>', ':BufferLast<CR>', 'silent', '')
         -- Close buffer
-        map('n', '<A-c>', ':BufferClose<CR>', opts)
+        nnoremap('<A-c>', ':BufferClose<CR>', 'silent', '')
         -- Wipeout buffer
         --                 :BufferWipeout<CR>
         -- Close commands
@@ -100,10 +99,10 @@ return {
         --                 :BufferCloseBuffersLeft<CR>
         --                 :BufferCloseBuffersRight<CR>
         -- Magic buffer-picking mode
-        map('n', '<C-p>', ':BufferPick<CR>', opts)
+        nnoremap('<C-p>', ':BufferPick<CR>', 'silent', '')
         -- Sort automatically by...
-        map('n', '<Space>bb', ':BufferOrderByBufferNumber<CR>', opts)
-        map('n', '<Space>bd', ':BufferOrderByDirectory<CR>', opts)
-        map('n', '<Space>bl', ':BufferOrderByLanguage<CR>', opts)
+        nnoremap('<Space>bb', ':BufferOrderByBufferNumber<CR>', 'silent', '')
+        nnoremap('<Space>bd', ':BufferOrderByDirectory<CR>', 'silent', '')
+        nnoremap('<Space>bl', ':BufferOrderByLanguage<CR>', 'silent', '')
     end,
 }
