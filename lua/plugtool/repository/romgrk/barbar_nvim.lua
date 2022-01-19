@@ -1,6 +1,6 @@
 return {
-    needs = { 'kyazdani42/nvim-web-devicons', 'b0o/mapx.nvim' },
-    after = { 'kyazdani42/nvim-web-devicons', 'b0o/mapx.nvim' },
+    needs = { 'kyazdani42/nvim-web-devicons' },
+    after = { 'kyazdani42/nvim-web-devicons' },
     preload = function()
         vim.o.termguicolors = true
         vim.g.bufferline = {
@@ -70,39 +70,44 @@ return {
             no_name_title = nil,
         }
     end,
-    config = function()
-        local nnoremap = _G['nnoremap']
+    config = {
+        {
+            function()
+                local nnoremap = _G['nnoremap']
 
-        -- Move to previous/next
-        nnoremap('<A-,>', ':BufferPrevious<CR>', 'silent', 'Switch to previous buffer')
-        nnoremap('<A-.>', ':BufferNext<CR>', 'silent', 'Switch to next buffer')
-        -- Re-order to previous/next
-        nnoremap('<A-<>', ':BufferMovePrevious<CR>', 'silent', 'Move buffer to the left')
-        nnoremap('<A->>', ' :BufferMoveNext<CR>', 'silent', 'Move buffer to the right')
-        -- Goto buffer in position...
-        nnoremap('<A-1>', ':BufferGoto 1<CR>', 'silent', 'Switch to buffer 1')
-        nnoremap('<A-2>', ':BufferGoto 2<CR>', 'silent', 'Switch to buffer 2')
-        nnoremap('<A-3>', ':BufferGoto 3<CR>', 'silent', 'Switch to buffer 3')
-        nnoremap('<A-4>', ':BufferGoto 4<CR>', 'silent', 'Switch to buffer 4')
-        nnoremap('<A-5>', ':BufferGoto 5<CR>', 'silent', 'Switch to buffer 5')
-        nnoremap('<A-6>', ':BufferGoto 6<CR>', 'silent', 'Switch to buffer 6')
-        nnoremap('<A-7>', ':BufferGoto 7<CR>', 'silent', 'Switch to buffer 7')
-        nnoremap('<A-8>', ':BufferGoto 8<CR>', 'silent', 'Switch to buffer 8')
-        nnoremap('<A-9>', ':BufferGoto 9<CR>', 'silent', 'Switch to buffer 9')
-        nnoremap('<A-0>', ':BufferLast<CR>', 'silent', 'Switch to last buffer')
-        -- Close buffer
-        nnoremap('<A-c>', ':BufferClose<CR>', 'silent', 'Close current buffer')
-        -- Wipeout buffer
-        --                 :BufferWipeout<CR>
-        -- Close commands
-        --                 :BufferCloseAllButCurrent<CR>
-        --                 :BufferCloseBuffersLeft<CR>
-        --                 :BufferCloseBuffersRight<CR>
-        -- Magic buffer-picking mode
-        nnoremap('<C-p>', ':BufferPick<CR>', 'silent', 'Select buffer')
-        -- Sort automatically by...
-        nnoremap('<Space>bb', ':BufferOrderByBufferNumber<CR>', 'silent', 'Sort buffers by buffer number')
-        nnoremap('<Space>bd', ':BufferOrderByDirectory<CR>', 'silent', 'Sort buffers by directory')
-        nnoremap('<Space>bl', ':BufferOrderByLanguage<CR>', 'silent', 'Sort buffers by language')
-    end,
+                -- Move to previous/next
+                nnoremap('<A-,>', ':BufferPrevious<CR>', 'silent', 'Switch to previous buffer')
+                nnoremap('<A-.>', ':BufferNext<CR>', 'silent', 'Switch to next buffer')
+                -- Re-order to previous/next
+                nnoremap('<A-<>', ':BufferMovePrevious<CR>', 'silent', 'Move buffer to the left')
+                nnoremap('<A->>', ' :BufferMoveNext<CR>', 'silent', 'Move buffer to the right')
+                -- Goto buffer in position...
+                nnoremap('<A-1>', ':BufferGoto 1<CR>', 'silent', 'Switch to buffer 1')
+                nnoremap('<A-2>', ':BufferGoto 2<CR>', 'silent', 'Switch to buffer 2')
+                nnoremap('<A-3>', ':BufferGoto 3<CR>', 'silent', 'Switch to buffer 3')
+                nnoremap('<A-4>', ':BufferGoto 4<CR>', 'silent', 'Switch to buffer 4')
+                nnoremap('<A-5>', ':BufferGoto 5<CR>', 'silent', 'Switch to buffer 5')
+                nnoremap('<A-6>', ':BufferGoto 6<CR>', 'silent', 'Switch to buffer 6')
+                nnoremap('<A-7>', ':BufferGoto 7<CR>', 'silent', 'Switch to buffer 7')
+                nnoremap('<A-8>', ':BufferGoto 8<CR>', 'silent', 'Switch to buffer 8')
+                nnoremap('<A-9>', ':BufferGoto 9<CR>', 'silent', 'Switch to buffer 9')
+                nnoremap('<A-0>', ':BufferLast<CR>', 'silent', 'Switch to last buffer')
+                -- Close buffer
+                nnoremap('<A-c>', ':BufferClose<CR>', 'silent', 'Close current buffer')
+                -- Wipeout buffer
+                --                 :BufferWipeout<CR>
+                -- Close commands
+                --                 :BufferCloseAllButCurrent<CR>
+                --                 :BufferCloseBuffersLeft<CR>
+                --                 :BufferCloseBuffersRight<CR>
+                -- Magic buffer-picking mode
+                nnoremap('<C-p>', ':BufferPick<CR>', 'silent', 'Select buffer')
+                -- Sort automatically by...
+                nnoremap('<Space>bb', ':BufferOrderByBufferNumber<CR>', 'silent', 'Sort buffers by buffer number')
+                nnoremap('<Space>bd', ':BufferOrderByDirectory<CR>', 'silent', 'Sort buffers by directory')
+                nnoremap('<Space>bl', ':BufferOrderByLanguage<CR>', 'silent', 'Sort buffers by language')
+            end,
+            after = 'b0o/mapx.nvim',
+        },
+    },
 }
