@@ -1,5 +1,5 @@
 return {
-    config = function(): lua
+    config = function()
         math.randomseed(os.time())
     end,
 }
