@@ -1,4 +1,5 @@
 return {
+    needs = { 'b0o/mapx.nvim' },
     config = {
         {
             function()
