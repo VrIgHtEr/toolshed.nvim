@@ -88,8 +88,8 @@ return {
         nnoremap('<A-6>', ':BufferGoto 6<CR>', 'silent', 'Switch to buffer 6')
         nnoremap('<A-7>', ':BufferGoto 7<CR>', 'silent', 'Switch to buffer 7')
         nnoremap('<A-8>', ':BufferGoto 8<CR>', 'silent', 'Switch to buffer 8')
-        nnoremap('<A-9>', ':BufferGoto 9<CR>', 'silent', 'Switch to last buffer')
-        nnoremap('<A-0>', ':BufferLast<CR>', 'silent', '')
+        nnoremap('<A-9>', ':BufferGoto 9<CR>', 'silent', 'Switch to buffer 9')
+        nnoremap('<A-0>', ':BufferLast<CR>', 'silent', 'Switch to last buffer')
         -- Close buffer
         nnoremap('<A-c>', ':BufferClose<CR>', 'silent', 'Close current buffer')
         -- Wipeout buffer
@@ -99,7 +99,7 @@ return {
         --                 :BufferCloseBuffersLeft<CR>
         --                 :BufferCloseBuffersRight<CR>
         -- Magic buffer-picking mode
-        nnoremap('<C-p>', ':BufferPick<CR>', 'silent', '')
+        nnoremap('<C-p>', ':BufferPick<CR>', 'silent', 'Select buffer')
         -- Sort automatically by...
         nnoremap('<Space>bb', ':BufferOrderByBufferNumber<CR>', 'silent', 'Sort buffers by buffer number')
         nnoremap('<Space>bd', ':BufferOrderByDirectory<CR>', 'silent', 'Sort buffers by directory')
