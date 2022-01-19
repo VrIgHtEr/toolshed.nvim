@@ -9,7 +9,7 @@ return {
                 end
                 table.insert(state.excludedfiletypes, 'plugtool')
             end,
-            before = 'likas-reineke/indent-blankline.nvim',
+            before = 'lukas-reineke/indent-blankline.nvim',
         },
         {
             function()
