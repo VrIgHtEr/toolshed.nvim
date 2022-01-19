@@ -19,6 +19,12 @@ return {
                         workspace = {
                             preloadFileSize = 1024,
                         },
+                        IntelliSense = {
+                            traceLocalSet = true,
+                            traceReturn = true,
+                            traceBeSetted = true,
+                            traceFieldInject = true,
+                        },
                     },
                 },
             },
