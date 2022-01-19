@@ -28,7 +28,15 @@ local function create_entries(plugins)
         entry.value = v.def
         setmetatable(entry, MT)
         entry.url = tostring(entry)
-        if type(v.def.config) == 'nil' then
+
+        if v.def.preload then
+            if type(v.def.preload) ~= 'function' then
+                error('Invalid preload type. Expected function but got ' .. type(v.def.preload))
+            end
+            entry.preload = v.def.preload
+        end
+
+        if v.def.config == nil then
             entry.config = {}
         elseif type(v.def.config) == 'function' then
             entry.config = { v.def.config }
@@ -274,6 +282,9 @@ return function(plugins)
     plugin_state = {}
     plugins = sort(plugins)
     for _, x in ipairs(plugins) do
+        if x.preload then
+            x.preload()
+        end
         vim.cmd('packadd ' .. x.value.reponame)
         configure_plugin(x)
     end
