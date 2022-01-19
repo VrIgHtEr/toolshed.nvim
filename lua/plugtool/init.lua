@@ -11,7 +11,7 @@ local plugins_added
 local git = require 'toolshed.git'
 local startupfunc = nil
 
-local cache_plugin_name = 'lewis6991/impatient.nvim'
+local cache_plugin_name = nil
 
 local function add_plugin(plugin, front)
     if type(plugin) == 'string' then
@@ -168,10 +168,12 @@ local function discover(plugin, update)
         config.username = plugin.username
         config.reponame = plugin.reponame
         plugdefs[url] = { def = config }
-        if url == cache_plugin_name then
-            plugdefs[url].def.before = {}
-        elseif plugdefs[cache_plugin_name] then
-            table.insert(plugdefs[cache_plugin_name].def.before, url)
+        if cache_plugin_name then
+            if url == cache_plugin_name then
+                plugdefs[url].def.before = {}
+            elseif plugdefs[cache_plugin_name] then
+                table.insert(plugdefs[cache_plugin_name].def.before, url)
+            end
         end
         if config.needs ~= nil then
             for _, x in ipairs(config.needs) do
@@ -278,8 +280,16 @@ function M.setup(plugins, callback)
     if plugins == nil then
         return
     end
-
-    local newplugins = { cache_plugin_name, 'vrighter/toolshed.nvim' }
+    if plugins.disable_lua_cache then
+        cache_plugin_name = nil
+    else
+        cache_plugin_name = 'lewis6991/impatient.nvim'
+    end
+    local newplugins = {}
+    if cache_plugin_name then
+        table.insert(newplugins, cache_plugin_name)
+    end
+    table.insert(newplugins, 'vrighter/toolshed.nvim')
     for _, x in ipairs(plugins) do
         table.insert(newplugins, x)
     end
