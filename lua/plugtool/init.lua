@@ -180,30 +180,6 @@ local function discover(plugin, update)
         config.username = plugin.username
         config.reponame = plugin.reponame
         plugdefs[url] = { def = config }
-        if flags.cache_plugin_name then
-            if url == flags.cache_plugin_name then
-                plugdefs[url].def.before = {}
-                if flags.profile_lua_cache then
-                    plugdefs[url].def.config = flags.profile_lua_cache
-                end
-            elseif plugdefs[flags.cache_plugin_name] then
-                table.insert(plugdefs[flags.cache_plugin_name].def.before, url)
-            end
-        end
-        if url == 'vrighter/toolshed.nvim' then
-            if not plugdefs[url].def.before then
-                plugdefs[url].def.before = {}
-            end
-        elseif plugdefs['vrighter/toolshed.nvim'] then
-            local tnvim = plugdefs['vrighter/toolshed.nvim']
-            if
-                not contains(tnvim.def.after, url)
-                and not contains(tnvim.def.before, url)
-                and not contains(plugdefs[url].def.before, 'vrighter/toolshed.nvim')
-            then
-                table.insert(tnvim.def.before, url)
-            end
-        end
         if config.needs ~= nil then
             for _, x in ipairs(config.needs) do
                 add_plugin(x)

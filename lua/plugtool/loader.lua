@@ -160,6 +160,51 @@ local function create_entries(plugins)
         end
     end
 
+    local function get_transitive_dependencies(plug)
+        plug = plugs[plug]
+        local visited = { [plug.url] = true }
+        local queue = require('toolshed.util.generic.queue').new()
+        queue:enqueue(plug.url)
+
+        local function add_dependency(url)
+            if not visited[url] then
+                visited[url] = true
+                queue:enqueue(url)
+            end
+        end
+
+        while queue:size() > 0 do
+            local url = queue:dequeue()
+            local p = plugs[url]
+            if p.after then
+                for x in pairs(p.after) do
+                    add_dependency(x)
+                end
+            end
+            for _, x in pairs(plugs) do
+                if x.before and x.before[url] then
+                    add_dependency(x.url)
+                end
+            end
+        end
+        visited[plug.url] = nil
+        return visited
+    end
+
+    -- bump toolshed.nvim as high up as it can go
+    local toolshed_dependencies = get_transitive_dependencies 'vrighter/toolshed.nvim'
+    for k, v in pairs(plugs) do
+        if k ~= 'vrighter/toolshed.nvim' then
+            if toolshed_dependencies[k] then
+                v.before['vrighter/toolshed.nvim'] = true
+                plugs['vrighter/toolshed.nvim'].after[k] = true
+            else
+                v.after['vrighter/toolshed.nvim'] = true
+                plugs['vrighter/toolshed.nvim'].before[k] = true
+            end
+        end
+    end
+
     -- all entries have fully populated before/after lists
     -- and they contain only links to plugins that are in the installation list.
     -- Link entries together in before/after lists
