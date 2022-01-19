@@ -1,8 +1,10 @@
 return {
-    config = function()
+    preload = function()
         vim.g.minimap_width = 10
         vim.g.minimap_auto_start = 1
         vim.g.minimap_auto_start_win_enter = 1
+    end,
+    config = function()
         local env = require 'toolshed.env'
         return require('toolshed.async').run(function()
             return env.install_dependencies {
