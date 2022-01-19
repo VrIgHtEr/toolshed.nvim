@@ -1,6 +1,6 @@
 return {
     needs = { 'neovim/nvim-lspconfig' },
-    after = { 'neovim/nvim-lspconfig', 'rcarriga/nvim-notify' },
+    after = { 'neovim/nvim-lspconfig' },
     config = function()
         local lsp_installer = require 'nvim-lsp-installer'
         lsp_installer.settings {

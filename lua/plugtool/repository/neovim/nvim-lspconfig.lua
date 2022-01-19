@@ -1,5 +1,4 @@
 return {
-    after = { 'rcarriga/nvim-notify' },
     config = {
         function()
             local env = require 'toolshed.env'
