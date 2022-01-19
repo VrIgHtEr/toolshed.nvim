@@ -1,10 +1,15 @@
 return {
     needs = { 'nvim-treesitter/nvim-treesitter' },
-    before = { 'nvim-treesitter/nvim-treesitter' },
+    after = { 'nvim-treesitter/nvim-treesitter' },
     config = {
+        function()
+            vim.api.nvim_exec('set termguicolors', true)
+        end,
         {
             function()
-                vim.api.nvim_exec('set termguicolors', true)
+                if true then
+                    return
+                end
                 require('nvim-treesitter.configs').setup {
                     highlight = {},
                     rainbow = {
