@@ -279,7 +279,7 @@ function M.setup(plugins, callback)
         return
     end
 
-    local newplugins = { cache_plugin_name }
+    local newplugins = { cache_plugin_name, 'vrighter/toolshed.nvim' }
     for _, x in ipairs(plugins) do
         table.insert(newplugins, x)
     end
@@ -289,7 +289,6 @@ function M.setup(plugins, callback)
     plugins_added = {}
     pluginlist = plugins
     display = require('plugtool.display').new()
-    add_plugin 'vrighter/toolshed.nvim'
 
     for _, plugin in ipairs(plugins) do
         add_plugin(plugin)
