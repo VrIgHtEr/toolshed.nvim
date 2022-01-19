@@ -11,7 +11,7 @@ local plugins_added
 local git = require 'toolshed.git'
 local startupfunc = nil
 
-local cache_plugin_name = nil
+local flags = {}
 
 local function add_plugin(plugin, front)
     if type(plugin) == 'string' then
@@ -168,11 +168,14 @@ local function discover(plugin, update)
         config.username = plugin.username
         config.reponame = plugin.reponame
         plugdefs[url] = { def = config }
-        if cache_plugin_name then
-            if url == cache_plugin_name then
+        if flags.cache_plugin_name then
+            if url == flags.cache_plugin_name then
                 plugdefs[url].def.before = {}
-            elseif plugdefs[cache_plugin_name] then
-                table.insert(plugdefs[cache_plugin_name].def.before, url)
+                if flags.profile_lua_cache then
+                    plugdefs[url].def.config = flags.profile_lua_cache
+                end
+            elseif plugdefs[flags.cache_plugin_name] then
+                table.insert(plugdefs[flags.cache_plugin_name].def.before, url)
             end
         end
         if config.needs ~= nil then
@@ -274,20 +277,26 @@ function M.setup(plugins, callback)
         return
     end
     startupfunc = nil
+    flags = {}
     if type(plugins) ~= nil and type(plugins) ~= 'table' then
         error 'options must be a table'
     end
     if plugins == nil then
         return
     end
-    if plugins.disable_lua_cache then
-        cache_plugin_name = nil
-    else
-        cache_plugin_name = 'lewis6991/impatient.nvim'
+
+    if not plugins.disable_lua_cache then
+        flags.cache_plugin_name = 'lewis6991/impatient.nvim'
+        if plugins.profile_lua_cache then
+            flags.profile_lua_cache = function()
+                require('impatient').enable_profile()
+            end
+        end
     end
+
     local newplugins = {}
-    if cache_plugin_name then
-        table.insert(newplugins, cache_plugin_name)
+    if flags.cache_plugin_name then
+        table.insert(newplugins, flags.cache_plugin_name)
     end
     table.insert(newplugins, 'vrighter/toolshed.nvim')
     for _, x in ipairs(plugins) do
