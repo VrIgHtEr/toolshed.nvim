@@ -1,5 +1,5 @@
 return {
-    needs = { 'lewis6991/impatient.nvim', 'b0o/mapx.nvim' },
+    needs = { 'b0o/mapx.nvim' },
     after = { 'lewis6991/impatient.nvim', 'b0o/mapx.nvim' },
     config = {
         {
