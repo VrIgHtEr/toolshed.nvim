@@ -10,5 +10,11 @@ return {
             end,
             before = 'likas-reineke/indent-blankline.nvim',
         },
+        {
+            function()
+                nnoremap('<leader>pu', ':lua require"plugtool-setup"()<cr>', 'silent', 'Update all plugins using plugtool')
+            end,
+            after = 'b0o/mapx.nvim',
+        },
     },
 }

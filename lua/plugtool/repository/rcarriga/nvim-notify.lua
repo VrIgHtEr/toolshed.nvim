@@ -1,6 +1,6 @@
 return {
-    needs = { 'nvim-telescope/telescope.nvim' },
-    after = { 'nvim-telescope/telescope.nvim', 'ray-x/aurora' },
+    needs = { 'nvim-telescope/telescope.nvim', 'b0o/mapx.nvim' },
+    after = { 'nvim-telescope/telescope.nvim', 'ray-x/aurora', 'b0o/mapx.nvim' },
     config = function()
         require('notify').setup {
             -- Animation style (see below for details)
@@ -32,5 +32,6 @@ return {
             },
         }
         vim.notify = require 'notify'
+        nnoremap('<leader>nn', ':Telescope notify<cr>', 'silent', 'Telescope: Show a list of previously shown notifications')
     end,
 }

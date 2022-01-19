@@ -1,6 +1,6 @@
 return {
-    needs = { 'mfussenegger/nvim-dap' },
-    after = { 'mfussenegger/nvim-dap' },
+    needs = { 'mfussenegger/nvim-dap', 'b0o/mapx.nvim' },
+    after = { 'mfussenegger/nvim-dap', 'b0o/mapx.nvim' },
     config = function()
         require('dapui').setup {
             icons = { expanded = '▾', collapsed = '▸' },
@@ -41,5 +41,6 @@ return {
             },
             windows = { indent = 1 },
         }
+        nnoremap('<leader>dt', ':lua require"dapui".toggle()<cr>', 'silent', 'Dap: Toggle the debugger UI')
     end,
 }

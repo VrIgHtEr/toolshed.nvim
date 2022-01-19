@@ -1,6 +1,11 @@
 return {
-    after = { 'rcarriga/nvim-notify' },
+    needs = { 'b0o/mapx.nvim' },
+    after = { 'rcarriga/nvim-notify', 'b0o/mapx.nvim' },
     config = function()
+        nnoremap('<leader>cf', ':lua vim.lsp.buf.formatting()<cr>', 'silent', 'Lsp: Format file')
+        nnoremap('<leader>rr', ':lua vim.lsp.buf.rename()<cr>', 'silent', 'Lsp: Rename element')
+        nnoremap('<leader>ca', ':lua vim.lsp.buf.code_action()<cr>', 'silent', 'Lsp: Code action')
+        nnoremap('<leader>gd', ':lua vim.lsp.buf.definition()<cr>', 'silent', 'Lsp: Go to definition')
         local env = require 'toolshed.env'
         local dirname = 'lua-language-server'
         local path = env.get_dependency_path(dirname)
