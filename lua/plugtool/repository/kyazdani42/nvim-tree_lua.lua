@@ -1,9 +1,12 @@
 return {
-    needs = { 'kyazdani42/nvim-web-devicons' },
-    after = { 'kyazdani42/nvim-web-devicons' },
-    config = function()
-        vim.api.nvim_exec(
-            [[
+	needs = { "kyazdani42/nvim-web-devicons" },
+	after = { "kyazdani42/nvim-web-devicons" },
+	preload = function()
+		vim.o.termguicolors = true
+	end,
+	config = function()
+		vim.api.nvim_exec(
+			[[
 let g:nvim_tree_quit_on_open = 1 "0 by default, closes the tree when you open a file
 let g:nvim_tree_indent_markers = 0 "0 by default, this option shows indent markers when folders are open
 let g:nvim_tree_git_hl = 1 "0 by default, will enable file highlight for git attributes (can be used without the icons).
@@ -80,43 +83,43 @@ set termguicolors " this variable must be enabled for colors to be applied prope
 highlight NvimTreeFolderIcon guibg=blue
 
 ]],
-            true
-        )
-        return require('nvim-tree').setup {
-            disable_netrw = true,
-            hijack_netrw = true,
-            open_on_setup = false,
-            ignore_ft_on_setup = {},
-            auto_close = true,
-            open_on_tab = false,
-            hijack_cursor = false,
-            update_cwd = false,
-            update_to_buf_dir = { enable = true, auto_open = true },
-            git = { ignore = true },
-            diagnostics = {
-                enable = true,
-                icons = {
-                    hint = '',
-                    info = '',
-                    warning = '',
-                    error = '',
-                },
-            },
-            update_focused_file = {
-                enable = true,
-                update_cwd = false,
-                ignore_list = {},
-            },
-            system_open = { cmd = nil, args = {} },
-            filters = { dotfiles = true, custom = {} },
-            view = {
-                width = 30,
-                height = 30,
-                hide_root_folder = false,
-                side = 'left',
-                auto_resize = false,
-                mappings = { custom_only = false, list = {} },
-            },
-        }
-    end,
+			true
+		)
+		return require("nvim-tree").setup({
+			disable_netrw = true,
+			hijack_netrw = true,
+			open_on_setup = false,
+			ignore_ft_on_setup = {},
+			auto_close = true,
+			open_on_tab = false,
+			hijack_cursor = false,
+			update_cwd = false,
+			update_to_buf_dir = { enable = true, auto_open = true },
+			git = { ignore = true },
+			diagnostics = {
+				enable = true,
+				icons = {
+					hint = "",
+					info = "",
+					warning = "",
+					error = "",
+				},
+			},
+			update_focused_file = {
+				enable = true,
+				update_cwd = false,
+				ignore_list = {},
+			},
+			system_open = { cmd = nil, args = {} },
+			filters = { dotfiles = true, custom = {} },
+			view = {
+				width = 30,
+				height = 30,
+				hide_root_folder = false,
+				side = "left",
+				auto_resize = false,
+				mappings = { custom_only = false, list = {} },
+			},
+		})
+	end,
 }

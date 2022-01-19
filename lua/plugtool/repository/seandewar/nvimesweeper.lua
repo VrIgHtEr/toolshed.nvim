@@ -1,5 +1,8 @@
 return {
-    config = function()
-        math.randomseed(os.time())
-    end,
+	preload = function()
+		vim.o.termguicolors = true
+	end,
+	config = function()
+		math.randomseed(os.time())
+	end,
 }
