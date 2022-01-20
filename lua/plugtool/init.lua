@@ -437,4 +437,10 @@ end
 function M.DEBUG_RESET()
     plugins_loaded = false
 end
+
+function M.flag(name)
+    if flags then
+        return flags[name]
+    end
+end
 return M
