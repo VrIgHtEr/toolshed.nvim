@@ -210,7 +210,9 @@ local function create_entries(plugins)
     for k in pairs(plugs) do
         table.insert(bump_order, k)
     end
-    table.sort(bump_order)
+    table.sort(bump_order, function(a, b)
+        return a:upper() < b:upper()
+    end)
     for _, x in ipairs(bump_order) do
         bump(x)
     end
