@@ -31,7 +31,7 @@ return {
                 nnoremap('<leader>mr', ':CMake build_and_debug<cr>', 'silent', 'CMake: build and debug')
                 nnoremap('<leader>mR', ':CMake build_and_run<cr>', 'silent', 'CMake: build and run')
             end,
-            after = 'b0o/mapx.nvim',
+            after = require('plugtool.constants').mapx,
         },
     },
 }

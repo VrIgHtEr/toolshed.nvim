@@ -47,7 +47,7 @@ return {
             function()
                 nnoremap('<leader>dt', ':lua require"dapui".toggle()<cr>', 'silent', 'Dap: Toggle the debugger UI')
             end,
-            after = 'b0o/mapx.nvim',
+            after = require('plugtool.constants').mapx,
         },
     },
 }

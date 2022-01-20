@@ -31,7 +31,7 @@ return {
                 nnoremap('<leader>gd', ':lua vim.lsp.buf.definition()<cr>', 'silent', 'Lsp: Go to definition')
                 nnoremap('<leader>ch', ':lua vim.lsp.buf.hover()<cr>', 'silent', 'Lsp: Hover')
             end,
-            after = 'b0o/mapx.nvim',
+            after = require('plugtool.constants').mapx,
         },
     },
 }

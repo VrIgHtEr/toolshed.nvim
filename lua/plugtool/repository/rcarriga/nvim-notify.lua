@@ -38,7 +38,7 @@ return {
             function()
                 nnoremap('<leader>nn', ':Telescope notify<cr>', 'silent', 'Telescope: Show a list of previously shown notifications')
             end,
-            after = 'b0o/mapx.nvim',
+            after = require('plugtool.constants').mapx,
         },
     },
 }

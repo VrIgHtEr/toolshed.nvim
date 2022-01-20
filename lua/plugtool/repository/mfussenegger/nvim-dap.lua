@@ -16,7 +16,7 @@ return {
                 nnoremap('<leader>dr', ':lua require"dap".repl_open()<cr>', 'silent', 'Dap: Open REPL')
                 nnoremap('<leader>dl', ':lua require"dap".run_last()<cr>', 'silent', 'Dap: run last')
             end,
-            after = 'b0o/mapx.nvim',
+            after = require('plugtool.constants').mapx,
         },
     },
 }

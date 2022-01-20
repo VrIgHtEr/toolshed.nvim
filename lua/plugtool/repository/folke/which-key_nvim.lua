@@ -71,7 +71,7 @@ return {
             function()
                 nnoremap('<leader>wk', ':WhichKey<cr>', 'silent', 'There for you in times of need...')
             end,
-            after = 'b0o/mapx.nvim',
+            after = require('plugtool.constants').mapx,
         },
     },
 }

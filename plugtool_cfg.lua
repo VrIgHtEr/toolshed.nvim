@@ -1,6 +1,7 @@
+local constants = require 'plugtool.constants'
 return {
-    needs = { 'b0o/mapx.nvim' },
-    after = { 'lewis6991/impatient.nvim', 'b0o/mapx.nvim' },
+    needs = { constants.mapx },
+    after = { constants.cache_plugin_name, constants.mapx },
     config = {
         {
             function()
@@ -16,7 +17,7 @@ return {
             function()
                 nnoremap('<leader>pu', ':lua require"plugtool-setup"()<cr>', 'silent', 'Update all plugins using plugtool')
             end,
-            after = 'b0o/mapx.nvim',
+            after = constants.mapx,
         },
     },
 }

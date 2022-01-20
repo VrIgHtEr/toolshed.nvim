@@ -12,7 +12,7 @@ return {
                 vnoremap('<A-l>', ':MoveHBlock(1)<CR>', 'silent', 'Move block to the right')
                 vnoremap('<A-l>', ':MoveHBlock(-1)<CR>', 'silent', 'Move block to the left')
             end,
-            after = 'b0o/mapx.nvim',
+            after = require('plugtool.constants').mapx,
         },
     },
 }

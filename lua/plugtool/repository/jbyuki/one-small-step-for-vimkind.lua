@@ -6,7 +6,7 @@ return {
             function()
                 nnoremap('<leader>rl', ':lua require"osv".run_this()<cr>', 'silent', 'Lua: Debug the current file')
             end,
-            after = 'b0o/mapx.nvim',
+            after = require('plugtool.constants').mapx,
         },
     },
 }

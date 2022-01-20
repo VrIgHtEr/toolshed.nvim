@@ -107,7 +107,7 @@ return {
                 nnoremap('<Space>bd', ':BufferOrderByDirectory<CR>', 'silent', 'Sort buffers by directory')
                 nnoremap('<Space>bl', ':BufferOrderByLanguage<CR>', 'silent', 'Sort buffers by language')
             end,
-            after = 'b0o/mapx.nvim',
+            after = require('plugtool.constants').mapx,
         },
     },
 }

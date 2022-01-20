@@ -21,7 +21,7 @@ return {
             function()
                 nnoremap('<leader>lr', ':LuaRun<cr>', 'silent', 'Lua: Runs the current lua file in this neovim instance')
             end,
-            after = 'b0o/mapx.nvim',
+            after = require('plugtool.constants').mapx,
         },
     },
 }

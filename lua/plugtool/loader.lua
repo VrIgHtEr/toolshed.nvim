@@ -1,3 +1,5 @@
+local constants = require 'plugtool.constants'
+
 local MT = {
     __tostring = function(x)
         return x.value.username .. '/' .. x.value.reponame
@@ -165,7 +167,6 @@ local function create_entries(plugins)
     -- Maintaining this invariant from now on.
 
     local function get_transitive_dependencies(plug)
-        plug = plugs[plug]
         local visited = { [plug.url] = true }
         local queue = require('toolshed.util.generic.queue').new()
         queue:enqueue(plug.url)
@@ -184,7 +185,11 @@ local function create_entries(plugins)
     end
 
     local function bump(url)
-        local dependencies = get_transitive_dependencies(url)
+        local plug = plugs[url]
+        if not plug then
+            return
+        end
+        local dependencies = get_transitive_dependencies(plug)
         for k, v in pairs(plugs) do
             if k ~= url then
                 if dependencies[k] then
@@ -198,7 +203,8 @@ local function create_entries(plugins)
         end
     end
     -- bump toolshed.nvim as high up as it can go
-    bump 'vrighter/toolshed.nvim'
+    bump(constants.toolshed_plugin_name)
+    bump(constants.cache_plugin_name)
 
     -- Link entries together in before/after lists
     for _, v in pairs(plugs) do
