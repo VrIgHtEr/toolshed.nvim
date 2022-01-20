@@ -1,10 +1,5 @@
 return {
-    config = {
-        {
-            function()
-                nnoremap('<leader>ut', ':UndotreeToggle<cr>', 'silent', 'Toggles the vim undo tree browser')
-            end,
-            after = require('plugtool.constants').mapx,
-        },
-    },
+    config = function()
+        nnoremap('<leader>ut', ':UndotreeToggle<cr>', 'silent', 'Toggles the vim undo tree browser')
+    end,
 }
