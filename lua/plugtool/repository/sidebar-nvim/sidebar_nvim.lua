@@ -1,5 +1,5 @@
 return {
-    config = function()
+    config = function(plugins)
         local state = require('plugtool').state 'sidebar-nvim/sidebar.nvim'
         local sections = { 'datetime', 'git', 'diagnostics' }
         if state.sections then
@@ -26,5 +26,10 @@ return {
             todos = { ignored_paths = { '~' } },
             disable_closing_prompt = false,
         }
+        if plugins['kyazdani42/nvim-tree.lua'] then
+            nnoremap('<leader>sb', ':NvimTreeClose<cr>:SidebarNvimToggle<cr>', 'silent', 'Tree: Toggle sidebar')
+        else
+            nnoremap('<leader>sb', ':SidebarNvimToggle<cr>', 'silent', 'Tree: Toggle sidebar')
+        end
     end,
 }
