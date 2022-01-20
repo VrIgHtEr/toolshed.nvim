@@ -206,6 +206,15 @@ local function create_entries(plugins)
     bump(constants.toolshed_plugin_name)
     bump(constants.cache_plugin_name)
 
+    local bump_order = {}
+    for k in pairs(plugs) do
+        table.insert(bump_order, k)
+    end
+    table.sort(bump_order)
+    for _, x in ipairs(bump_order) do
+        bump(x)
+    end
+
     -- Link entries together in before/after lists
     for _, v in pairs(plugs) do
         for k in pairs(v.before) do
