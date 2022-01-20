@@ -13,18 +13,6 @@ local startupfunc = nil
 
 local flags = {}
 
-local function contains(tbl, value)
-    if tbl == nil then
-        return false
-    end
-    for _, x in ipairs(tbl) do
-        if x == value then
-            return true
-        end
-    end
-    return false
-end
-
 local function add_plugin(plugin, front)
     if type(plugin) == 'string' then
         plugin = { plugin }
