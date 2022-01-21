@@ -95,18 +95,18 @@ local function discover(plugin, update)
             displayer 'Cloning'
             a.main_loop()
             local parentPath = vim.fn.fnamemodify(path, ':p:h:h')
-            ret = assert(a.spawn_a { 'mkdir', '-p', parentPath })
+            ret = assert(a.wait(a.spawn_async { 'mkdir', '-p', parentPath }))
             if ret ~= 0 then
                 displayer 'Failed to create directory'
                 error('failed to create path: ' .. parentPath)
             end
             local plugin_url = 'https://github.com/' .. url .. '.git'
-            ret = git.clone_a(plugin_url, {
+            ret = a.wait(git.clone_async(plugin_url, {
                 dest = path,
                 progress = function(line)
                     displayer(line)
                 end,
-            })
+            }))
             if ret ~= 0 then
                 displayer 'Failed to clone'
                 error('failed to clone git repository: ' .. plugin_url)
@@ -115,11 +115,7 @@ local function discover(plugin, update)
             updated = true
         elseif update then
             displayer 'Updating'
-            ret = git.update_a(path, {
-                progress = function(line)
-                    displayer(line)
-                end,
-            })
+            ret = a.wait(git.update_async(path, { progress = displayer }))
             if not ret then
                 displayer 'Failed to check for updates'
                 error('failed to check for updates: ' .. url)
@@ -288,24 +284,16 @@ function M.setup(plugins, callback)
         display = require('plugtool.display').new()
 
         startupfunc = nil
+        local config_updating = nil
+        local cfgpath = vim.fn.stdpath 'config'
+
         -- only the first time
         if not pluginlist then
             flags = parse_flags(plugins)
         else
-            local cfgpath = vim.fn.stdpath 'config'
             if folder_exists(cfgpath .. '/.git') then
-                vim.notify('Checking config for updates', 'info', { title = 'plugtool' })
-                local configupdates, err = a.wait(git.update_async(cfgpath))
-                if err then
-                    vim.notify('An error occurred while checking config for updates\n\n' .. tostring(err), 'error', { title = 'plugtool' })
-                elseif #configupdates == 0 then
-                    vim.notify('Config is up to date!', 'info', { title = 'plugtool' })
-                else
-                    vim.schedule(function()
-                        vim.notify('Config was updated!', 'info', { title = 'plugtool' })
-                    end)
-                    return
-                end
+                config_updating = display.displayer 'config'
+                config_updating 'Queued'
             end
         end
 
@@ -325,6 +313,21 @@ function M.setup(plugins, callback)
 
         for _, plugin in ipairs(plugins) do
             add_plugin(plugin)
+        end
+        if config_updating then
+            local configupdates, err = a.wait(git.update_async(cfgpath, { progress = config_updating }))
+            if err then
+                config_updating('ERROR: ' .. tostring(err))
+            elseif #configupdates > 0 then
+                local str = 'Updated with ' .. #configupdates .. ' commit'
+                if #configupdates > 1 then
+                    str = str .. 's'
+                end
+                str = str .. '!'
+                config_updating(str, ret)
+            else
+                config_updating 'Up to date!'
+            end
         end
         return discover_loop(callback)
     end)
