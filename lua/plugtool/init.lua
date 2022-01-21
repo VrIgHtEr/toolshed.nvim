@@ -329,6 +329,7 @@ function M.setup(plugins, callback)
             add_plugin(plugin)
         end
         if config_updating then
+            config_updating 'Updating'
             local configupdates, err = a.wait(git.update_async(cfgpath, { progress = config_updating }))
             if err then
                 config_updating('ERROR: ' .. tostring(err))
