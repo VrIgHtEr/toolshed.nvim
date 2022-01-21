@@ -277,38 +277,51 @@ local function parse_flags(tbl)
 end
 
 function M.setup(plugins, callback)
-    if discovering or plugins == nil then
-        return
-    end
-    if type(plugins) ~= nil and type(plugins) ~= 'table' then
-        error 'options must be a table'
-    end
+    return a.run(function()
+        if discovering or plugins == nil then
+            return
+        end
+        if type(plugins) ~= nil and type(plugins) ~= 'table' then
+            error 'options must be a table'
+        end
 
-    startupfunc = nil
-    -- only the first time
-    if not pluginlist then
-        flags = parse_flags(plugins)
-    end
+        startupfunc = nil
+        -- only the first time
+        if not pluginlist then
+            flags = parse_flags(plugins)
+        else
+            local cfgpath = vim.fn.stdpath 'config'
+            if folder_exists(cfgpath .. '/.git') then
+                local configupdates = assert(a.wait(git.update(cfgpath)))
+                if #configupdates ~= 0 then
+                    vim.schedule(function()
+                        vim.notify('Config was updated!', 'info', 'plugtool')
+                    end)
+                    return
+                end
+            end
+        end
 
-    local newplugins = {}
-    if flags.cache_plugin_name then
-        table.insert(newplugins, flags.cache_plugin_name)
-    end
-    table.insert(newplugins, 'vrighter/toolshed.nvim')
-    for _, x in ipairs(plugins) do
-        table.insert(newplugins, x)
-    end
-    plugins = newplugins
+        local newplugins = {}
+        if flags.cache_plugin_name then
+            table.insert(newplugins, flags.cache_plugin_name)
+        end
+        table.insert(newplugins, 'vrighter/toolshed.nvim')
+        for _, x in ipairs(plugins) do
+            table.insert(newplugins, x)
+        end
+        plugins = newplugins
 
-    num_added = 0
-    plugins_added = {}
-    pluginlist = plugins
-    display = require('plugtool.display').new()
+        num_added = 0
+        plugins_added = {}
+        pluginlist = plugins
+        display = require('plugtool.display').new()
 
-    for _, plugin in ipairs(plugins) do
-        add_plugin(plugin)
-    end
-    discover_loop(callback)
+        for _, plugin in ipairs(plugins) do
+            add_plugin(plugin)
+        end
+        return discover_loop(callback)
+    end)
 end
 
 function M.set_startup_func(func)
