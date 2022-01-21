@@ -11,6 +11,9 @@ local plugins_added
 local git = require 'toolshed.git'
 local startupfunc = nil
 
+local env = require 'env'
+local pendingmarker = env.var .. '/plugtool.update.pending'
+
 local flags = {}
 
 local function notify(message, msgtype)
@@ -260,6 +263,7 @@ local function discover_loop(callback)
             display.close()
             notify 'All plugins up to date'
         end
+        env.deleteFileOrDir(pendingmarker)
         discovering = false
     end)
 end
@@ -301,10 +305,13 @@ function M.setup(plugins, callback)
         local config_updating = nil
         local cfgpath = vim.fn.stdpath 'config'
 
+        local pending = env.file_exists(pendingmarker)
+
         -- only the first time
         if not pluginlist then
             flags = parse_flags(plugins)
-        else
+        end
+        if not pluginlist or pending then
             if folder_exists(cfgpath .. '/.git') then
                 config_updating = display.displayer 'config'
                 config_updating 'Queued'
@@ -340,6 +347,11 @@ function M.setup(plugins, callback)
                 end
                 str = str .. '!'
                 config_updating(str, configupdates)
+                a.wait(a.spawn_async { 'touch', pendingmarker })
+                for k in pairs(plugins_added) do
+                    display.displayer(k) 'Deferred'
+                end
+                return
             else
                 config_updating 'Up to date!'
             end
