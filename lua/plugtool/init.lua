@@ -339,7 +339,7 @@ function M.setup(plugins, callback)
                     str = str .. 's'
                 end
                 str = str .. '!'
-                config_updating(str, ret)
+                config_updating(str, configupdates)
             else
                 config_updating 'Up to date!'
             end
