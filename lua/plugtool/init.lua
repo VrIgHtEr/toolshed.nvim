@@ -285,6 +285,8 @@ function M.setup(plugins, callback)
             error 'options must be a table'
         end
 
+        display = require('plugtool.display').new()
+
         startupfunc = nil
         -- only the first time
         if not pluginlist then
@@ -320,7 +322,6 @@ function M.setup(plugins, callback)
         num_added = 0
         plugins_added = {}
         pluginlist = plugins
-        display = require('plugtool.display').new()
 
         for _, plugin in ipairs(plugins) do
             add_plugin(plugin)
