@@ -11,7 +11,7 @@ local plugins_added
 local git = require 'toolshed.git'
 local startupfunc = nil
 
-local env = require 'env'
+local env = require 'toolshed.env'
 local pendingmarker = env.var .. '/plugtool.update.pending'
 
 local flags = {}
@@ -303,20 +303,24 @@ function M.setup(plugins, callback)
 
         startupfunc = nil
         local config_updating = nil
+        local is_first_load = not pluginlist
         local cfgpath = vim.fn.stdpath 'config'
 
         local pending = env.file_exists(pendingmarker)
+        if pending then plugins_loaded = true end
 
         -- only the first time
         if not pluginlist then
             flags = parse_flags(plugins)
         end
-        if not pluginlist or pending then
             if folder_exists(cfgpath .. '/.git') then
                 config_updating = display.displayer 'config'
+                if pending then 
+                config_updating 'Skipped'
+                else
                 config_updating 'Queued'
             end
-        end
+            end
 
         local newplugins = {}
         if flags.cache_plugin_name then
@@ -335,7 +339,7 @@ function M.setup(plugins, callback)
         for _, plugin in ipairs(plugins) do
             add_plugin(plugin)
         end
-        if config_updating then
+        if not is_first_load then
             config_updating 'Updating'
             local configupdates, err = a.wait(git.update_async(cfgpath, { progress = config_updating }))
             if err then
@@ -347,10 +351,10 @@ function M.setup(plugins, callback)
                 end
                 str = str .. '!'
                 config_updating(str, configupdates)
-                a.wait(a.spawn_async { 'touch', pendingmarker })
                 for k in pairs(plugins_added) do
                     display.displayer(k) 'Deferred'
                 end
+                a.wait(a.spawn_async { 'touch', pendingmarker })
                 return
             else
                 config_updating 'Up to date!'
@@ -475,10 +479,6 @@ function M.state(plugin)
         plugin_state[plugin] = ret
     end
     return ret
-end
-
-function M.DEBUG_RESET()
-    plugins_loaded = false
 end
 
 function M.flag(name)

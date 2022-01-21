@@ -94,7 +94,6 @@ function M.clone_repo_a(repo, target, recurse)
 end
 
 function M.deleteFileOrDir(path)
-    print('deleting ' .. path)
     return M.bashexec('rm -rf ' .. M.bashescape(path))
 end
 
