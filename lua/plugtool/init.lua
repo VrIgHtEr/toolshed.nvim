@@ -273,9 +273,6 @@ local function parse_flags(tbl)
             end
         end
     end
-    if tbl.manage_neovim then
-        ret.manage_neovim = true
-    end
     return ret
 end
 
