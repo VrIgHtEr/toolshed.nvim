@@ -292,10 +292,15 @@ function M.setup(plugins, callback)
         else
             local cfgpath = vim.fn.stdpath 'config'
             if folder_exists(cfgpath .. '/.git') then
-                local configupdates = a.wait(git.update_async(cfgpath))
-                if configupdates and #configupdates ~= 0 then
+                vim.notify('Checking config for updates', 'info', { title = 'plugtool' })
+                local configupdates, err = a.wait(git.update_async(cfgpath))
+                if err then
+                    vim.notify('An error occurred while checking config for updates\n\n' .. tostring(err), 'error', { title = 'plugtool' })
+                elseif #configupdates == 0 then
+                    vim.notify('Config is up to date!', 'info', { title = 'plugtool' })
+                else
                     vim.schedule(function()
-                        vim.notify('Config was updated!', 'info', 'plugtool')
+                        vim.notify('Config was updated!', 'info', { title = 'plugtool' })
                     end)
                     return
                 end
