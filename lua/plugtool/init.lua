@@ -262,26 +262,35 @@ function M.update(callback)
     return M.setup(pluginlist, callback)
 end
 
-function M.setup(plugins, callback)
-    if discovering then
-        return
-    end
-    startupfunc = nil
-    flags = {}
-    if type(plugins) ~= nil and type(plugins) ~= 'table' then
-        error 'options must be a table'
-    end
-    if plugins == nil then
-        return
-    end
-
-    if not plugins.disable_lua_cache then
-        flags.cache_plugin_name = 'lewis6991/impatient.nvim'
-        if plugins.profile_lua_cache then
-            flags.profile_lua_cache = function()
+local function parse_flags(tbl)
+    local ret = {}
+    ret = {}
+    if not tbl.disable_lua_cache then
+        ret.cache_plugin_name = require('plugtool.constants').cache_plugin_name
+        if tbl.profile_lua_cache then
+            ret.profile_lua_cache = function()
                 require('impatient').enable_profile()
             end
         end
+    end
+    if tbl.manage_neovim then
+        ret.manage_neovim = true
+    end
+    return ret
+end
+
+function M.setup(plugins, callback)
+    if discovering or plugins == nil then
+        return
+    end
+    if type(plugins) ~= nil and type(plugins) ~= 'table' then
+        error 'options must be a table'
+    end
+
+    startupfunc = nil
+    -- only the first time
+    if not pluginlist then
+        flags = parse_flags(plugins)
     end
 
     local newplugins = {}
