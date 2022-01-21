@@ -13,6 +13,20 @@ local startupfunc = nil
 
 local flags = {}
 
+local function notify(message, msgtype)
+    if message == nil then
+        message = ''
+    else
+        message = tostring(message)
+    end
+    if not msgtype or type(msgtype) ~= 'string' then
+        msgtype = 'info'
+    end
+    vim.schedule(function()
+        vim.notify(message, msgtype, { title = 'plugtool' })
+    end)
+end
+
 local function add_plugin(plugin, front)
     if type(plugin) == 'string' then
         plugin = { plugin }
@@ -225,7 +239,7 @@ local function discover_loop(callback)
         if not plugins_loaded then
             if any_updated then
                 plugins_loaded = true
-                print 'Plugin installation complete. Please restart neovim'
+                notify 'Plugin installation complete.\nPlease restart neovim'
             else
                 display.close()
                 load_sequence = loader(plugdefs)
@@ -239,12 +253,12 @@ local function discover_loop(callback)
             end
         elseif any_updated then
             plugins_loaded = true
-            print('Updated ' .. num_updated .. ' plugins. Please restart neovim')
+            notify('Updated ' .. num_updated .. ' plugins.\nPlease restart neovim')
         else
             plugins_loaded = true
             a.main_loop()
             display.close()
-            print 'All plugins up to date'
+            notify 'All plugins up to date'
         end
         discovering = false
     end)
