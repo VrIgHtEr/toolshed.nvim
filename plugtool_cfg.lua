@@ -1,7 +1,7 @@
 local constants = require("plugtool.constants")
 return {
 	needs = { constants.mapx },
-	after = { constants.cache_plugin_name, constants.mapx, "vrighter/update.nvim" },
+	after = { constants.cache_plugin_name, constants.mapx },
 	config = {
 		function()
 			nnoremap("<leader>pu", ':lua require"plugtool-setup"()<cr>', "silent", "Update all plugins using plugtool")
