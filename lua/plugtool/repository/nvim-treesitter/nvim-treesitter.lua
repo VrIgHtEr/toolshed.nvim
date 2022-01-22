@@ -5,7 +5,7 @@ return {
             ensure_installed = 'maintained',
 
             -- Install languages synchronously (only applied to `ensure_installed`)
-            sync_install = true,
+            sync_install = false,
 
             highlight = {
                 -- `false` will disable the whole extension
