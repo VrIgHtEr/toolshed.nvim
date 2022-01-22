@@ -307,20 +307,22 @@ function M.setup(plugins, callback)
         local cfgpath = vim.fn.stdpath 'config'
 
         local pending = env.file_exists(pendingmarker)
-        if pending then plugins_loaded = true end
+        if pending then
+            plugins_loaded = true
+        end
 
         -- only the first time
         if not pluginlist then
             flags = parse_flags(plugins)
         end
-            if folder_exists(cfgpath .. '/.git') then
-                config_updating = display.displayer 'config'
-                if pending then 
+        if folder_exists(cfgpath .. '/.git') then
+            config_updating = display.displayer 'config'
+            if pending then
                 config_updating 'Skipped'
-                else
+            else
                 config_updating 'Queued'
             end
-            end
+        end
 
         local newplugins = {}
         if flags.cache_plugin_name then
@@ -339,7 +341,7 @@ function M.setup(plugins, callback)
         for _, plugin in ipairs(plugins) do
             add_plugin(plugin)
         end
-        if not is_first_load then
+        if not is_first_load and config_updating then
             config_updating 'Updating'
             local configupdates, err = a.wait(git.update_async(cfgpath, { progress = config_updating }))
             if err then
