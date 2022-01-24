@@ -1,5 +1,8 @@
 local M = {}
 
+--- Iterate over characters of a string
+---@param str string
+---@return function Iterator
 function M.chars(str)
     local i, max = 0, #str
     return function()
@@ -11,6 +14,9 @@ function M.chars(str)
 end
 string.chars = M.chars
 
+---Iterate over bytes of a string
+---@param str string
+---@return function Iterator
 function M.bytes(str)
     local i, max = 0, #str
     return function()
@@ -22,6 +28,9 @@ function M.bytes(str)
 end
 string.bytes = M.bytes
 
+---Iterate over UTF8 codepoints in a string
+---@param str string
+---@return function Iterator
 function M.codepoints(str)
     local nxt, cache = str:bytes()
     return function()
@@ -56,6 +65,9 @@ function M.codepoints(str)
 end
 string.codepoints = M.codepoints
 
+---Iterate over UTF8 codepoints in a string, while converting windows (\r\n) or mac (\r) newlines to linux format (\n)
+---@param str string
+---@return function Iterator
 function M.filteredcodepoints(str)
     local codepoint, cache = str:codepoints()
     return function()
@@ -74,6 +86,9 @@ function M.filteredcodepoints(str)
 end
 string.filteredcodepoints = M.filteredcodepoints
 
+---Returns an iterator that returns individual lines in a string, handling any format of newline
+---@param str string
+---@return function Iterator
 function M.lines(str)
     local codepoints = str:filteredcodepoints()
     return function()
@@ -91,12 +106,19 @@ function M.lines(str)
 end
 string.lines = M.lines
 
+---Trims whitespace from either end of the string
+---@param s string
+---@return string
 function M.trim(s)
     local from = s:match '^%s*()'
     return from > #s and '' or s:match('.*%S', from)
 end
 string.trim = M.trim
 
+---Returns the Levenshtein distance between two strings
+---@param A string
+---@param B string
+---@return number
 function M.distance(A, B)
     local la, lb, x = A:len(), B:len(), {}
     if la == 0 then
