@@ -136,11 +136,11 @@ http.request_async = function(host, path, opts)
             end
 
             local function close()
-                a.close_a(client)
+                a.wait(a.close_async(client))
             end
             local function shutdown()
                 uv.read_stop(client)
-                a.shutdown_a(client)
+                a.wait(a.shutdown_async(client))
                 close()
             end
 
@@ -218,7 +218,7 @@ http.request_async = function(host, path, opts)
                     table.insert(data, x)
                 end
             end
-            success = a.write_a(client, table.concat(data, '\r\n'))
+            success = a.wait(a.write_async(client, table.concat(data, '\r\n')))
             if not success then
                 shutdown()
                 return step(nil, 'failed to write')
