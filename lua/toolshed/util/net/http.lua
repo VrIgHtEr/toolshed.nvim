@@ -227,6 +227,4 @@ http.request_async = function(host, path, opts)
     end
 end
 
-a.create_await_wrappers(http)
-
 return http

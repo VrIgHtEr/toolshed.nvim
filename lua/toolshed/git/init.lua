@@ -132,4 +132,4 @@ function git.update_async(path, opts)
         return output
     end)
 end
-return a.create_await_wrappers(git)
+return git

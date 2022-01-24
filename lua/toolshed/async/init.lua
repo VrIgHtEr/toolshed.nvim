@@ -371,27 +371,4 @@ a.write_async = function(tcp, data)
     end
 end
 
-----------------------------------------------------------------------------------
-----------------------------------------------------------------------------------
-----------------------------------------------------------------------------------
--- create wait wrappers around all provided async functions
-----------------------------------------------------------------------------------
-function a.create_await_wrappers(tbl)
-    assert(type(tbl) == 'table', 'tbl must be a table')
-    for k, v in pairs(tbl) do
-        if type(k) == 'string' then
-            if #k > 6 and k:sub(#k - 5, #k) == '_async' then
-                tbl[k:sub(1, #k - 4)] = function(...)
-                    return a.wait(v(...))
-                end
-            end
-        end
-        if type(v) == 'table' then
-            a.create_await_wrappers(v)
-        end
-    end
-    return tbl
-end
-a.create_await_wrappers(a)
-
 return a
