@@ -117,11 +117,11 @@ http.request_async = function(host, path, opts)
             opts.headers.Host = host
         end
         return a.run(function()
-            local addr, err = a.getaddrinfo_a(host, 'http', {
+            local addr, err = a.wait(a.getaddrinfo_async(host, 'http', {
                 family = 'inet',
                 protocol = 'tcp',
                 socktype = 'stream',
-            })
+            }))
             if err then
                 return step(nil, err)
             end
@@ -144,7 +144,7 @@ http.request_async = function(host, path, opts)
                 close()
             end
 
-            local success = a.tcp_connect_a(client, addr.addr, addr.port)
+            local success = a.wait(a.tcp_connect_async(client, addr.addr, addr.port))
             if not success then
                 close()
                 return step(nil, 'failed to connect to ' .. vim.inspect(addr.addr))

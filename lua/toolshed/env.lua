@@ -82,7 +82,7 @@ function M.clone_repo(repo, target, recurse)
     return M.bashexec(clonecmd)
 end
 
-function M.clone_repo_a(repo, target, recurse)
+function M.clone_repo_async(repo, target, recurse)
     print('cloning repository ' .. repo .. ' to ' .. target)
     local clonecmd = { 'git', 'clone' }
     if recurse then
@@ -90,7 +90,7 @@ function M.clone_repo_a(repo, target, recurse)
     end
     table.insert(clonecmd, repo)
     table.insert(clonecmd, target)
-    return a.spawn_lines_a(clonecmd, print)
+    return a.spawn_lines_async(clonecmd, print)
 end
 
 function M.deleteFileOrDir(path)
@@ -163,12 +163,12 @@ local install_dependency_async = a.syncwrap(function(v)
                 recurse = true
             end
             alert 'Cloning git repository'
-            local ret = assert(M.clone_repo_a(v.repo, target, recurse))
+            local ret = assert(a.wait(M.clone_repo_async(v.repo, target, recurse)))
             if ret == 0 then
                 if type(v.buildcmd) == 'string' then
                     print('executing ' .. v.buildcmd)
                     alert('Running: ' .. v.buildcmd)
-                    ret = assert(a.spawn_lines_a({ v.buildcmd, cwd = target }, print))
+                    ret = assert(a.wait(a.spawn_lines_async({ v.buildcmd, cwd = target }, print)))
                     if ret == 0 then
                         success = true
                     end
@@ -190,7 +190,7 @@ local install_dependency_async = a.syncwrap(function(v)
                         if not cmd.cwd then
                             cmd.cwd = target
                         end
-                        ret = assert(a.spawn_lines_a(cmd, print))
+                        ret = assert(a.wait(a.spawn_lines_async(cmd, print)))
                         if ret ~= 0 then
                             failed = true
                             break
@@ -218,16 +218,16 @@ local install_dependency_async = a.syncwrap(function(v)
                     else
                         local scriptpath = M.bin .. '/' .. scriptname
                         M.bashexec('echo ' .. M.bashescape(script) .. ' > ' .. M.bashescape(scriptpath))
-                        assert(a.spawn_a { 'chmod', '+x', scriptpath })
+                        assert(a.wait(a.spawn_async { 'chmod', '+x', scriptpath }))
                     end
                 end
             end
             if success then
-                assert(a.spawn_a { 'touch', metafilepath })
+                assert(a.wait(a.spawn_async { 'touch', metafilepath }))
                 print(v.dirname .. ' successfully installed')
                 alert 'Installation successful'
             else
-                assert(a.spawn_a { 'rm', '-rf', target })
+                assert(a.wait(a.spawn_async { 'rm', '-rf', target }))
                 print('installation of ' .. v.dirname .. ' unsuccessful')
                 alert('Installation failed', true)
             end
@@ -274,7 +274,7 @@ end
 
 function M.exec_checker(tool)
     return function()
-        if a.spawn_a { tool, '--version' } == nil then
+        if a.wait(a.spawn_async { tool, '--version' }) == nil then
             return tool
         end
     end
@@ -284,11 +284,11 @@ function M.nproc_async()
     return function(step)
         return a.run(function()
             local proc = nil
-            local ret, err = a.spawn_lines_a({ 'nproc' }, function(line)
+            local ret, err = a.wait(a.spawn_lines_async({ 'nproc' }, function(line)
                 if line then
                     proc = tonumber(line)
                 end
-            end)
+            end))
             if ret == 0 then
                 if proc then
                     return step(proc)

@@ -31,7 +31,7 @@ function git.clone_async(url, opts)
         if opts and opts.dest then
             table.insert(cmd, opts.dest)
         end
-        local ret, err = a.spawn_lines_a(cmd, nil, callback)
+        local ret, err = a.wait(a.spawn_lines_async(cmd, nil, callback))
         if not ret then
             return nil, err
         end
@@ -79,12 +79,12 @@ function git.update_async(path, opts)
         if opts then
             callback = opts.progress
         end
-        local ret, err = a.spawn_lines_a({
+        local ret, err = a.wait(a.spawn_lines_async({
             'git',
             'fetch',
             '--progress',
             cwd = path,
-        }, nil, callback)
+        }, nil, callback))
         if not ret then
             return nil, err
         end
@@ -93,7 +93,7 @@ function git.update_async(path, opts)
         end
 
         local output = {}
-        ret, err = a.spawn_lines_a({
+        ret, err = a.wait(a.spawn_lines_async({
             'git',
             'log',
             '--date=relative',
@@ -104,7 +104,7 @@ function git.update_async(path, opts)
             if line then
                 table.insert(output, parse_git_line(line))
             end
-        end)
+        end))
         if not ret then
             return nil, err
         end
@@ -113,7 +113,7 @@ function git.update_async(path, opts)
         end
 
         if #output ~= 0 then
-            ret, err = a.spawn_lines_a { 'git', 'reset', '--hard', cwd = path }
+            ret, err = a.wait(a.spawn_lines_async { 'git', 'reset', '--hard', cwd = path })
             if not ret then
                 return nil, err
             end
@@ -121,7 +121,7 @@ function git.update_async(path, opts)
                 return nil, 'failed to git reset'
             end
 
-            ret, err = a.spawn_lines_a { 'git', 'merge', cwd = path }
+            ret, err = a.wait(a.spawn_lines_async { 'git', 'merge', cwd = path })
             if not ret then
                 return nil, err
             end

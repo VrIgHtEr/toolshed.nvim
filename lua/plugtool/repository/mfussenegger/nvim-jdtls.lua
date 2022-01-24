@@ -6,11 +6,11 @@ local function check_java_dependency(...)
     local versions = { ... }
     return function()
         local firstline
-        local ret = a.spawn_lines_a({ 'java', '--version' }, function(line)
+        local ret = a.sync(a.spawn_lines_async({ 'java', '--version' }, function(line)
             if not firstline then
                 firstline = line
             end
-        end)
+        end))
         if ret ~= 0 then
             return 'java ' .. table.concat(versions, '.')
         end
