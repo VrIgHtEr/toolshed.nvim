@@ -5,10 +5,11 @@ return {
     type = {
         cache = 0,
         global = 1,
-        sys_override = 2,
-        plugtool = 3,
-        update = 4,
-        plugin = 5,
-        gui = 6,
+        theme = 2,
+        sys_override = 3,
+        plugtool = 4,
+        update = 5,
+        plugin = 6,
+        gui = 7,
     },
 }
