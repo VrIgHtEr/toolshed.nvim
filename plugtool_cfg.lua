@@ -1,5 +1,6 @@
 local constants = require 'plugtool.constants'
 return {
+    plugin_type = constants.type.plugtool,
     needs = { constants.mapx },
     after = { constants.cache_plugin_name, constants.mapx },
     config = {
