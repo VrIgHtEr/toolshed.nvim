@@ -117,8 +117,8 @@ local function setup(state)
 end
 
 return {
+    plugin_type = require('plugtool.constants').type.dev,
     needs = { 'mfussenegger/nvim-dap' },
-    after = { 'mfussenegger/nvim-dap' },
     config = function()
         install_dependencies()
         setup(require('plugtool').state 'mfussenegger/nvim-jdtls')

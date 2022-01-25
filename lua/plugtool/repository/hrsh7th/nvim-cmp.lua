@@ -1,4 +1,5 @@
 return {
+    plugin_type = require('plugtool.constants').type.gui,
     config = function(_, state)
         vim.o.completeopt = 'menu,menuone,noselect'
         local cmp = require 'cmp'

@@ -1,6 +1,6 @@
 return {
+    plugin_type = require('plugtool.constants').type.gui,
     needs = { 'nvim-treesitter/nvim-treesitter' },
-    after = { 'nvim-treesitter/nvim-treesitter' },
     config = function()
         --        vim.opt.list = true
         --        vim.opt.listchars:append 'space:⋅'

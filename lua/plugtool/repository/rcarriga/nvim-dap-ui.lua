@@ -1,6 +1,6 @@
 return {
+    plugin_type = require('plugtool.constants').type.gui,
     needs = { 'mfussenegger/nvim-dap' },
-    after = { 'mfussenegger/nvim-dap' },
     config = function()
         require('dapui').setup {
             icons = { expanded = '▾', collapsed = '▸' },

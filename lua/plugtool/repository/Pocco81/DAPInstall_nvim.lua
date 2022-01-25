@@ -1,4 +1,5 @@
 return {
+    plugin_type = require('plugtool.constants').type.dap,
     needs = { 'mfussenegger/nvim-dap' },
     after = { 'mfussenegger/nvim-dap' },
     config = function()

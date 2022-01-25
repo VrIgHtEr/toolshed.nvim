@@ -1,4 +1,5 @@
 return {
+    plugin_type = require('plugtool.constants').type.lsp,
     config = function()
         nnoremap('<leader>cf', ':lua vim.lsp.buf.formatting()<cr>', 'silent', 'Lsp: Format file')
         nnoremap('<leader>rr', ':lua vim.lsp.buf.rename()<cr>', 'silent', 'Lsp: Rename element')

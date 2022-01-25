@@ -1,4 +1,5 @@
 return {
+    plugin_type = require('plugtool.constants').type.dap,
     config = function()
         nnoremap('<F5>', ':lua require"dap".continue()<cr>', 'silent', 'Dap: continue')
         nnoremap('<F10>', ':lua require"dap".step_over()<cr>', 'silent', 'Dap: Step over')

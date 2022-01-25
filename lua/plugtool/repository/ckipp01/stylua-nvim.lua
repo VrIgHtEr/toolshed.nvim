@@ -1,4 +1,5 @@
 return {
+    plugin_type = require('plugtool.constants').type.dev,
     config = function()
         if vim.fn.has 'nvim-0.5' then
             vim.api.nvim_exec(

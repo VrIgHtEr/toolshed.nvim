@@ -1,4 +1,5 @@
 return {
+    plugin_type = require('plugtool.constants').type.util,
     config = function()
         nnoremap('<A-j>', ':MoveLine(1)<CR>', 'silent', 'Move line down')
         nnoremap('<A-k>', ':MoveLine(-1)<CR>', 'silent', 'Move line up')

@@ -1,6 +1,6 @@
 return {
+    plugin_type = require('plugtool.constants').type.dev,
     needs = { 'mfussenegger/nvim-dap', 'nvim-lua/plenary.nvim' },
-    after = { 'mfussenegger/nvim-dap', 'nvim-lua/plenary.nvim' },
     config = {
         function()
             require('cmake').setup {

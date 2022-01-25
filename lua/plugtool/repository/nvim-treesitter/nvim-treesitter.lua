@@ -1,4 +1,5 @@
 return {
+    plugin_type = require('plugtool.constants').type.generic_plugin,
     config = function()
         require('nvim-treesitter.configs').setup {
             -- One of "all", "maintained" (parsers with maintainers), or a list of languages

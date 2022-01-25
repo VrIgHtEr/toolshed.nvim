@@ -1,4 +1,5 @@
 return {
+    plugin_type = require('plugtool.constants').type.gui,
     preload = function()
         vim.g.minimap_width = 10
         vim.g.minimap_auto_start = 0

@@ -1,4 +1,5 @@
 return {
+    plugin_type = require('plugtool.constants').type.util,
     config = function()
         require('luapad').setup {
             count_limit = 100000000,
