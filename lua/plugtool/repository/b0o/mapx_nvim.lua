@@ -1,5 +1,4 @@
 return {
-    plugin_type = require('plugtool.constants').type.global,
     after = { 'folke/which-key.nvim' },
     config = function(plugins)
         local config = { global = true }

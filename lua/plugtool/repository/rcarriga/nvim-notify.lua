@@ -1,5 +1,4 @@
 return {
-    plugin_type = require('plugtool.constants').type.sys_override,
     needs = { 'nvim-telescope/telescope.nvim' },
     after = { 'nvim-telescope/telescope.nvim', 'ray-x/aurora' },
     config = function()
