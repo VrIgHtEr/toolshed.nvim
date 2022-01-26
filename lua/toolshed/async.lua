@@ -201,9 +201,10 @@ function a.spawn_async(var)
         error 'invalid argument'
     end
 
+    local cancelledstatus = 0
     return function(step)
         if cancelled then
-            return step(0)
+            return step()
         end
         local opts = { args = args }
         if cwd ~= nil then
@@ -242,6 +243,7 @@ function a.spawn_async(var)
                 vim.loop.read_start(stderr, cberr)
             end
         else
+            cancelled = true
             handle = nil
             if cbout then
                 stdout:close()
