@@ -1,5 +1,4 @@
 return {
-    plugin_type = require('plugtool.constants').type.lsp,
     needs = { 'neovim/nvim-lspconfig' },
     after = { 'neovim/nvim-lspconfig' },
     config = function()

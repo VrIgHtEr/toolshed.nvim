@@ -1,6 +1,6 @@
 return {
-    plugin_type = require('plugtool.constants').type.gui,
     needs = { 'mfussenegger/nvim-dap', 'sidebar-nvim/sidebar.nvim' },
+    after = { 'mfussenegger/nvim-dap' },
     before = { 'sidebar-nvim/sidebar.nvim' },
     config = {
         {

@@ -1,6 +1,8 @@
 return {
-    plugin_type = require('plugtool.constants').type.gui,
     needs = {
+        'nvim-telescope/telescope.nvim',
+    },
+    after = {
         'nvim-telescope/telescope.nvim',
     },
     config = function()

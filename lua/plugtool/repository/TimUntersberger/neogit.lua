@@ -1,7 +1,6 @@
 return {
-    plugin_type = require('plugtool.constants').type.gui,
     needs = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' },
-    after = { 'sindrets/diffview.nvim' },
+    after = { 'nvim-lua/plenary.nvim', 'sindrets/diffview.nvim' },
     config = function()
         local neogit = require 'neogit'
 

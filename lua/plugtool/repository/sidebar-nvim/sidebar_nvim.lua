@@ -1,5 +1,4 @@
 return {
-    plugin_type = require('plugtool.constants').type.gui,
     config = function(plugins)
         local state = require('plugtool').state 'sidebar-nvim/sidebar.nvim'
         local sections = { 'datetime', 'git', 'diagnostics' }

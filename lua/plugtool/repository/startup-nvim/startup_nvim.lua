@@ -76,9 +76,12 @@ local function format_plugin_list(plugins)
 end
 
 return {
-    plugin_type = require('plugtool.constants').type.gui,
     needs = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
-    after = { 'lukas-reineke/indent-blankline.nvim' },
+    after = {
+        'nvim-telescope/telescope.nvim',
+        'nvim-lua/plenary.nvim',
+        'lukas-reineke/indent-blankline.nvim',
+    },
     config = {
         function()
             require('plugtool').set_startup_func(function()

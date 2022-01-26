@@ -1,11 +1,11 @@
 return {
-    plugin_type = require('plugtool.constants').type.gui,
     needs = {
         'hrsh7th/nvim-cmp',
         'neovim/nvim-lspconfig',
         'mfussenegger/nvim-dap',
     },
     before = { 'hrsh7th/nvim-cmp' },
+    after = { 'neovim/nvim-lspconfig', 'mfussenegger/nvim-dap' },
     config = function(_, state)
         if not state['hrsh7th/nvim-cmp'] then
             state['hrsh7th/nvim-cmp'] = {}

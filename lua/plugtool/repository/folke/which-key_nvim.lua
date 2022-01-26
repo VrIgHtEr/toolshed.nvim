@@ -1,5 +1,4 @@
 return {
-    plugin_type = require('plugtool.constants').type.gui,
     config = {
         function()
             require('which-key').setup {

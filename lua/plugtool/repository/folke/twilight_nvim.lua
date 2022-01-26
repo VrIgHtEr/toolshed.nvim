@@ -1,6 +1,6 @@
 return {
-    plugin_type = require('plugtool.constants').type.gui,
     needs = { 'nvim-treesitter/nvim-treesitter' },
+    after = { 'nvim-treesitter/nvim-treesitter' },
     config = function()
         require('twilight').setup {
             dimming = {

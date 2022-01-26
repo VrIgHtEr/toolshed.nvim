@@ -1,6 +1,6 @@
 return {
-    plugin_type = require('plugtool.constants').type.gui,
     needs = { 'nvim-lualine/lualine.nvim', 'neovim/nvim-lspconfig' },
+    after = { 'neovim/nvim-lspconfig' },
     before = { 'nvim-lualine/lualine.nvim' },
     config = {
         {

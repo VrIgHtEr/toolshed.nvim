@@ -1,6 +1,6 @@
 return {
-    plugin_type = require('plugtool.constants').type.gui,
     needs = { 'kyazdani42/nvim-web-devicons' },
+    after = { 'kyazdani42/nvim-web-devicons' },
     preload = function()
         vim.o.termguicolors = true
         vim.g.bufferline = {

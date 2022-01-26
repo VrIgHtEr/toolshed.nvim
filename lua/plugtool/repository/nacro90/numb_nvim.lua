@@ -1,5 +1,4 @@
 return {
-    plugin_type = require('plugtool.constants').type.util,
     config = function()
         require('numb').setup {
             show_numbers = true, -- Enable 'number' for the window while peeking
