@@ -127,7 +127,6 @@ return {
                             { ' File Browser', 'Telescope file_browser', '<leader>fb' },
                             { ' Colorschemes', 'Telescope colorscheme', '<leader>cs' },
                             { ' New File', "lua require'startup'.new_file()", '<leader>nf' },
-                            { ' Update Plugins', "lua require'plugtool'.update()", '<leader>pu' },
                         },
                         highlight = 'String',
                         default_color = '',
