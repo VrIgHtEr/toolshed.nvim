@@ -62,6 +62,9 @@ function display.new()
         end
 
         local function create_lines()
+            if not message then
+                return {}, {}
+            end
             local newlines = {}
             local newhighlights = {}
             local indent = emptypadding:len()
@@ -103,11 +106,23 @@ function display.new()
             return newlines, newhighlights
         end
 
+        local removed = false
         function displayer.message(str, changes)
             vim.schedule(function()
+                if removed then
+                    return
+                end
+                if str ~= nil and not str then
+                    removed = true
+                end
                 changelogs = changes or {}
                 message = str
-                local newlines, newhl = create_lines()
+                local newlines, newhl
+                if not removed then
+                    newlines, newhl = create_lines()
+                else
+                    newlines, newhl = {}, {}
+                end
                 local last_line = get_last_line()
                 local redraw_following = redraw_all or (#lines ~= #newlines)
                 lines, highlights = newlines, newhl

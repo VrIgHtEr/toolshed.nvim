@@ -147,10 +147,10 @@ local function discover(plugin, update)
                 str = str .. '!'
                 displayer(str, ret)
             else
-                displayer 'Up to date!'
+                displayer(false)
             end
         else
-            displayer 'Discovered'
+            displayer(false)
         end
         local cfgpath = path .. '/' .. config_filename
         local lines = read_file(cfgpath)
@@ -359,7 +359,7 @@ function M.setup(plugins, callback)
                 a.wait(a.spawn_async { 'touch', pendingmarker })
                 return
             else
-                config_updating 'Up to date!'
+                config_updating(false)
             end
         end
         return discover_loop(callback)
