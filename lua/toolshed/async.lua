@@ -164,7 +164,7 @@ function a.spawn_lines_async(var, cb_stdout, cb_stderr)
 end
 
 function a.spawn_async(var)
-    local handle, err, cancelled = nil, nil, false
+    local handle, err, executed = nil, nil, false
     local cmd
     local args = {}
     local cwd = nil
@@ -202,7 +202,7 @@ function a.spawn_async(var)
     end
 
     return function(step)
-        if cancelled then
+        if executed then
             return step()
         end
         local opts = { args = args }
@@ -234,7 +234,7 @@ function a.spawn_async(var)
                 step(...)
             end)
         )
-        cancelled = true
+        executed = true
         if handle then
             if cbout then
                 vim.loop.read_start(stdout, cbout)
@@ -243,7 +243,6 @@ function a.spawn_async(var)
                 vim.loop.read_start(stderr, cberr)
             end
         else
-            cancelled = true
             handle = nil
             if cbout then
                 stdout:close()
@@ -254,7 +253,7 @@ function a.spawn_async(var)
             step(nil, err)
         end
     end, function()
-        cancelled = true
+        executed = true
         if handle then
             vim.loop.process_kill(handle, 15)
         end
