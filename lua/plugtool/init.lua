@@ -128,7 +128,7 @@ local function discover(plugin, update)
                 displayer 'Failed to clone'
                 error('failed to clone git repository: ' .. plugin_url)
             end
-            displayer 'Cloned successfully!'
+            displayer(false)
             updated = true
         elseif update then
             displayer 'Updating'
