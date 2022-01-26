@@ -318,7 +318,7 @@ function M.setup(plugins, callback)
         if folder_exists(cfgpath .. '/.git') then
             config_updating = display.displayer 'config'
             if pending then
-                config_updating 'Skipped'
+                config_updating(false)
             else
                 config_updating 'Queued'
             end
