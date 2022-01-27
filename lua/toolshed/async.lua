@@ -203,7 +203,7 @@ function a.spawn_async(var)
 
     return function(step)
         if executed then
-            return step()
+            return step(0, 0)
         end
         local opts = { args = args }
         if cwd ~= nil then

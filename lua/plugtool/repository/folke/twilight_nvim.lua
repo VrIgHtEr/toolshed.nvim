@@ -21,6 +21,5 @@ return {
             },
             exclude = {}, -- exclude these filetypes
         }
-        vim.api.nvim_exec('TwilightEnable', true)
     end,
 }
