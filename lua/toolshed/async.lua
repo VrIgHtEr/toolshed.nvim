@@ -1,5 +1,6 @@
 local a = {}
 require 'toolshed.util.string.global'
+local sig = require 'toolshed.util.sys.signal'
 
 local vimlock = false
 ----------------------------------------------------------------------------------
@@ -255,7 +256,7 @@ function a.spawn_async(var)
     end, function()
         executed = true
         if handle then
-            vim.loop.process_kill(handle, 15)
+            vim.loop.process_kill(handle, sig.int)
         end
     end
 end
