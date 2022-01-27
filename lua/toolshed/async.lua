@@ -164,6 +164,8 @@ function a.spawn_lines_async(var, cb_stdout, cb_stderr)
     return a.spawn_async(var)
 end
 
+local cancel_signal = sig.int
+
 function a.spawn_async(var)
     local handle, err, executed = nil, nil, false
     local cmd
@@ -204,7 +206,7 @@ function a.spawn_async(var)
 
     return function(step)
         if executed then
-            return step(0, 0)
+            return step(0, cancel_signal)
         end
         local opts = { args = args }
         if cwd ~= nil then
@@ -256,7 +258,7 @@ function a.spawn_async(var)
     end, function()
         executed = true
         if handle then
-            vim.loop.process_kill(handle, sig.int)
+            vim.loop.process_kill(handle, cancel_signal)
         end
     end
 end
