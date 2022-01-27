@@ -1,38 +1,34 @@
-local M = {}
-
 --- Iterate over characters of a string
----@param str string
+---@param self string
 ---@return function Iterator
-function M.chars(str)
-    local i, max = 0, #str
+function string:chars()
+    local i, max = 0, #self
     return function()
         if i < max then
             i = i + 1
-            return str:sub(i, i)
+            return self:sub(i, i)
         end
     end
 end
-string.chars = M.chars
 
 ---Iterate over bytes of a string
----@param str string
+---@param self string
 ---@return function Iterator
-function M.bytes(str)
-    local i, max = 0, #str
+function string:bytes()
+    local i, max = 0, #self
     return function()
         if i < max then
             i = i + 1
-            return str:byte(i)
+            return self:byte(i)
         end
     end
 end
-string.bytes = M.bytes
 
 ---Iterate over UTF8 codepoints in a string
----@param str string
+---@param self string
 ---@return function Iterator
-function M.codepoints(str)
-    local nxt, cache = str:bytes()
+function string:codepoints()
+    local nxt, cache = self:bytes()
     return function()
         local c = cache or nxt()
         cache = nil
@@ -63,13 +59,12 @@ function M.codepoints(str)
         return string.char(unpack(ret))
     end
 end
-string.codepoints = M.codepoints
 
 ---Iterate over UTF8 codepoints in a string, while converting windows (\r\n) or mac (\r) newlines to linux format (\n)
----@param str string
+---@param self string
 ---@return function Iterator
-function M.filteredcodepoints(str)
-    local codepoint, cache = str:codepoints()
+function string:filteredcodepoints()
+    local codepoint, cache = self:codepoints()
     return function()
         local cp = cache or codepoint()
         cache = nil
@@ -84,13 +79,12 @@ function M.filteredcodepoints(str)
         end
     end
 end
-string.filteredcodepoints = M.filteredcodepoints
 
 ---Returns an iterator that returns individual lines in a string, handling any format of newline
----@param str string
+---@param self string
 ---@return function Iterator
-function M.lines(str)
-    local codepoints = str:filteredcodepoints()
+function string:lines()
+    local codepoints = self:filteredcodepoints()
     return function()
         local line = {}
         for c in codepoints do
@@ -104,23 +98,21 @@ function M.lines(str)
         end
     end
 end
-string.lines = M.lines
 
 ---Trims whitespace from either end of the string
----@param s string
+---@param self string
 ---@return string
-function M.trim(s)
-    local from = s:match '^%s*()'
-    return from > #s and '' or s:match('.*%S', from)
+function string:trim()
+    local from = self:match '^%s*()'
+    return from > #self and '' or self:match('.*%S', from)
 end
-string.trim = M.trim
 
 ---Returns the Levenshtein distance between two strings
----@param A string
+---@param self string
 ---@param B string
 ---@return number
-function M.distance(A, B)
-    local la, lb, x = A:len(), B:len(), {}
+function string:distance(B)
+    local la, lb, x = self:len(), B:len(), {}
     if la == 0 then
         return lb
     end
@@ -128,13 +120,13 @@ function M.distance(A, B)
         return la
     end
     if la < lb then
-        A, la, B, lb = B, lb, A, la
+        self, la, B, lb = B, lb, self, la
     end
     for i = 1, lb do
         x[i] = i
     end
     for r = 1, la do
-        local t, l, v = r - 1, r, A:sub(r, r)
+        local t, l, v = r - 1, r, self:sub(r, r)
         for c = 1, lb do
             if v ~= B:sub(c, c) then
                 if x[c] < t then
@@ -150,5 +142,4 @@ function M.distance(A, B)
     end
     return x[lb]
 end
-string.distance = M.distance
-return M
+return string
