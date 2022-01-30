@@ -30,6 +30,13 @@ return {
                 DEBUG = '',
                 TRACE = '✎',
             },
+            render = function(bufnr, notif, highlights)
+                if notif.title[1] == '' then
+                    return notify_renderers.minimal(bufnr, notif, highlights)
+                else
+                    return notify_renderers.default(bufnr, notif, highlights)
+                end
+            end,
         }
         vim.notify = require 'notify'
         nnoremap('<leader>nn', ':Telescope notify<cr>', 'silent', 'Telescope: Show a list of previously shown notifications')
