@@ -2,15 +2,13 @@ return {
     needs = { 'nvim-telescope/telescope.nvim' },
     after = { 'nvim-telescope/telescope.nvim', 'ray-x/aurora' },
     config = function()
+        local notify_renderers = require 'notify.render'
         require('notify').setup {
             -- Animation style (see below for details)
             stages = 'slide',
 
             -- Function called when a new window is opened, use for changing win settings/config
             on_open = nil,
-
-            -- Render function for notifications. See notify-render()
-            render = 'default',
 
             -- Default timeout for notifications
             timeout = 5000,
@@ -30,6 +28,8 @@ return {
                 DEBUG = '',
                 TRACE = '✎',
             },
+
+            -- Render function for notifications. See notify-render()
             render = function(bufnr, notif, highlights)
                 if notif.title[1] == '' then
                     return notify_renderers.minimal(bufnr, notif, highlights)
