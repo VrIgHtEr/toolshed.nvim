@@ -2,14 +2,22 @@ local M = {}
 local function iterator(table)
     local index, max = 0, #table
     return function()
-        if index >= max then
-            return
+        if index < max then
+            index = index + 1
+            return table[index]
         end
-        index = index + 1
-        return table[index]
     end
 end
 function M.map(iter, fun)
+    iter = iterator(iter)
+    return function()
+        local items = { iter() }
+        if #items ~= 0 then
+            return fun(unpack(items))
+        end
+    end
+end
+function M.where(iter, fun)
     iter = iterator(iter)
     return function()
         local items = { iter() }

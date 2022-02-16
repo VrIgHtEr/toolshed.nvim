@@ -42,9 +42,7 @@ reserved_type_names = {
             if reserved_type_names[name] then
                 return nil
             end
-            if rawget(types, name) then
-                return rawget(types, name)
-            end
+            -- if rawget(types, name) then return rawget(types, name) end
             local t = {}
             local member_vars = {}
             member_vars.__typename = name
