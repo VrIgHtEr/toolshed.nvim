@@ -1,81 +1,81 @@
 local M = {}
 local MT = {}
 
-function MT.size(q)
-    if q.parity then
-        return q.capacity - (q.tail - q.head)
+function MT:size()
+    if self.parity then
+        return self.capacity - (self.tail - self.head)
     else
-        return q.head - q.tail
+        return self.head - self.tail
     end
 end
 
-local function grow(q)
+local function grow(self)
     local newbuf = {}
-    for x in q:iterator() do
+    for x in self:iterator() do
         table.insert(newbuf, x)
     end
-    q.head = q:size()
-    q.buf = newbuf
-    q.capacity = q.capacity * 2
-    q.parity = false
-    q.tail = 0
+    self.head = self:size()
+    self.buf = newbuf
+    self.capacity = self.capacity * 2
+    self.parity = false
+    self.tail = 0
 end
 
-function MT.enqueue(q, item)
-    if q.parity and q.head == q.tail then
-        grow(q)
+function MT:enqueue(item)
+    if self.parity and self.head == self.tail then
+        grow(self)
     end
-    q.head = q.head + 1
-    q.buf[q.head] = item
-    if q.head == q.capacity then
-        q.parity = not q.parity
-        q.head = 0
+    self.head = self.head + 1
+    self.buf[self.head] = item
+    if self.head == self.capacity then
+        self.parity = not self.parity
+        self.head = 0
     end
-    q.version = q.version + 1
+    self.version = self.version + 1
 end
 
-function MT.prequeue(q, item)
-    if q.parity and q.head == q.tail then
-        grow(q)
+function MT:prequeue(item)
+    if self.parity and self.head == self.tail then
+        grow(self)
     end
-    if q.tail == 0 then
-        q.tail = q.capacity
-        q.parity = not q.parity
+    if self.tail == 0 then
+        self.tail = self.capacity
+        self.parity = not self.parity
     end
-    q.buf[q.tail] = item
-    q.tail = q.tail - 1
-    q.version = q.version + 1
+    self.buf[self.tail] = item
+    self.tail = self.tail - 1
+    self.version = self.version + 1
 end
 
-function MT.dequeue(q)
-    if q.parity or q.head ~= q.tail then
-        q.tail = q.tail + 1
-        local ret = q.buf[q.tail]
-        q.buf[q.tail] = nil
-        if q.tail == q.capacity then
-            q.parity = not q.parity
-            q.tail = 0
+function MT:dequeue()
+    if self.parity or self.head ~= self.tail then
+        self.tail = self.tail + 1
+        local ret = self.buf[self.tail]
+        self.buf[self.tail] = nil
+        if self.tail == self.capacity then
+            self.parity = not self.parity
+            self.tail = 0
         end
-        q.version = q.version + 1
+        self.version = self.version + 1
         return ret
     end
 end
 
-function MT.iterator(q)
-    local head = q.head
-    local parity = q.parity
-    local version = q.version
+function MT:iterator()
+    local head = self.head
+    local parity = self.parity
+    local version = self.version
 
     return function()
-        if version ~= q.version then
+        if version ~= self.version then
             error 'collection modified while being iterated'
         end
-        if head == q.tail and not parity then
+        if head == self.tail and not parity then
             return nil
         end
         head = head + 1
-        local ret = q.buf[head]
-        if head == q.capacity then
+        local ret = self.buf[head]
+        if head == self.capacity then
             parity = not parity
             head = 0
         end
@@ -96,4 +96,5 @@ end
 function MT.__index(_, k)
     return MT[k]
 end
+function MT.__metatable() end
 return M
