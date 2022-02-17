@@ -3,6 +3,7 @@ local buf = 0
 local separator = ' : '
 local separator_length = separator:len()
 local filetype = 'plugtool'
+local string = require 'toolshed.util.string'
 
 function display.new()
     local win = vim.api.nvim_get_current_win()
@@ -68,7 +69,7 @@ function display.new()
             local newlines = {}
             local newhighlights = {}
             local indent = emptypadding:len()
-            for x in message:lines() do
+            for x in string.lines(message) do
                 table.insert(newlines, x)
                 local hl = { { indent, indent + x:len(), theme.info } }
                 table.insert(newhighlights, hl)

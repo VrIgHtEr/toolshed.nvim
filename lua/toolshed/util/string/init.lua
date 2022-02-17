@@ -28,7 +28,7 @@ end
 ---@param self string
 ---@return function Iterator
 function string:codepoints()
-    local nxt, cache = self:bytes()
+    local nxt, cache = string.bytes(self)
     return function()
         local c = cache or nxt()
         cache = nil
@@ -64,7 +64,7 @@ end
 ---@param self string
 ---@return function Iterator
 function string:filteredcodepoints()
-    local codepoint, cache = self:codepoints()
+    local codepoint, cache = string.codepoints(self)
     return function()
         local cp = cache or codepoint()
         cache = nil
@@ -84,7 +84,7 @@ end
 ---@param self string
 ---@return function Iterator
 function string:lines()
-    local codepoints = self:filteredcodepoints()
+    local codepoints = string.filteredcodepoints(self)
     return function()
         local line = {}
         for c in codepoints do

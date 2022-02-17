@@ -1,5 +1,6 @@
 local M = {}
 local a = require 'toolshed.async'
+local string = require 'toolshed.util.string'
 local plugdefs = {}
 local display
 local discoverqueue = require('toolshed.util.generic.queue').new()
@@ -43,11 +44,11 @@ local function add_plugin(plugin, front)
         if slash == nil or slash == 0 then
             error('invalid plugin url format: ' .. vim.inspect(plugin_url))
         end
-        local username = plugin_url:sub(1, slash - 1):trim()
+        local username = string.trim(plugin_url:sub(1, slash - 1))
         if username == '' then
             error('invalid plugin url format: ' .. vim.inspect(plugin_url))
         end
-        local reponame = plugin_url:sub(slash + 1):trim()
+        local reponame = string.trim(plugin_url:sub(slash + 1))
         slash = reponame:find '/'
         if slash then
             error('invalid plugin url format: ' .. vim.inspect(plugin_url))
