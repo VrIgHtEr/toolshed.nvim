@@ -1,4 +1,5 @@
 local http = {}
+local string = require 'toolshed.util.string'
 
 local a = require 'toolshed.async'
 local uv = vim.loop
