@@ -153,4 +153,10 @@ end
 function string:base64_decode()
     return base64.decode(self)
 end
+
+local bm = require 'toolshed.util.string.boyer-moore'
+function string:find_in(other)
+    return bm(self, other)
+end
+
 return string
