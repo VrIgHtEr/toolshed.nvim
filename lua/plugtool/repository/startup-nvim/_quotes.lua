@@ -105,7 +105,7 @@ local quotes = {
     },
 }
 
-require 'toolshed.util.string'
+local string = require 'toolshed.util.string'
 
 local function process_quotes(json)
     local q = vim.fn.json_decode(json)
