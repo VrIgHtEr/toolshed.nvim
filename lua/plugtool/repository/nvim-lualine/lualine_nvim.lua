@@ -5,11 +5,12 @@ return {
         vim.o.termguicolors = true
     end,
     config = function()
+        local state = require('plugtool').state 'nvim-lualine/lualine.nvim'
         -- Color for highlights
         local config = {
             options = {
                 icons_enabled = true,
-                theme = 'iceberg_dark',
+                theme = state.theme or 'iceberg_dark',
                 component_separators = { '', '' },
                 section_separators = { '', '' },
                 disabled_filetypes = {},
@@ -34,7 +35,6 @@ return {
             extensions = {},
         }
 
-        local state = require('plugtool').state 'nvim-lualine/lualine.nvim'
         if state.sections then
             if state.sections.lualine_a then
                 for _, x in ipairs(state.sections.lualine_a) do
