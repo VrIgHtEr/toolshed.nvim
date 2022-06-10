@@ -58,13 +58,13 @@ fi
             dirname = 'java-debug',
             repo = 'https://github.com/microsoft/java-debug.git',
             buildcmd = { { './mvnw', 'clean', 'install' } },
-            builddeps = { check_java_dependency(11) },
+            builddeps = { check_java_dependency(17) },
         },
         {
             dirname = 'vscode-java-test',
             repo = 'https://github.com/microsoft/vscode-java-test.git',
             buildcmd = { { 'npm', 'install' }, { 'npm', 'run', 'build-plugin' } },
-            builddeps = { check_java_dependency(11), env.exec_checker 'npm' },
+            builddeps = { check_java_dependency(17), env.exec_checker 'npm' },
         },
     }
 end
