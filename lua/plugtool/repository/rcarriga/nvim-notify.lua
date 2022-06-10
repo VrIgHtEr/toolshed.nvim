@@ -30,11 +30,11 @@ return {
             },
 
             -- Render function for notifications. See notify-render()
-            render = function(bufnr, notif, highlights)
+            render = function(bufnr, notif, highlights, config)
                 if notif.title[1] == '' then
-                    return notify_renderers.minimal(bufnr, notif, highlights)
+                    return notify_renderers.minimal(bufnr, notif, highlights, config)
                 else
-                    return notify_renderers.default(bufnr, notif, highlights)
+                    return notify_renderers.default(bufnr, notif, highlights, config)
                 end
             end,
         }
