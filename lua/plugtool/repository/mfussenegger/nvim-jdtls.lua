@@ -108,7 +108,7 @@ local function setup(state)
     vim.api.nvim_exec(
         [[augroup NvimJdtlsFormatAutogroup
               autocmd!
-              autocmd BufWritePre *.java lua vim.lsp.buf.formatting_sync()
+              autocmd BufWritePre *.java lua vim.lsp.buf.format()
               autocmd BufRead,BufNewFile *.java lua require'plugtool'.state"mfussenegger/nvim-jdtls".setup()
           augroup end
           nnoremap <buffer> <leader>cc :JdtCompile<cr>]],
