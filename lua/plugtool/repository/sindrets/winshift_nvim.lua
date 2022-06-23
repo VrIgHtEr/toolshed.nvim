@@ -11,24 +11,52 @@ return {
                 cursorcolumn = false,
                 colorcolumn = '',
             },
-            -- The window picker is used to select a window while swapping windows with
-            -- ':WinShift swap'.
-            -- A string of chars used as identifiers by the window picker.
-            window_picker_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
-            window_picker_ignore = {
-                -- This table allows you to indicate to the window picker that a window
-                -- should be ignored if its buffer matches any of the following criteria.
-                filetype = { -- List of ignored file types
-                    'NvimTree',
-                },
-                buftype = { -- List of ignored buftypes
-                    'terminal',
-                    'quickfix',
-                },
-                bufname = { -- List of regex patterns matching ignored buffer names
-                    [[.*foo/bar/baz\.qux]],
+            keymaps = {
+                disable_defaults = false, -- Disable the default keymaps
+                win_move_mode = {
+                    ['h'] = 'left',
+                    ['j'] = 'down',
+                    ['k'] = 'up',
+                    ['l'] = 'right',
+                    ['H'] = 'far_left',
+                    ['J'] = 'far_down',
+                    ['K'] = 'far_up',
+                    ['L'] = 'far_right',
+                    ['<left>'] = 'left',
+                    ['<down>'] = 'down',
+                    ['<up>'] = 'up',
+                    ['<right>'] = 'right',
+                    ['<S-left>'] = 'far_left',
+                    ['<S-down>'] = 'far_down',
+                    ['<S-up>'] = 'far_up',
+                    ['<S-right>'] = 'far_right',
                 },
             },
+            ---A function that should prompt the user to select a window.
+            ---
+            ---The window picker is used to select a window while swapping windows with
+            ---`:WinShift swap`.
+            ---@return integer? winid # Either the selected window ID, or `nil` to
+            ---   indicate that the user cancelled / gave an invalid selection.
+            window_picker = function()
+                return require('winshift.lib').pick_window {
+                    -- A string of chars used as identifiers by the window picker.
+                    picker_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
+                    filter_rules = {
+                        -- This table allows you to indicate to the window picker that a window
+                        -- should be ignored if its buffer matches any of the following criteria.
+                        cur_win = true, -- Filter out the current window
+                        floats = true, -- Filter out floating windows
+                        filetype = { 'NvimTree' }, -- List of ignored file types
+                        buftype = { 'terminal', 'quickfix' }, -- List of ignored buftypes
+                        bufname = {}, -- List of vim regex patterns matching ignored buffer names
+                    },
+                    ---A function used to filter the list of selectable windows.
+                    ---@param winids integer[] # The list of selectable window IDs.
+                    ---@return integer[] filtered # The filtered list of window IDs.
+                    filter_func = nil,
+                }
+            end,
         }
         nnoremap({ '<C-W><C-M>', '<C-W>m' }, '<Cmd>WinShift<CR>', 'silent', 'Start Win-Move mode')
         nnoremap('<C-W>X', '<Cmd>WinShift swap<CR>', 'silent', 'Swap two windows')
