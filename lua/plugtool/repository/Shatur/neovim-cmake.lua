@@ -14,6 +14,7 @@ return {
             vim.api.nvim_exec(
                 [[augroup NeovimCmakeFormatAutogroup
                       autocmd!
+                      autocmd BufWritePre *.zig lua vim.lsp.buf.format()
                       autocmd BufWritePre *.cpp lua vim.lsp.buf.format()
                       autocmd BufWritePre *.hpp lua vim.lsp.buf.format()
                       autocmd BufWritePre *.c lua vim.lsp.buf.format()
