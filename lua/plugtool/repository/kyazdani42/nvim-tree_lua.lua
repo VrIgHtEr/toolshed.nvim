@@ -29,7 +29,7 @@ highlight NvimTreeFolderIcon guibg=blue
             hijack_cursor = false,
             respect_buf_cwd = true,
             update_cwd = true,
-            update_to_buf_dir = { enable = true, auto_open = true },
+            hijack_directories = { enable = true, auto_open = true },
             git = { ignore = true },
             diagnostics = {
                 enable = true,
@@ -52,7 +52,6 @@ highlight NvimTreeFolderIcon guibg=blue
                 height = 30,
                 hide_root_folder = false,
                 side = 'left',
-                auto_resize = false,
                 mappings = { custom_only = false, list = {} },
             },
             renderer = {
@@ -98,6 +97,7 @@ highlight NvimTreeFolderIcon guibg=blue
             },
             actions = {
                 open_file = {
+                    resize_window = false,
                     quit_on_open = true,
                     window_picker = {
                         exclude = {
