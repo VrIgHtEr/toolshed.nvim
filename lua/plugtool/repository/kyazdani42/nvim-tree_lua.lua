@@ -27,7 +27,8 @@ highlight NvimTreeFolderIcon guibg=blue
             open_on_tab = false,
             ignore_ft_on_setup = {},
             hijack_cursor = false,
-            update_cwd = false,
+            respect_buf_cwd = true,
+            update_cwd = true,
             update_to_buf_dir = { enable = true, auto_open = true },
             git = { ignore = true },
             diagnostics = {
@@ -41,7 +42,7 @@ highlight NvimTreeFolderIcon guibg=blue
             },
             update_focused_file = {
                 enable = true,
-                update_cwd = false,
+                update_cwd = true,
                 ignore_list = {},
             },
             system_open = { cmd = nil, args = {} },
