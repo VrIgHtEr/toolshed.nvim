@@ -1,7 +1,7 @@
 return {
     needs = { 'neovim/nvim-lspconfig' },
     after = { 'neovim/nvim-lspconfig' },
-    config = function()
+    config = function(plugins)
         local lsp_installer = require 'nvim-lsp-installer'
         lsp_installer.settings {
             ui = {
@@ -53,17 +53,19 @@ return {
                     error("ERROR :: LSP config :: expected 'table' but got '" .. type(opts) .. "' instead")
                 end
             end
-            if opts.on_attach ~= nil then
-                if type(opts.on_attach) ~= 'function' then
-                    error 'lsp on_attach is not a function'
+            if plugins['SmiteshP/nvim-navic'] then
+                if opts.on_attach ~= nil then
+                    if type(opts.on_attach) ~= 'function' then
+                        error 'lsp on_attach is not a function'
+                    end
+                    local on_attach = opts.on_attach
+                    on_attach = function(...)
+                        require('nvim-navic').attach(...)
+                        on_attach(...)
+                    end
+                else
+                    opts.on_attach = require('nvim-navic').attach
                 end
-                local on_attach = opts.on_attach
-                on_attach = function(...)
-                    require('nvim-navic').attach(...)
-                    on_attach(...)
-                end
-            else
-                opts.on_attach = require('nvim-navic').attach
             end
             require('lspconfig')[server.name].setup(opts)
         end
