@@ -44,8 +44,7 @@ return {
             -- servers that are requested to be installed will be put in a queue.
             max_concurrent_installers = 4,
         }
-
-        lsp_installer.on_server_ready(function(server)
+        for _, server in ipairs(lsp_installer.get_installed_servers()) do
             local hasOpts, opts = pcall(require, 'cfg/lsp/' .. server.name)
             if not hasOpts then
                 opts = {}
@@ -54,7 +53,19 @@ return {
                     error("ERROR :: LSP config :: expected 'table' but got '" .. type(opts) .. "' instead")
                 end
             end
-            server:setup(opts)
-        end)
+            if opts.on_attach ~= nil then
+                if type(opts.on_attach) ~= 'function' then
+                    error 'lsp on_attach is not a function'
+                end
+                local on_attach = opts.on_attach
+                on_attach = function(...)
+                    require('nvim-navic').attach(...)
+                    on_attach(...)
+                end
+            else
+                opts.on_attach = require('nvim-navic').attach
+            end
+            require('lspconfig')[server.name].setup(opts)
+        end
     end,
 }
