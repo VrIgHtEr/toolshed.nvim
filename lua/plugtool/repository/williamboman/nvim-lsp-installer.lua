@@ -47,7 +47,10 @@ return {
         for _, server in ipairs(lsp_installer.get_installed_servers()) do
             local hasOpts, opts = pcall(require, 'cfg/lsp/' .. server.name)
             if not hasOpts then
-                opts = {}
+                opts = server._default_options
+                if opts == nil then
+                    opts = {}
+                end
             else
                 if type(opts) ~= 'table' then
                     error("ERROR :: LSP config :: expected 'table' but got '" .. type(opts) .. "' instead")
@@ -59,7 +62,7 @@ return {
                         error 'lsp on_attach is not a function'
                     end
                     local on_attach = opts.on_attach
-                    on_attach = function(...)
+                    opts.on_attach = function(...)
                         require('nvim-navic').attach(...)
                         on_attach(...)
                     end
