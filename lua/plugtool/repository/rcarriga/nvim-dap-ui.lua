@@ -2,7 +2,9 @@ return {
     needs = { 'mfussenegger/nvim-dap' },
     after = { 'mfussenegger/nvim-dap' },
     config = function()
-        require('dapui').setup {
+        local dap = require 'dap'
+        local dapui = require 'dapui'
+        dapui.setup {
             icons = { expanded = '▾', collapsed = '▸' },
             mappings = {
                 -- Use a table to apply multiple mappings
@@ -40,6 +42,17 @@ return {
             },
             windows = { indent = 1 },
         }
+
+        dap.listeners.after.event_initialized['dapui_config'] = function()
+            dapui.open()
+        end
+        dap.listeners.after.event_terminated['dapui_config'] = function()
+            dapui.close()
+        end
+        dap.listeners.after.event_exited['dapui_config'] = function()
+            dapui.close()
+        end
+
         nnoremap('<leader>dt', ':lua require"dapui".toggle()<cr>', 'silent', 'Dap: Toggle the debugger UI')
     end,
 }
