@@ -3,7 +3,7 @@ return {
     after = { 'neovim/nvim-lspconfig' },
     config = function(plugins)
         local lsp_installer = require 'nvim-lsp-installer'
-        lsp_installer.settings {
+        lsp_installer.setup {
             ui = {
                 icons = {
                     -- The list icon to use for installed servers.
