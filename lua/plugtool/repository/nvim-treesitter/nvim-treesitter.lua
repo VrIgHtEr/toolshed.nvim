@@ -6,6 +6,7 @@ return {
 
             -- Install languages synchronously (only applied to `ensure_installed`)
             sync_install = true,
+            ignore_install = { 'phpdoc' },
 
             highlight = {
                 -- `false` will disable the whole extension
