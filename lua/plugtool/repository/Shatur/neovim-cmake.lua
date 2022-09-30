@@ -14,11 +14,11 @@ return {
             vim.api.nvim_exec(
                 [[augroup NeovimCmakeFormatAutogroup
                       autocmd!
-                      autocmd BufWritePre *.zig lua vim.lsp.buf.format()
-                      autocmd BufWritePre *.cpp lua vim.lsp.buf.format()
-                      autocmd BufWritePre *.hpp lua vim.lsp.buf.format()
-                      autocmd BufWritePre *.c lua vim.lsp.buf.format()
-                      autocmd BufWritePre *.h lua vim.lsp.buf.format()
+                      autocmd BufWritePre *.zig lua (vim.lsp.buf.format or vim.lsp.buf.formatting_sync)()
+                      autocmd BufWritePre *.cpp lua (vim.lsp.buf.format or vim.lsp.buf.formatting_sync)()
+                      autocmd BufWritePre *.hpp lua (vim.lsp.buf.format or vim.lsp.buf.formatting_sync)()
+                      autocmd BufWritePre *.c lua (vim.lsp.buf.format or vim.lsp.buf.formatting_sync)()
+                      autocmd BufWritePre *.h lua (vim.lsp.buf.format or vim.lsp.buf.formatting_sync)()
                   augroup end]],
                 true
             )
