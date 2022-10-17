@@ -1,6 +1,6 @@
 return {
     needs = { 'neovim/nvim-lspconfig', 'mfussenegger/nvim-dap' },
-    after = { 'neovim/nvim-lspconfig', 'mfussenegger/nvim-dap', 'SmiteshP/nvim-navic' },
+    before = { 'neovim/nvim-lspconfig', 'mfussenegger/nvim-dap', 'SmiteshP/nvim-navic' },
     config = function(plugins)
         local globals = { 'vim' }
         if plugins['b0o/mapx.nvim'] then
@@ -22,39 +22,11 @@ return {
             end
         end
 
-        local luadev = require('neodev').setup {
-            library = {
-                vimruntime = true, -- runtime path
-                types = true, -- full signature, docs and completion of vim.api, vim.treesitter, vim.lsp and others
-                plugins = true, -- installed opt or start plugins in packpath
-                -- you can also specify the list of plugins to make available as a workspace library
-                -- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },
-            },
-            runtime_path = true,
-            lspconfig = {
-                capabilities = require('lsp/lsp').capabilities,
-                cmd = { require('toolshed.env').bin .. '/lua-language-server' },
-                on_attach = on_attach,
-                settings = {
-                    Lua = {
-                        workspace = {
-                            preloadFileSize = 1024,
-                        },
-                        diagnostics = {
-                            globals = globals,
-                        },
-                        IntelliSense = {
-                            traceLocalSet = true,
-                            traceReturn = true,
-                            traceBeSetted = true,
-                            traceFieldInject = true,
-                        },
-                    },
-                },
-            },
-        }
+        require('neodev').setup()
         local lspconfig = require 'lspconfig'
-        lspconfig.sumneko_lua.setup(luadev)
+        lspconfig.sumneko_lua.setup {
+            on_attach = on_attach,
+        }
 
         local dap = require 'dap'
         dap.configurations.lua = {
