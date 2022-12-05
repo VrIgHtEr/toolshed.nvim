@@ -16,7 +16,7 @@ return {
         local lldbpath = lldb_available()
         if lldbpath then
             local dap = require 'dap'
-            dap.adapters.lldb = {
+            dap.adapters.codelldb = {
                 type = 'executable',
                 command = '/usr/bin/lldb-vscode',
                 name = 'lldb',
@@ -25,11 +25,8 @@ return {
             dap.configurations.cpp = {
                 {
                     name = 'Launch',
-                    type = 'lldb',
+                    type = 'codelldb',
                     request = 'launch',
-                    program = function()
-                        return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-                    end,
                     cwd = '${workspaceFolder}',
                     stopOnEntry = false,
                     args = {},
