@@ -37,9 +37,9 @@ return {
                 true
             )
             nnoremap('<leader>mc', ':Task start cmake configure<cr>', 'silent', 'CMake: configure')
-            nnoremap('<leader>mb', ':CMake build<cr>', 'silent', 'CMake: build')
-            nnoremap('<leader>mR', ':CMake build_and_debug<cr>', 'silent', 'CMake: build and debug')
-            nnoremap('<leader>mr', ':CMake build_and_run<cr>', 'silent', 'CMake: build and run')
+            nnoremap('<leader>mb', ':Task start cmake build<cr>', 'silent', 'CMake: build')
+            nnoremap('<leader>mR', ':Task start cmake debug<cr>', 'silent', 'CMake: build and debug')
+            nnoremap('<leader>mr', ':Task start cmake run<cr>', 'silent', 'CMake: build and run')
         end,
     },
 }
