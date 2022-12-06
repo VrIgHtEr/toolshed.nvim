@@ -16,7 +16,7 @@ return {
         local lldbpath = lldb_available()
         if lldbpath then
             local dap = require 'dap'
-            dap.adapters.codelldb = {
+            dap.adapters.lldb = {
                 type = 'executable',
                 command = '/usr/bin/lldb-vscode',
                 name = 'lldb',
@@ -25,7 +25,7 @@ return {
             dap.configurations.cpp = {
                 {
                     name = 'Launch',
-                    type = 'codelldb',
+                    type = 'lldb',
                     request = 'launch',
                     cwd = '${workspaceFolder}',
                     stopOnEntry = false,
