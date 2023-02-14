@@ -24,7 +24,7 @@ return {
 
         require('neodev').setup()
         local lspconfig = require 'lspconfig'
-        lspconfig.sumneko_lua.setup {
+        lspconfig.lua_ls.setup {
             on_attach = on_attach,
         }
 
