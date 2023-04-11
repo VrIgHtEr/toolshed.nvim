@@ -23,9 +23,7 @@ highlight NvimTreeFolderIcon guibg=blue
         return require('nvim-tree').setup {
             disable_netrw = true,
             hijack_netrw = true,
-            open_on_setup = false,
             open_on_tab = false,
-            ignore_ft_on_setup = {},
             hijack_cursor = false,
             respect_buf_cwd = true,
             update_cwd = true,
