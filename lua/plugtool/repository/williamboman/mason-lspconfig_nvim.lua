@@ -1,7 +1,6 @@
 return {
     needs = { 'neovim/nvim-lspconfig', 'williamboman/mason.nvim' },
-    before = { 'neovim/nvim-lspconfig' },
-    after = { 'williamboman/mason.nvim' },
+    after = { 'williamboman/mason.nvim', 'neovim/nvim-lspconfig' },
     config = function(plugins)
         local masonlsp = require 'mason-lspconfig'
         masonlsp.setup { automatic_installation = true }
