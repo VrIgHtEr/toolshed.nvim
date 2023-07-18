@@ -1,7 +1,7 @@
 local constants = require 'plugtool.constants'
 return {
     needs = { constants.mapx },
-    after = { constants.cache_plugin_name, constants.mapx },
+    after = { constants.mapx },
     config = {
         function()
             nnoremap('<leader>pu', ':lua require"plugtool".update()<cr>', 'silent', 'Update all plugins using plugtool')

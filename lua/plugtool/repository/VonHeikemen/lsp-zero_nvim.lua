@@ -10,7 +10,8 @@ return {
         'hrsh7th/cmp-nvim-lua',
         'L3MON4D3/LuaSnip',
         'rafamadriz/friendly-snippets' },
-    before = { 'neovim/nvim-lspconfig',
+    after = {
+        'neovim/nvim-lspconfig',
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
         'hrsh7th/nvim-cmp',
@@ -23,11 +24,11 @@ return {
         'rafamadriz/friendly-snippets' },
     config = function()
         local lsp = require('lsp-zero').preset({
-                name = 'minimal',
-                set_lsp_keymaps = true,
-                manage_nvim_cmp = true,
-                suggest_lsp_servers = true,
-            })
+            name = 'minimal',
+            set_lsp_keymaps = true,
+            manage_nvim_cmp = true,
+            suggest_lsp_servers = true,
+        })
 
         lsp.nvim_workspace()
         lsp.setup()

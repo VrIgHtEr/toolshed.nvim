@@ -313,9 +313,6 @@ function M.setup(plugins, callback)
         end
 
         -- only the first time
-        if not pluginlist then
-            flags = parse_flags(plugins)
-        end
         if folder_exists(cfgpath .. '/.git') then
             config_updating = display.displayer 'config'
             if pending then

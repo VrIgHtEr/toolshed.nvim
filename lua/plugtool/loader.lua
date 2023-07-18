@@ -204,7 +204,6 @@ local function create_entries(plugins)
     end
     -- bump toolshed.nvim as high up as it can go
     bump(constants.toolshed_plugin_name)
-    bump(constants.cache_plugin_name)
     bump 'vrighter/update.nvim'
 
     local bump_order = {}
