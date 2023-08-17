@@ -50,7 +50,6 @@ highlight NvimTreeFolderIcon guibg=blue
                 --height = 30,
                 hide_root_folder = false,
                 side = 'left',
-                mappings = { custom_only = false, list = {} },
             },
             renderer = {
                 root_folder_modifier = ':~',
